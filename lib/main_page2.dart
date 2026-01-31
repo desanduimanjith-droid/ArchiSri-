@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/main_page3.dart';
 
-class MainPage2 extends StatelessWidget {
+class MainPage2 extends StatefulWidget {
   const MainPage2({super.key});
 
+  @override
+  State<MainPage2> createState() => _MainPage2State();
+}
+
+class _MainPage2State extends State<MainPage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold( 

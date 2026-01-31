@@ -1,10 +1,16 @@
+
 import 'package:flutter/material.dart';
 import 'package:archisri_1/login_page.dart';
 
 
-class MainPage4 extends StatelessWidget {
+class MainPage4 extends StatefulWidget {
   const MainPage4({super.key});
 
+  @override
+  State<MainPage4> createState() => _MainPage4State();
+}
+
+class _MainPage4State extends State<MainPage4> {
   @override
   Widget build(BuildContext context) {
     return Scaffold( 
@@ -16,7 +22,7 @@ class MainPage4 extends StatelessWidget {
             padding: const EdgeInsets.only(left:30,top:10),
             child: Center(
               child: Align(
-                alignment: AlignmentGeometry.topLeft,
+                alignment: Alignment.topLeft,
                 child:Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -27,7 +33,7 @@ class MainPage4 extends StatelessWidget {
 
                       ),
                     
-                   
+                    
                     
 
                   ],
@@ -174,14 +180,14 @@ class MainPage4 extends StatelessWidget {
                 height: 50,
                 child:ElevatedButton(
                   onPressed: () {
-                     //Navigate to the next page
-                     Navigator.pushReplacement(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
+                        
                         builder: (context) => const LoginPage(), 
-                    ),
-                      );
-                    // Navigate to the next page
+                      ),
+                    );
+                    
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 0, 229, 255),

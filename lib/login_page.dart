@@ -1,22 +1,21 @@
-import 'package:archisri_1/signin_page.dart';
 import 'package:flutter/material.dart';
+import 'package:archisri_1/signin_page.dart';
 
-
-class LogPage extends StatefulWidget {
-  const LogPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _SignInScreenState();
 }
 
 class _SignInScreenState extends State<LoginPage> {
- 
+  // Controllers to retrieve text from the fields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    
+   
     Color backgroundColor = const Color(0xFFEBE4D0);
 
     return Scaffold(
@@ -32,26 +31,26 @@ class _SignInScreenState extends State<LoginPage> {
 
                 
                 Container(
-                  height: 130,
-                  width: 250,
+                  height: 150,
+                  width: 200,
                   alignment: Alignment.center,
                   child: Column(
                     children: [
-                    Image.asset(
+                      Image.asset(
                       'assets/images/ARCHISHI.png',
-                      height: 125.0,
-                      width: 125.0,
-                    ), 
+                      height: 140.0,
+                      width: 140.0,
 
-                  ],
+                      ),
+                    ],
                   ),
                 ),
                 
                 const SizedBox(height: 20),
 
-                //  TITLE TEXT 
+                // title and subtitle
                 const Text(
-                  "Welcome to ArchiShi",
+                  "Welcome Back",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -72,7 +71,7 @@ class _SignInScreenState extends State<LoginPage> {
 
                 const SizedBox(height: 30),
 
-                //  MAIN FORM CONTAINER 
+                //text fileds
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -95,7 +94,7 @@ class _SignInScreenState extends State<LoginPage> {
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
-                          hintText: "email@gmail.com",
+                          hintText: "example@email.com",
                           hintStyle: TextStyle(color: Colors.grey[400]),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           border: OutlineInputBorder(
@@ -140,16 +139,14 @@ class _SignInScreenState extends State<LoginPage> {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2D2D2D), 
+                            backgroundColor: const Color(0xFF2D2D2D), // Dark charcoal color
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           onPressed: () {
-                            
                             print("Sign In Clicked");
-                            print("Email: ${_emailController.text}");
-                            print("Password: ${_passwordController.text}");
+                            // Add your login logic here
                           },
                           child: const Text(
                             "Sign In",
@@ -165,7 +162,7 @@ class _SignInScreenState extends State<LoginPage> {
                         child: GestureDetector(
                           onTap: () {
                             print("Forgot Password Clicked");
-                            // Navigate to Forgot Password Screen here
+                            // Add navigation to forgot password screen
                           },
                           child: const Text(
                             "Forgot password?",
@@ -183,7 +180,7 @@ class _SignInScreenState extends State<LoginPage> {
 
                 const SizedBox(height: 30),
 
-                // "OR CONTINUE WITH" DIVIDER 
+                // --- 4. "OR CONTINUE WITH" DIVIDER ---
                 Row(
                   children: const [
                     Expanded(child: Divider(color: Colors.black, thickness: 1.5, endIndent: 10)),
@@ -194,24 +191,31 @@ class _SignInScreenState extends State<LoginPage> {
 
                 const SizedBox(height: 20),
 
-                //  SOCIAL BUTTONS 
+                // --- 5. SOCIAL BUTTONS ---
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // Google Button
                     _socialButton(
                       label: "Google",
-                      icon:  Image.asset("assets/google.png", height: 28, width: 28),
+                      //google  icon
+                      icon:Image.asset(
+                        "assets/images/google.webp",
+                        height: 28,
+                        width: 28,
+                        
+                        ),
                       onTap: () {
                         print("Google Login Clicked");
                       },
                     ),
                     
-                    const SizedBox(width: 16), 
+                    const SizedBox(width: 16), // Spacing between buttons
 
                     // Facebook Button
                     _socialButton(
                       label: "Facebook",
+                      // facebook icon
                       icon: const Icon(Icons.facebook, color: Colors.blue, size: 28), 
                       onTap: () {
                         print("Facebook Login Clicked");
@@ -222,7 +226,7 @@ class _SignInScreenState extends State<LoginPage> {
 
                 const SizedBox(height: 30),
 
-                //  SIGN UP LINK 
+                //sign up link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -233,19 +237,19 @@ class _SignInScreenState extends State<LoginPage> {
                     GestureDetector(
                       onTap: () {
                         print("Sign Up Clicked");
-                        //Navigate to the next page
-                     Navigator.pushReplacement(
+                        // Navigate to Sign Up Screen
+                         Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
+                        
                         builder: (context) => const SignUpScreen(), 
-                    ),
-                      );
-                        // Navigate to Sign Up Screen here
+                      ),
+                    );
                       },
                       child: const Text(
                         "Sign Up",
                         style: TextStyle(
-                          color: Colors.pinkAccent, 
+                          color: Colors.pinkAccent, // Matching the pink color in image
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -262,7 +266,7 @@ class _SignInScreenState extends State<LoginPage> {
     );
   }
 
-  // Helper widget to create the Social Buttons
+  // Helper widget to create the Social Buttons (Google/Facebook)
   Widget _socialButton({required String label, required Widget icon, required VoidCallback onTap}) {
     return Expanded(
       child: InkWell(
@@ -271,7 +275,7 @@ class _SignInScreenState extends State<LoginPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.grey.shade200, 
+            color: Colors.grey.shade200, // Light grey background
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
