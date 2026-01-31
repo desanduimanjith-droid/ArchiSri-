@@ -1,8 +1,9 @@
 import 'package:archisri_1/signin_page.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+
+class LogPage extends StatefulWidget {
+  const LogPage({super.key});
 
   @override
   State<LoginPage> createState() => _SignInScreenState();
