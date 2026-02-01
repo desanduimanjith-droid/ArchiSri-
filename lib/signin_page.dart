@@ -1,14 +1,21 @@
 import 'package:archisri_1/login_page.dart';
 import 'package:flutter/material.dart';
+//import 'package:archisri_1/main_content_part.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  // get the name for the main content welcome part
+
+
   // Controllers for text fields
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();

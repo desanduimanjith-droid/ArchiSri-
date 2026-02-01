@@ -1,3 +1,4 @@
+import 'package:archisri_1/main_content_part.dart';
 import 'package:flutter/material.dart';
 import 'package:archisri_1/signin_page.dart';
 
@@ -5,10 +6,12 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _SignInScreenState();
+  State<LoginPage> createState() => _LoginScreenState();
 }
 
-class _SignInScreenState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginPage> {
+
+  
   // Controllers to retrieve text from the fields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -147,6 +150,13 @@ class _SignInScreenState extends State<LoginPage> {
                           onPressed: () {
                             print("Sign In Clicked");
                             // Add your login logic here
+                            Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        
+                        builder: (context) => const MainContentPart(), 
+                      ),
+                    );
                           },
                           child: const Text(
                             "Sign In",
