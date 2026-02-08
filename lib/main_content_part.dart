@@ -1,3 +1,4 @@
+import 'package:archisri_1/feature_1_part1.dart';
 import 'package:flutter/material.dart';
 
 // project model
@@ -100,13 +101,7 @@ class _MainContentPartState extends State<MainContentPart> {
     });
   }
 
-  void onInteractionDetected() {
-    if (!isModified) {
-      setState(() {
-        isModified = true;
-      });
-    }
-  }
+
 
 
   @override
@@ -334,7 +329,7 @@ class _MainContentPartState extends State<MainContentPart> {
                   ),
                   child: Center(
                     child: Text(
-                      'Continue',
+                      "Continue",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -350,10 +345,9 @@ class _MainContentPartState extends State<MainContentPart> {
               //reset button
               GestureDetector(
                 onTap: () {
-                  reset();
-                  setState(() {
-                    isModified = false;
-                  });
+                 reset();
+                  
+                
                 },
                 child: Container(
                   width: double.infinity,
@@ -456,7 +450,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFF5A623).withOpacity(0.4),
+            color: const Color(0xFFF5A623).withValues(alpha: 0.4),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -494,9 +488,9 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                     height: 74,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       border: Border.all(
-                          color: Colors.white.withOpacity(0.4), width: 2),
+                          color: Colors.white.withValues(alpha: 0.4), width: 2),
                     ),
                     child: Center(
                       child: Image.asset(
@@ -536,7 +530,14 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                         GestureDetector(
                           onTap: (){
                             print("Start Build Clicked");
+                           Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Feature1Part1(), 
+                          ),
+                           );
                           },
+  
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 30),
@@ -545,7 +546,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                               borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.18),
+                                  color: Colors.black.withValues(alpha:0.18),
                                   blurRadius: 8,
                                   offset: const Offset(0, 3),
                                 ),
