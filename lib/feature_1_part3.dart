@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:archisri_1/feature_1_part3.dart';
 
-class Feature1Part2 extends StatefulWidget {
-  const Feature1Part2({super.key});
+class Feature1Part3 extends StatefulWidget {
+  const Feature1Part3({super.key});
 
   @override
-  State<Feature1Part2> createState() => _Feature1Part2State();
+  State<Feature1Part3> createState() => _Feature1Part3State();
 }
 
-class _Feature1Part2State extends State<Feature1Part2> {
-  double currentStep = 2;
+class _Feature1Part3State extends State<Feature1Part3> {
+  double currentStep = 3;
   final double totalSteps = 8;
   String? selectedFloor;
 
   final List<Map<String, dynamic>> floorOptions = [
-    {'name': 'Single Floor','name1':'Single story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Double Floor','name1':'2-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Triple Floor','name1':'3-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Quadruple Floor','name1':'4-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
+    {'name': 'Single Room', 'image': Image(image: AssetImage('assets/images/bedroom.png'),  fit: BoxFit.contain)},
+    {'name': 'Double Room', 'image': Image(image: AssetImage('assets/images/two-beds.png'), fit: BoxFit.contain)},
+    {'name': 'Triple Room', 'image': Image(image: AssetImage('assets/images/pillows.png'), fit: BoxFit.contain)},
+    {'name': 'Quadruple Room', 'image': Image(image: AssetImage('assets/images/p1.png'), fit: BoxFit.contain)},
     
 
   ];
@@ -117,7 +116,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Select Number of Floors",
+                    "For first floor",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -126,7 +125,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "How many floors do you want in your house?",
+                    "How many rooms do you want in your first floor?",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -185,6 +184,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                                     
                                   ),
                                   child: style['image'],
+                                  
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
@@ -195,15 +195,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                                     color: Colors.black87,
                                   ),
                                   ),
-                                  const SizedBox(height: 8),
-                                Text(
-                                  style ['name1'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                  ),
+                                 
                                 
                                 
                               ],
@@ -262,12 +254,6 @@ class _Feature1Part2State extends State<Feature1Part2> {
                             ? () {
                                 // Handle next action
                                 print('Selected floor: $selectedFloor');
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Feature1Part3(),
-                                  ),
-                                );
                               }
                             : null,
                         style: ElevatedButton.styleFrom(
