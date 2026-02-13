@@ -1,27 +1,44 @@
 import 'package:flutter/material.dart';
 
-class Feature1Part3 extends StatefulWidget {
-  const Feature1Part3({
-    super.key, 
-    
-  });
+// Feature: Third-floor room selector
+// This file implements a UI step in the multi-step "AI House Plan Designer"
+// flow. It presents selectable room options for the third floor and shows
+// progress information at the top. State is maintained locally in the
+// `StatefulWidget` below.
+
+class Feature1Part5 extends StatefulWidget {
+  const Feature1Part5({super.key});
 
   @override
-  State<Feature1Part3> createState() => _Feature1Part3State();
+  State<Feature1Part5> createState() => _Feature1Part5State();
 }
 
-class _Feature1Part3State extends State<Feature1Part3> {
+class _Feature1Part5State extends State<Feature1Part5> {
+  // currentStep: the current step index in the multi-step flow
   double currentStep = 3;
+
+  // totalSteps: how many steps exist in the flow (used for the progress bar)
   final double totalSteps = 8;
-  List<String> selectedRooms = [];
 
+  // selectedFloor: currently selected floor option name (null if none)
+  String? selectedFloor;
+
+  // floorOptions: list of selectable room option metadata (name + image widget)
   final List<Map<String, dynamic>> floorOptions = [
-    {'name': 'Single Room', 'image': Image(image: AssetImage('assets/images/bedroom.png'),  fit: BoxFit.contain)},
-    {'name': 'Double Room', 'image': Image(image: AssetImage('assets/images/two-beds.png'), fit: BoxFit.contain)},
-    {'name': 'Triple Room', 'image': Image(image: AssetImage('assets/images/pillows.png'), fit: BoxFit.contain)},
-    {'name': 'Quadruple Room', 'image': Image(image: AssetImage('assets/images/p1.png'), fit: BoxFit.contain)},
-    
-
+    {
+      'name': 'Single Room',
+      'image': Image(
+        image: AssetImage('assets/images/bedroom.png'),
+        fit: BoxFit.contain,
+      )
+    },
+    {
+      'name': 'Double Room',
+      'image': Image(
+        image: AssetImage('assets/images/two-beds.png'),
+        fit: BoxFit.contain,
+      )
+    },
   ];
 
   @override
@@ -30,10 +47,10 @@ class _Feature1Part3State extends State<Feature1Part3> {
       backgroundColor: const Color(0xFFF5E6D3),
       body: Column(
         children: [
-          // Header Section
+          // Header Section: app title, step indicator and progress bar
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(left: 40,top: 60, right: 40, bottom: 40),
+            padding: const EdgeInsets.only(left: 40, top: 60, right: 40, bottom: 40),
             decoration: const BoxDecoration(
               color: Color(0xFFD4C55A),
               borderRadius: BorderRadius.only(
@@ -43,7 +60,6 @@ class _Feature1Part3State extends State<Feature1Part3> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              
               children: [
                 Container(
                   height: 100,
@@ -54,15 +70,11 @@ class _Feature1Part3State extends State<Feature1Part3> {
                     border: Border.all(color: Colors.white, width: 3),
                   ),
                   padding: const EdgeInsets.all(10),
-                 
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
-                    
                   ),
-                  
-                
                 ),
-                const SizedBox(width: 16), 
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +97,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                         ),
                       ),
                       const SizedBox(height: 17),
+                      // Display current step and total steps
                       Text(
                         "Step ${currentStep.toInt()} of ${totalSteps.toInt()}",
                         style: const TextStyle(
@@ -111,7 +124,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
             ),
           ),
 
-          // Content Section
+          // Content Section: question prompt and list of selectable options
           Flexible(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
@@ -119,7 +132,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "For first floor",
+                    "For third floor",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -128,7 +141,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "How many rooms do you want in your first floor?",
+                    "How many rooms do you want in your third floor?",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -136,79 +149,65 @@ class _Feature1Part3State extends State<Feature1Part3> {
                   ),
                   const SizedBox(height: 5),
 
-                  // Grid of style options
+                  // List of floor option cards (scrollable)
                   Flexible(
                     child: ListView.builder(
-                      
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedRooms.contains(style['name']);
+                        final isSelected = selectedFloor == style['name'];
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
-                          
                           child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (selectedRooms.contains(style['name'])) {
-                                selectedRooms.remove(style['name']);
-                              } else {
-                                selectedRooms.add(style['name']);
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            
-                              border: Border.all(
-                                color: isSelected
-                                    ? const Color(0xFFE68C46)
-                                    : Colors.black87,
-                                width: 3,
+                            // When an option is tapped, update the selectedFloor state
+                            onTap: () {
+                              setState(() {
+                                selectedFloor = style['name'];
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: isSelected ? const Color(0xFFE68C46) : Colors.black87,
+                                  width: 3,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.10),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.10),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF5E6D3),
-                                    borderRadius: BorderRadius.circular(10),
-                                    
-                                    
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF5E6D3),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: style['image'],
                                   ),
-                                  child: style['image'],
-                                  
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  style['name'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    style['name'],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
                                   ),
-                                  ),
-                                 
-                                
-                                
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
                         );
                       },
                     ),
@@ -218,11 +217,12 @@ class _Feature1Part3State extends State<Feature1Part3> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // Back button: pops the current route
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                       style: ElevatedButton.styleFrom(
+                        style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
                           foregroundColor: Colors.white,
@@ -248,22 +248,17 @@ class _Feature1Part3State extends State<Feature1Part3> {
                         ),
                       ),
 
-
-
-
-                  
                       const SizedBox(height: 8),
 
-                      // Next Button
-                    
+                      // Next Button: enabled only when an option is selected
                       ElevatedButton(
-                        onPressed: 
-                             () {
-                                // Handle next action
-                                
-                              
-                              },
-                            
+                        onPressed: selectedFloor != null
+                            ? () {
+                                // Handle next action (stub): in a real flow this
+                                // would navigate forward or save the selection.
+                                print('Selected floor: $selectedFloor');
+                              }
+                            : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
@@ -287,21 +282,15 @@ class _Feature1Part3State extends State<Feature1Part3> {
                             SizedBox(width: 8),
                             Icon(Icons.arrow_forward, size: 25),
                           ],
-                         ),
+                        ),
                       ),
                     ],
                   ),
-                  
-                     
-                  
-                  
-
                 ],
               ),
             ),
           ),
         ],
-        
       ),
     );
   }

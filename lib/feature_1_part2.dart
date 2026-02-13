@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part3.dart';
+import 'package:flutter/material.dart';
+
+
+
+
 
 class Feature1Part2 extends StatefulWidget {
   const Feature1Part2({super.key});
@@ -11,13 +15,13 @@ class Feature1Part2 extends StatefulWidget {
 class _Feature1Part2State extends State<Feature1Part2> {
   double currentStep = 2;
   final double totalSteps = 8;
-  String? selectedFloor;
+  List<String> selectedFloor = [];
 
   final List<Map<String, dynamic>> floorOptions = [
     {'name': 'Single Floor','name1':'Single story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
     {'name': 'Double Floor','name1':'2-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
     {'name': 'Triple Floor','name1':'3-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Quadruple Floor','name1':'4-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
+    
     
 
   ];
@@ -141,7 +145,8 @@ class _Feature1Part2State extends State<Feature1Part2> {
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedFloor == style['name'];
+                        // check the multiple selection
+                        final isSelected = selectedFloor.contains(style['name']);
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -149,7 +154,11 @@ class _Feature1Part2State extends State<Feature1Part2> {
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedFloor = style['name'];
+                              if (selectedFloor.contains(style['name'])) {
+                                selectedFloor.remove(style['name']);
+                              } else {
+                                selectedFloor.add(style['name']);
+                              }
                             });
                           },
                           child: Container(
@@ -258,18 +267,16 @@ class _Feature1Part2State extends State<Feature1Part2> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: selectedFloor != null
-                            ? () {
-                                // Handle next action
-                                print('Selected floor: $selectedFloor');
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Feature1Part3(),
-                                  ),
-                                );
-                              }
-                            : null,
+                         onPressed: selectedFloor.isEmpty ? null : () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Feature1Part3(),
+                            ),
+                          );
+                         },
+
+                          
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,

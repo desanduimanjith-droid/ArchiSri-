@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 
-class Feature1Part3 extends StatefulWidget {
-  const Feature1Part3({
-    super.key, 
-    
-  });
+class Feature1Part5 extends StatefulWidget {
+  const Feature1Part5({super.key});
 
   @override
-  State<Feature1Part3> createState() => _Feature1Part3State();
+  State<Feature1Part5> createState() => _Feature1Part5State();
 }
 
-class _Feature1Part3State extends State<Feature1Part3> {
+class _Feature1Part5State extends State<Feature1Part5> {
   double currentStep = 3;
   final double totalSteps = 8;
-  List<String> selectedRooms = [];
+  String? selectedFloor;
 
   final List<Map<String, dynamic>> floorOptions = [
     {'name': 'Single Room', 'image': Image(image: AssetImage('assets/images/bedroom.png'),  fit: BoxFit.contain)},
@@ -119,7 +116,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "For first floor",
+                    "For third floor",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -128,7 +125,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "How many rooms do you want in your first floor?",
+                    "How many rooms do you want in your third floor?",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -143,7 +140,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedRooms.contains(style['name']);
+                        final isSelected = selectedFloor == style['name'];
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -151,11 +148,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              if (selectedRooms.contains(style['name'])) {
-                                selectedRooms.remove(style['name']);
-                              } else {
-                                selectedRooms.add(style['name']);
-                              }
+                              selectedFloor = style['name'];
                             });
                           },
                           child: Container(
@@ -257,13 +250,12 @@ class _Feature1Part3State extends State<Feature1Part3> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: 
-                             () {
+                        onPressed: selectedFloor != null
+                            ? () {
                                 // Handle next action
-                                
-                              
-                              },
-                            
+                                print('Selected floor: $selectedFloor');
+                              }
+                            : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,

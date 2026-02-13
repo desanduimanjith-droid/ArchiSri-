@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
-class Feature1Part3 extends StatefulWidget {
-  const Feature1Part3({
+class Feature1Part4 extends StatefulWidget {
+  
+
+  // 2. Update the constructor to require this data
+  const Feature1Part4({
     super.key, 
     
   });
 
   @override
-  State<Feature1Part3> createState() => _Feature1Part3State();
+  State<Feature1Part4> createState() => _Feature1Part4State();
 }
 
-class _Feature1Part3State extends State<Feature1Part3> {
+class _Feature1Part4State extends State<Feature1Part4> {
   double currentStep = 3;
   final double totalSteps = 8;
   List<String> selectedRooms = [];
@@ -119,7 +122,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "For first floor",
+                    "For second floor",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -128,7 +131,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "How many rooms do you want in your first floor?",
+                    "How many rooms do you want in your second floor?",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -261,7 +264,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                              () {
                                 // Handle next action
                                 
-                              
+                                print('Data selected in Part 3 (Rooms): $selectedRooms'); 
                               },
                             
                         style: ElevatedButton.styleFrom(
