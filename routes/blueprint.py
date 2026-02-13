@@ -1,59 +1,96 @@
 import os
-from flask import Blueprint, request, jsonify
-import requests
-from io import BytesIO
-from PIL import Image
+from flask import Blueprint, request, send_file, jsonify
+from huggingface_hub import InferenceClient
+from PIL import ImageDraw, ImageFont
 
-blueprint_api = Blueprint("blueprint_api",__name__) #used to organize routes
 
-HF_API_KEY = os.getenv("HF_API_KEY")
-print("HF API KEY LOADED:",HF_API_KEY is not None)
-HF_MODEL_URL = "https://router.huggingface.co/models/runwayml/stable-diffusion-v1-5"
+blueprint_api = Blueprint("blueprint_api", __name__)
 
-@blueprint_api.route("/generate-blueprint",methods=["POST"])
+# Get token from environment variable (SAFE way)
+HF_TOKEN = "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"
+
+client = InferenceClient(token=HF_TOKEN)
+
+@blueprint_api.route("/generate-blueprint", methods=["POST"])
 def generate_blueprint():
-    data = request.json # Get the JSON data sent from the client (frontend / Postman)
-    land_width = data.get("land_width")
-    land_length = data.get("land_length")
-    bedrooms = data.get("bedrooms")
-    enviroment = data.get("environment")
+    try:
+        data = request.json
 
-    propmt = f"""
-    2D architectural floor plan blureprint,
-    residential house design,
-    {bedrooms}bedrooms,
-    land size {land_width} x {land_length} feet,
-    suitable for {enviroment} environmnet in sri lanka,
-    top down view,
-    black and white technical drwing,
-    clean lines,
-    labled rooms
-    """
+        landsize = data.get("landsize")
+        bedrooms = data.get("bedrooms")
+        floors = data.get("floors")
+        bathrooms = data.get("bathrooms")
+        living_room = data.get("living_room")
+        kitchen = data.get("kitchen")
+        style = data.get("style")
 
-    header = {
-        "Authorization":f"Bearer {HF_API_KEY}"
-    }
 
-    payload = {
-        "inputs":propmt
-    }
+        prompt = f"""
+        2D architectural floor plan blueprint,
+        top view,
+        technical CAD drawing,
+        land size {landsize},
+        bedrooms {bedrooms},
+        floors {floors},
+        kitchen {kitchen},
+        living room {living_room},
+        bathrooms {bathrooms},
+        style {style}
+        accurate room dimensions,
+        black and white blueprint style,
+        clean layout,
+        high resolution,
+        professional architectural drafting
+        """
 
-    response = requests.post(HF_MODEL_URL,headers=header,json=payload)
+        image = client.text_to_image(
+            prompt=prompt,
+            model="stabilityai/stable-diffusion-xl-base-1.0"
+        )
 
-    if response.status_code !=200:
+        #Convert the editable format
+        image = image.convert("RGBA")
+        draw = ImageDraw.Draw(image)
+        try:
+            font_large = ImageFont.truetype("arial.ttf", 20)
+            font_small = ImageFont.truetype("arial.ttf", 15)
+        except:
+            font_large = ImageFont.load_default()
+            font_small = ImageFont.load_default()
+        
+        # 🔹 HEADER INFO
+        draw.text((50, 50), f"Land Size: {landsize}", fill="black", font=font_large)
+        draw.text((50, 120), f"Floors: {floors}", fill="black", font=font_small)
+
+        # 🔹 ROOM LABELS + DIMENSIONS
+        y_position = 200
+
+        if bedrooms:
+            draw.text((50, y_position), f"Bedrooms: {bedrooms} (12x12 ft each)", fill="black", font=font_small)
+            y_position += 60
+
+        if bathrooms:
+            draw.text((50, y_position), f"Bathrooms: {bathrooms} (8x6 ft each)", fill="black", font=font_small)
+            y_position += 60
+
+        if kitchen:
+            draw.text((50, y_position), f"Kitchen: {kitchen} (10x8 ft)", fill="black", font=font_small)
+            y_position += 60
+
+        if living_room:
+            draw.text((50, y_position), f"Living Room: {living_room} (15x12 ft)", fill="black", font=font_small)
+            y_position += 60
+
+        draw.text((50, y_position), f"Style: {style}", fill="black", font=font_small)
+
+        #Save the image
+        image_path = "generated_plan.png"
+        image.save(image_path)
+
+        return send_file(image_path, mimetype="image/png")
+
+    except Exception as e:
         return jsonify({
-            "success":False,
-            "error":"Diffusion model failed",
-            "details":response.text
-        }),500
-    
-    image = Image.open(BytesIO(response.content))
-    image_path = "static/generated_plan.png"
-    image.save(image_path)
-
-    return jsonify({
-        "success":True,
-        "message":"AI Blueprint generated successfully",
-        "image_path":image_path,
-        "ai_model":"Stable Diffusion (Hugging face)"
-    })
+            "success": False,
+            "error": str(e)
+        }), 500
