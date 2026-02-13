@@ -211,7 +211,7 @@ class RecommendationScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: const [
                               Text(
-                                "ArchiSri GS Pro",
+                                "ArchiSri GS Pro", //Updated UI part
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
