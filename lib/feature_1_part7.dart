@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-// 4th floor room type selection screen
+
+//bathroom type selection screen
 
 class Feature1Part6 extends StatefulWidget {
   const Feature1Part6({super.key});
@@ -9,17 +10,16 @@ class Feature1Part6 extends StatefulWidget {
 }
 
 class _Feature1Part6State extends State<Feature1Part6> {
-  double currentStep = 3;
+  double currentStep = 4;
   final double totalSteps = 8;
- List<String> selectedRooms = [];
+  String? selectedFloor;
 
   final List<Map<String, dynamic>> floorOptions = [
-    {'name': 'Single Room', 'image': Image(image: AssetImage('assets/images/bedroom.png'),  fit: BoxFit.contain)},
-    {'name': 'Double Room', 'image': Image(image: AssetImage('assets/images/two-beds.png'), fit: BoxFit.contain)},
-    {'name': 'Triple Room', 'image': Image(image: AssetImage('assets/images/pillows.png'), fit: BoxFit.contain)},
-    {'name': 'Quadruple Room', 'image': Image(image: AssetImage('assets/images/p1.png'), fit: BoxFit.contain)},
+    {'name': 'Separate bathroom', 'icon': Icons.bathroom_rounded}, 
+    {'name': 'Attached bathroom', 'icon': Icons.bedroom_baby_rounded}, 
     
-
+    
+ 
   ];
 
   @override
@@ -117,7 +117,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "For fourth floor",
+                    "Select the bathroom type",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -126,7 +126,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "How many rooms do you want in your fourth floor?",
+                    "What kind of bathroom do you prefer?",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -141,7 +141,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedRooms.contains(style['name']);
+                        final isSelected = selectedFloor == style['name'];
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -149,11 +149,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              if (selectedRooms.contains(style['name'])) {
-                                selectedRooms.remove(style['name']);
-                              } else {
-                                selectedRooms.add(style['name']);
-                              }
+                              selectedFloor = style['name'];
                             });
                           },
                           child: Container(
@@ -188,7 +184,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                                     
                                     
                                   ),
-                                  child: style['image'],
+                                  child: Icon(style['icon'], size: 30, color: const Color(0xFFE68C46)),
                                   
                                 ),
                                 const SizedBox(height: 16),
@@ -255,10 +251,10 @@ class _Feature1Part6State extends State<Feature1Part6> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: selectedRooms.isNotEmpty
+                        onPressed: selectedFloor != null
                             ? () {
                                 // Handle next action
-                                print('Selected rooms: $selectedRooms');
+                                print('Selected floor: $selectedFloor');
                               }
                             : null,
                         style: ElevatedButton.styleFrom(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// 2nd floor room type selection screen
 
 class Feature1Part4 extends StatefulWidget {
   
