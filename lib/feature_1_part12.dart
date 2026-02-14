@@ -15,10 +15,10 @@ class _Feature1Part6State extends State<Feature1Part6> {
   List<String> selectedRooms = [];
 
   final List<Map<String, dynamic>> floorOptions = [
-    {'name': 'One single bedroom', 'icon': Icons.bathroom_rounded}, 
-    {'name': '2nd bedroom', 'icon': Icons.bathroom_rounded},
-    {'name': '3rd bedroom', 'icon': Icons.bathroom_rounded},
-    {'name': '4th bedroom', 'icon': Icons.bathroom_rounded}
+    {'name': 'for the 1st floor', 'icon': Icons.bedroom_baby_rounded}, 
+    {'name': 'for the 2nd floor', 'icon': Icons.bedroom_baby_rounded}, 
+    {'name': 'for the 3rd floor', 'icon': Icons.bedroom_baby_rounded}, 
+    {'name': 'for the 4th floor', 'icon': Icons.bedroom_baby_rounded}, 
   
   ];
 
@@ -117,7 +117,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Attach Bathroom",
+                    "Separate bathrooms for each floor",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -126,7 +126,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "Select rooms to add attached bathroom to (3rd floor only)",
+                    "Select which floor(s) you want to have separate bathrooms for",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
