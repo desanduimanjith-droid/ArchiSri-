@@ -126,7 +126,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "Select rooms to add attached bathroom to (1st floor only)",
+                    "Select rooms to add attached bathroom to (3rd floor only)",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
