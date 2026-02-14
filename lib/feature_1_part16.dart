@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
+import 'feature_1_part2.dart';
 
-//bathroom type selection screen( separate bathroom for each floor or shared bathroom for all floors)
+//living room selection screen (4th floor living room)
 
-class Feature1Part6 extends StatefulWidget {
-  const Feature1Part6({super.key});
+class Feature1Part1 extends StatefulWidget {
+  const Feature1Part1({super.key});
 
   @override
-  State<Feature1Part6> createState() => _Feature1Part6State();
+  State<Feature1Part1> createState() => _Feature1Part1State();
 }
 
-class _Feature1Part6State extends State<Feature1Part6> {
-  double currentStep = 5;
+class _Feature1Part1State extends State<Feature1Part1> {
+  double currentStep = 6;
   final double totalSteps = 8;
   List<String> selectedRooms = [];
 
-  final List<Map<String, dynamic>> floorOptions = [
-    {'name': 'for the 1st floor', 'icon': Icons.bedroom_baby_rounded}, 
-    {'name': 'for the 2nd floor', 'icon': Icons.bedroom_baby_rounded}, 
-    {'name': 'for the 3rd floor', 'icon': Icons.bedroom_baby_rounded}, 
-    {'name': 'for the 4th floor', 'icon': Icons.bedroom_baby_rounded}, 
-  
+  final List<Map<String, dynamic>> houseStyles = [
+    {'name': '1', 'image': Image(image: AssetImage('assets/images/living-room.png'), fit: BoxFit.contain)},
+    {'name': '2', 'image': Image(image: AssetImage('assets/images/living-room.png'), fit: BoxFit.contain)},
+    {'name': '3', 'image': Image(image: AssetImage('assets/images/living-room.png'), fit: BoxFit.contain)},
+    {'name': '4', 'image': Image(image: AssetImage('assets/images/living-room.png'), fit: BoxFit.contain)},
   ];
 
   @override
@@ -110,14 +110,14 @@ class _Feature1Part6State extends State<Feature1Part6> {
           ),
 
           // Content Section
-          Flexible(
+          Expanded(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Separate bathrooms for each floor",
+                    "living room(s)",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -126,7 +126,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "Select which floor(s) you want to have separate bathrooms for",
+                    "How many living rooms should include in fourth floor?",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -136,17 +136,19 @@ class _Feature1Part6State extends State<Feature1Part6> {
 
                   // Grid of style options
                   Flexible(
-                    child: ListView.builder(
-                      
-                      itemCount: floorOptions.length,
+                    child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 1,
+                      ),
+                      itemCount: houseStyles.length,
                       itemBuilder: (context, index) {
-                        final style = floorOptions[index];
+                        final style = houseStyles[index];
                         final isSelected = selectedRooms.contains(style['name']);
 
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
-                          
-                          child: GestureDetector(
+                        return GestureDetector(
                           onTap: () {
                             setState(() {
                               if (selectedRooms.contains(style['name'])) {
@@ -157,20 +159,18 @@ class _Feature1Part6State extends State<Feature1Part6> {
                             });
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
-                            
                               border: Border.all(
                                 color: isSelected
                                     ? const Color(0xFFE68C46)
-                                    : Colors.black87,
+                                    : Colors.transparent,
                                 width: 3,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.10),
+                                  color: Colors.black.withOpacity(0.05),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),
@@ -180,18 +180,15 @@ class _Feature1Part6State extends State<Feature1Part6> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                  height: 50,
-                                  width: 50,
+                                  height: 70,
+                                  width: 70,
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFF5E6D3),
-                                    borderRadius: BorderRadius.circular(10),
                                     
                                     
                                   ),
-                                  child: Icon(style['icon'], size: 30, color: const Color(0xFFE68C46)),
-                                  
+                                  child: style['image'],
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 12),
                                 Text(
                                   style['name'],
                                   style: TextStyle(
@@ -200,105 +197,62 @@ class _Feature1Part6State extends State<Feature1Part6> {
                                     color: Colors.black87,
                                   ),
                                   ),
-                                 
                                 
                                 
                               ],
                             ),
                           ),
-                        ),
                         );
                       },
                     ),
                   ),
-                  const SizedBox(height: 24),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                       style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFE68C46),
-                          disabledBackgroundColor: Colors.grey.shade300,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.arrow_back, size: 25),
-                            SizedBox(width: 8),
-                            Text(
-                              'Back',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-
-
-
                   
-                      const SizedBox(height: 8),
+                  const SizedBox(height: 8),
 
-                      // Next Button
-                    
-                      ElevatedButton(
-                        onPressed: selectedRooms.isNotEmpty
-                            ? () {
-                                // Handle next action
-                                print('Selected rooms: $selectedRooms');
-                              }
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFE68C46),
-                          disabledBackgroundColor: Colors.grey.shade300,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          elevation: 0,
+                  // Next Button
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: selectedRooms.isNotEmpty
+                          ? () {
+                              // Handle next action
+                              print('Selected rooms: $selectedRooms');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const Feature1Part2()),
+                              );
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFE68C46),
+                        disabledBackgroundColor: Colors.grey.shade300,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
                         ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Next',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            Icon(Icons.arrow_forward, size: 25),
-                          ],
-                         ),
+                        elevation: 0,
                       ),
-                    ],
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Next',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(Icons.arrow_forward, size: 25),
+                        ],
+                      ),
+                    ),
                   ),
-                  
-                     
-                  
-                  
-
                 ],
               ),
             ),
           ),
         ],
-        
       ),
     );
   }
