@@ -11,15 +11,13 @@ class Feature1Part2 extends StatefulWidget {
 class _Feature1Part2State extends State<Feature1Part2> {
   double currentStep = 2;
   final double totalSteps = 8;
-  String? selectedFloor;
+  List<String> selectedFloor = []; 
 
   final List<Map<String, dynamic>> floorOptions = [
     {'name': 'Single Floor','name1':'Single story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
     {'name': 'Double Floor','name1':'2-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
     {'name': 'Triple Floor','name1':'3-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
     {'name': 'Quadruple Floor','name1':'4-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    
-
   ];
 
   @override
@@ -126,7 +124,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "How many floors do you want in your house?",
+                    "How many floors do you want in your house? (You can select multiple)",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black54,
@@ -141,7 +139,8 @@ class _Feature1Part2State extends State<Feature1Part2> {
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedFloor == style['name'];
+                        
+                        final isSelected = selectedFloor.contains(style['name']);
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -149,7 +148,12 @@ class _Feature1Part2State extends State<Feature1Part2> {
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedFloor = style['name'];
+                            
+                              if (selectedFloor.contains(style['name'])) {
+                                selectedFloor.remove(style['name']);
+                              } else {
+                                selectedFloor.add(style['name']);
+                              }
                             });
                           },
                           child: Container(
@@ -172,40 +176,71 @@ class _Feature1Part2State extends State<Feature1Part2> {
                                 ),
                               ],
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            child: Row(
                               children: [
+                                // Checkbox indicator
+                                Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                    color: isSelected 
+                                        ? const Color(0xFFE68C46) 
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: isSelected 
+                                          ? const Color(0xFFE68C46) 
+                                          : Colors.black54,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: isSelected
+                                      ? const Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                          size: 20,
+                                        )
+                                      : null,
+                                ),
+                                const SizedBox(width: 16),
+                                
+                                // Image
                                 Container(
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFF5E6D3),
                                     borderRadius: BorderRadius.circular(10),
-                                    
-                                    
                                   ),
                                   child: style['image'],
                                 ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  style['name'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                Text(
-                                  style ['name1'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                  ),
+                                const SizedBox(width: 16),
                                 
-                                
+                                // Text
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        style['name'],
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        style['name1'],
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -215,6 +250,20 @@ class _Feature1Part2State extends State<Feature1Part2> {
                     ),
                   ),
                   const SizedBox(height: 24),
+
+                  // Selection counter
+                  if (selectedFloor.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        '${selectedFloor.length} floor${selectedFloor.length > 1 ? 's' : ''} selected',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFFE68C46),
+                        ),
+                      ),
+                    ),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -249,27 +298,24 @@ class _Feature1Part2State extends State<Feature1Part2> {
                         ),
                       ),
 
-
-
-
-                  
                       const SizedBox(height: 8),
 
-                      // Next Button
-                    
+                      // Next Button - disabled if no selection
                       ElevatedButton(
-                        onPressed: selectedFloor != null
-                            ? () {
+                        onPressed: selectedFloor.isEmpty 
+                            ? null 
+                            : () {
                                 // Handle next action
-                                print('Selected floor: $selectedFloor');
+                                print('Selected floors: $selectedFloor');
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Feature1Part3(),
+                                    builder: (context) => Feature1Part3(
+                                      selectedFloors: selectedFloor,
+                                    ),
                                   ),
                                 );
-                              }
-                            : null,
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
@@ -297,17 +343,11 @@ class _Feature1Part2State extends State<Feature1Part2> {
                       ),
                     ],
                   ),
-                  
-                     
-                  
-                  
-
                 ],
               ),
             ),
           ),
         ],
-        
       ),
     );
   }

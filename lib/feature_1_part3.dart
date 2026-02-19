@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Feature1Part3 extends StatefulWidget {
-  const Feature1Part3({super.key});
+  const Feature1Part3({super.key, required List<String> selectedFloors});
 
   @override
   State<Feature1Part3> createState() => _Feature1Part3State();
@@ -10,7 +10,7 @@ class Feature1Part3 extends StatefulWidget {
 class _Feature1Part3State extends State<Feature1Part3> {
   double currentStep = 3;
   final double totalSteps = 8;
-  String? selectedFloor;
+  List<String> selectedFloors = [];
 
   final List<Map<String, dynamic>> floorOptions = [
     {'name': 'Single Room', 'image': Image(image: AssetImage('assets/images/bedroom.png'),  fit: BoxFit.contain)},
@@ -140,7 +140,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedFloor == style['name'];
+                        final isSelected = selectedFloors.contains(style['name']);
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -148,7 +148,11 @@ class _Feature1Part3State extends State<Feature1Part3> {
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedFloor = style['name'];
+                              if (selectedFloors.contains(style['name'])) {
+                                selectedFloors.remove(style['name']);
+                              } else {
+                                selectedFloors.add(style['name']);
+                              }
                             });
                           },
                           child: Container(
@@ -250,10 +254,10 @@ class _Feature1Part3State extends State<Feature1Part3> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: selectedFloor != null
+                        onPressed: selectedFloors.isNotEmpty
                             ? () {
                                 // Handle next action
-                                print('Selected floor: $selectedFloor');
+                                print('Selected floors: $selectedFloors');
                               }
                             : null,
                         style: ElevatedButton.styleFrom(

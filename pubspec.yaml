@@ -17,3 +17,18 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/ARCHISHI.png
+    - assets/images/3d-house.png
+    - assets/images/artificial-intelligence.png
+    - assets/images/bedroom.png
+    - assets/images/google.webp
+    - assets/images/house.png
+    - assets/images/home.png
+    - assets/images/home_plan.png
+    - assets/images/mansion.png
+    - assets/images/p1.png
+    - assets/images/pillows.png
+    - assets/images/two-beds.png
+    - assets/images/bt.png
+
