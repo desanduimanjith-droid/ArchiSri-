@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:archisri_1/screens/auth/signup_page.dart';
 import 'package:archisri_1/main_content_part.dart';
 
@@ -13,6 +15,50 @@ class _SignInScreenState extends State<LoginPage> {
   // Controllers to retrieve text from the fields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  // Google sign in client
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email'],
+  );
+
+  Future<void> _handleGoogleSignIn() async {
+    try {
+      final account = await _googleSignIn.signIn();
+      if (account == null) {
+        // user aborted
+        return;
+      }
+
+      // authenticate with Firebase if you want persistent backend session
+      final GoogleSignInAuthentication auth = await account.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: auth.accessToken,
+        idToken: auth.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      debugPrint('Google user: ${account.displayName} (${account.email})');
+
+      // Navigate to main content
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MainContentPart(),
+        ),
+      );
+    } on FirebaseAuthException catch (fbError) {
+      debugPrint('Firebase auth error: $fbError');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Authentication error: ${fbError.message}')),
+      );
+    } catch (error) {
+      debugPrint('Google sign-in failed: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Google sign-in failed: $error')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,16 +250,13 @@ class _SignInScreenState extends State<LoginPage> {
                     // Google Button
                     _socialButton(
                       label: "Google",
-                      //google  icon
-                      icon:Image.asset(
+                      // google icon
+                      icon: Image.asset(
                         "assets/images/google.webp",
                         height: 28,
                         width: 28,
-                        
-                        ),
-                      onTap: () {
-                        print("Google Login Clicked");
-                      },
+                      ),
+                      onTap: _handleGoogleSignIn,
                     ),
                     
                     const SizedBox(width: 16), // Spacing between buttons
