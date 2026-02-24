@@ -34,16 +34,19 @@ class IoTDeviceScreen extends StatelessWidget {
                   // ==================================================
                   // IMAGE
                   // ==================================================
-                  Center(
-                    child: Image.asset(
-                      'assets/iot_device.png',
-                      height: 250, // Larger image for details page
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        height: 250,
-                        width: double.infinity,
-                        color: Colors.grey[200],
-                        child: const Icon(Icons.broken_image, size: 50),
+                  Hero(
+                    tag: 'iot_device_image',
+                    child: Center(
+                      child: Image.asset(
+                        'assets/iot_device.png',
+                        height: 250, // Larger image for details page
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          height: 250,
+                          width: double.infinity,
+                          color: Colors.grey[200],
+                          child: const Icon(Icons.broken_image, size: 50),
+                        ),
                       ),
                     ),
                   ),

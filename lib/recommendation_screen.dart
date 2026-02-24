@@ -138,17 +138,21 @@ class RecommendationScreen extends StatelessWidget {
                           const SizedBox(height: 15),
 
                           // Image
-                          Center(
-                            child: Image.asset(
-                              'assets/iot_device.png',
-                              height: 160,
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Container(
-                                    height: 160,
-                                    color: Colors.grey[200],
-                                    child: const Icon(Icons.broken_image),
-                                  ),
+                          Hero(
+                            tag: 'iot_device_image',
+                            child: Center(
+                              child: Image.asset(
+                                'assets/iot_device.png',
+                                height: 160,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                      height: 160,
+                                      width: double.infinity,
+                                      color: Colors.grey[200],
+                                      child: const Icon(Icons.broken_image),
+                                    ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 20),
