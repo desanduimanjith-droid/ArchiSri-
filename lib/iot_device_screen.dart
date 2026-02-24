@@ -85,7 +85,7 @@ class IoTDeviceScreen extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFDD835).withOpacity(0.4),
+                          color: const Color(0xFFFDD835).withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Row(
