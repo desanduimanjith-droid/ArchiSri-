@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'utils/app_colors.dart';
 
 class MaterialsScreen extends StatelessWidget {
   const MaterialsScreen({super.key});
@@ -6,7 +7,7 @@ class MaterialsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF8E1),
+      backgroundColor: AppColors.backgroundCream,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -18,7 +19,7 @@ class MaterialsScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            backgroundColor: const Color(0xFFFDD835),
+            backgroundColor: AppColors.primaryYellow,
             elevation: 0,
             floating: false,
             pinned: false,
@@ -36,7 +37,7 @@ class MaterialsScreen extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE6CCB2),
+                      color: AppColors.lightBrown,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: Colors.white, width: 2),
                     ),
@@ -48,7 +49,7 @@ class MaterialsScreen extends StatelessWidget {
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFD4A373),
+                            color: AppColors.mediumBrown,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: const Row(
@@ -150,7 +151,7 @@ class MaterialsScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -190,7 +191,7 @@ class MaterialsScreen extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD87D4A),
+                    color: AppColors.accentOrange,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -222,7 +223,7 @@ class MaterialsScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE68A45),
+                        backgroundColor: AppColors.buttonOrange,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),

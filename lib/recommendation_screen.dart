@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'iot_device_screen.dart';
 import 'materials_screen.dart';
+import 'utils/app_colors.dart';
 
 class RecommendationScreen extends StatelessWidget {
   const RecommendationScreen({super.key});
@@ -8,7 +9,7 @@ class RecommendationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF8E1), // Cream Background
+      backgroundColor: AppColors.backgroundCream, // Cream Background
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -19,7 +20,7 @@ class RecommendationScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(20, 60, 20, 30),
               decoration: const BoxDecoration(
-                color: Color(0xFFFDD835), // Yellow Header
+                color: AppColors.primaryYellow, // Yellow Header
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(30),
                 ),
@@ -30,7 +31,7 @@ class RecommendationScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 247, 150, 5),
+                      color: AppColors.iconOrange,
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: const Icon(
@@ -113,7 +114,7 @@ class RecommendationScreen extends StatelessWidget {
                         color: Colors.white,
                         shape: const CircleBorder(),
                         elevation: 5,
-                        shadowColor: Colors.grey.withOpacity(0.3),
+                        shadowColor: Colors.grey.withValues(alpha: 0.3),
                         child: InkWell(
                           onTap: () {},
                           customBorder: const CircleBorder(),
@@ -150,7 +151,7 @@ class RecommendationScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
+                            color: Colors.grey.withValues(alpha: 0.1),
                             blurRadius: 10,
                             offset: const Offset(0, 5),
                           ),
@@ -166,7 +167,9 @@ class RecommendationScreen extends StatelessWidget {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFDD835).withOpacity(0.4),
+                              color: AppColors.primaryYellow.withValues(
+                                alpha: 0.4,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Row(
@@ -247,7 +250,7 @@ class RecommendationScreen extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFD4A373),
+                        backgroundColor: AppColors.mediumBrown,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
