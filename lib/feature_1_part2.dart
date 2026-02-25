@@ -11,7 +11,7 @@ class Feature1Part2 extends StatefulWidget {
 class _Feature1Part2State extends State<Feature1Part2> {
   double currentStep = 2;
   final double totalSteps = 8;
-  String? selectedFloor;
+  List<String> selectedOptions = [];
 
   final List<Map<String, dynamic>> floorOptions = [
     {'name': 'Single Floor','name1':'Single story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
@@ -141,7 +141,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedFloor == style['name'];
+                        final isSelected = selectedOptions.contains(style['name']);
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -149,7 +149,11 @@ class _Feature1Part2State extends State<Feature1Part2> {
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedFloor = style['name'];
+                              if (isSelected) {
+                                selectedOptions.remove(style['name']);
+                              } else {
+                                selectedOptions.add(style['name']);
+                              }
                             });
                           },
                           child: Container(
@@ -258,10 +262,10 @@ class _Feature1Part2State extends State<Feature1Part2> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: selectedFloor != null
+                        onPressed: selectedOptions.isNotEmpty
                             ? () {
                                 // Handle next action
-                                print('Selected floor: $selectedFloor');
+                                print('Selected options: $selectedOptions');
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

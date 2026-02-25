@@ -11,7 +11,7 @@ class Feature1Part1 extends StatefulWidget {
 class _Feature1Part1State extends State<Feature1Part1> {
   double currentStep = 1;
   final double totalSteps = 8;
-  List<String> selectedOptions = [];
+  String? selectedStyle;
 
   final List<Map<String, dynamic>> houseStyles = [
     {'name': 'Modern', 'image': Image(image: AssetImage('assets/images/home.png'), fit: BoxFit.contain)},
@@ -144,16 +144,12 @@ class _Feature1Part1State extends State<Feature1Part1> {
                       itemCount: houseStyles.length,
                       itemBuilder: (context, index) {
                         final style = houseStyles[index];
-                        final isSelected = selectedOptions.contains(style['name']);
+                        final isSelected = selectedStyle == style['name'];
 
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              if (isSelected) {
-                                selectedOptions.remove(style['name']);
-                              } else {
-                                selectedOptions.add(style['name']);
-                              }
+                              selectedStyle = style['name'];
                             });
                           },
                           child: Container(
@@ -210,10 +206,10 @@ class _Feature1Part1State extends State<Feature1Part1> {
                   // Next Button
                   Center(
                     child: ElevatedButton(
-                      onPressed: selectedOptions.isNotEmpty
+                      onPressed: selectedStyle != null
                           ? () {
                               // Handle next action
-                              print('Selected options: $selectedOptions');
+                              print('Selected style: $selectedStyle');
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => const Feature1Part2()),
