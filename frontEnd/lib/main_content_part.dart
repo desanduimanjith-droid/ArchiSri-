@@ -1,6 +1,7 @@
+import 'package:archisri_1/feature_1_part1.dart';
 import 'package:flutter/material.dart';
 
-// ─── Project Model ───────────────────────────────────────────────
+// project model
 class Project {
   final String name;
   final double percent;
@@ -8,6 +9,7 @@ class Project {
   final Color barColor;
   final String icon;
   final bool aiOptimized;
+  final bool isModified;
 
   const Project({
     required this.name,
@@ -16,6 +18,7 @@ class Project {
     required this.barColor,
     required this.icon,
     this.aiOptimized = false,
+    this.isModified = false,
   });
 }
 
@@ -25,21 +28,24 @@ const List<Project> allProjects = [
     percent: 0.75,
     status: "In progress",
     barColor: Color(0xFF22C55E),
-    icon: "🏡",
+    icon:""
+   
+    
   ),
   Project(
     name: "Eco-friendly House",
     percent: 0.45,
     status: "Planning",
     barColor: Color(0xFFF59E0B),
-    icon: "🌱",
+    icon: "",
+    aiOptimized: true,
   ),
   Project(
     name: "Luxury Villa",
     percent: 0.90,
     status: "Almost done",
     barColor: Color(0xFF06B6D4),
-    icon: "🏛️",
+    icon: "",
     aiOptimized: true,
   ),
   Project(
@@ -47,14 +53,14 @@ const List<Project> allProjects = [
     percent: 0.30,
     status: "Planning",
     barColor: Color(0xFFF59E0B),
-    icon: "🏖️",
+    icon: "",
   ),
   Project(
     name: "Mountain Retreat",
     percent: 0.60,
     status: "In progress",
     barColor: Color(0xFF22C55E),
-    icon: "⛰️",
+    icon: "",
     aiOptimized: true,
   ),
   Project(
@@ -62,19 +68,19 @@ const List<Project> allProjects = [
     percent: 0.15,
     status: "Planning",
     barColor: Color(0xFFF59E0B),
-    icon: "🏙️",
+    icon: "",
   ),
   Project(
     name: "Farm House",
     percent: 0.85,
     status: "Almost done",
     barColor: Color(0xFF06B6D4),
-    icon: "🌾",
+    icon: "",
     aiOptimized: true,
   ),
 ];
 
-// ─── Main Content Page ───────────────────────────────────────────
+// Main Content Part Widget
 class MainContentPart extends StatefulWidget {
   const MainContentPart({super.key});
 
@@ -85,19 +91,18 @@ class MainContentPart extends StatefulWidget {
 class _MainContentPartState extends State<MainContentPart> {
   bool showAll = false;
   bool startBuildClicked = false;
+  bool isModified = false;
 
-  // ── Reset everything back to initial state ──
+  // reset the state
   void reset() {
     setState(() {
-      showAll = false;
       startBuildClicked = false;
+      isModified = false;
     });
   }
 
-  // ── Get the most progressed project for the CTA button ──
-  Project get topProject {
-    return allProjects.reduce((a, b) => a.percent > b.percent ? a : b);
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +118,7 @@ class _MainContentPartState extends State<MainContentPart> {
         elevation: 0,
         centerTitle: false,
         title: const Text(
-          'Welcome, Desandu 👋',
+          'Welcome, ',
           style: TextStyle(
             color: Colors.black87,
             fontSize: 20,
@@ -125,40 +130,21 @@ class _MainContentPartState extends State<MainContentPart> {
           onPressed: () {},
         ),
         actions: [
-          // ── Notification bell with badge ──
+          // nitification bell with red dot
           Stack(
             clipBehavior: Clip.none,
             children: [
               IconButton(
                 icon: const Icon(Icons.notifications_outlined,
                     color: Colors.black87),
-                onPressed: () {},
+                onPressed: (){
+                   print("Notification clicked");
+                },
               ),
-              Positioned(
-                right: 6,
-                top: 6,
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Center(
-                    child: Text(
-                      '1',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            
             ],
           ),
-          // ── Avatar ──
+          // Avatar
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: Container(
@@ -168,23 +154,23 @@ class _MainContentPartState extends State<MainContentPart> {
                 shape: BoxShape.circle,
                 color: const Color(0xFFD4A574),
               ),
-              child: const Center(
-                child: Text(
-                  'D',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
+              child: Center(
+                child:
+                  IconButton(
+                 icon: Icon(Icons.person, color: Colors.white, size: 18),
+                 onPressed: () {
+                   print("Avatar clicked");
+                 },
+                    
+              ),
+                
               ),
             ),
           ),
+
         ],
       ),
-      // ─────────────────────────────────────────────────────────
-      // ── BODY ──
-      // ─────────────────────────────────────────────────────────
+      // body part starts here
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -194,14 +180,14 @@ class _MainContentPartState extends State<MainContentPart> {
             children: [
               const SizedBox(height: 18),
 
-              // ── Animated Blueprint Banner ──
+              // animated blueprint banner
               BlueprintBanner(
                 onStartBuild: () {
                   setState(() => startBuildClicked = true);
                 },
               ),
 
-              // ── Start Build confirmation card ──
+              // start build clicked message
               AnimatedSize(
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.easeInOut,
@@ -212,20 +198,23 @@ class _MainContentPartState extends State<MainContentPart> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 12, horizontal: 16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF22C55E).withOpacity(0.1),
+                          color: const Color(0xFF22C55E).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: const Color(0xFF22C55E).withOpacity(0.35),
+                            color: const Color(0xFF22C55E).withValues(alpha: 0.35),
                           ),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: const [
-                            Text('✅', style: TextStyle(fontSize: 18)),
+                            Icon(Icons.check_circle,
+                                color: Color(0xFF16A34A), size: 25),
+                            
+
                             SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                'AI House Plan Designer started! Your plan will be ready in less than 2 minutes.',
+                                'AI House Plan Designer started! Your plan will be ready in less than 2 minutes and requires further modifications to customize your home plan.',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: Color(0xFF166534),
@@ -241,14 +230,14 @@ class _MainContentPartState extends State<MainContentPart> {
 
               const SizedBox(height: 22),
 
-              // ── Recent Projects Card ──
+              // resent projects section
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.88),
+                  color: Colors.white.withValues(alpha: 0.88),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
+                      color: Colors.black.withValues(alpha: 0.06),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -258,7 +247,7 @@ class _MainContentPartState extends State<MainContentPart> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── Title row ──
+                    // titele
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -274,6 +263,7 @@ class _MainContentPartState extends State<MainContentPart> {
                           onTap: () => setState(() => showAll = !showAll),
                           child: Text(
                             showAll ? 'Show Less ✕' : 'View All >',
+                            
                             style: const TextStyle(
                               fontSize: 14,
                               color: Color(0xFF3B82F6),
@@ -285,13 +275,18 @@ class _MainContentPartState extends State<MainContentPart> {
                     ),
                     const SizedBox(height: 14),
 
-                    // ── Project list ── expands in same page ──
+                    // project list
                     AnimatedSize(
-                      duration: const Duration(milliseconds: 450),
+                      duration: const Duration(milliseconds: 400),
                       curve: Curves.easeInOut,
                       child: Column(
                         children: visibleProjects
-                            .map((p) => ProjectCard(project: p))
+                            .map((p) => GestureDetector(
+                              onTap: () => setState(() {
+                                isModified = true;
+                              }),
+                              child: ProjectCard(project: p),
+                            ))
                             .toList(),
                       ),
                     ),
@@ -301,37 +296,40 @@ class _MainContentPartState extends State<MainContentPart> {
 
               const SizedBox(height: 20),
 
-              // ── Continue CTA Button ──
+              // continue top project button
               GestureDetector(
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Continuing "${topProject.name}"...'),
+                      content: Text('Continue your the tour of the App!, " If you whant to contionue use other features, you can use this button later. "'),
                       backgroundColor: const Color(0xFFF5A623),
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                       duration: const Duration(seconds: 2),
+                      padding: const EdgeInsets.all(16),
+                      
+                      
                     ),
                   );
                 },
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF5A623),
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFF5A623).withOpacity(0.4),
+                        color: const Color(0xFFF5A623).withValues(alpha: 0.4),
                         blurRadius: 12,
-                        offset: const Offset(0, 5),
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: Center(
                     child: Text(
-                      'Continue "${topProject.name}"  >',
+                      "Continue",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -344,26 +342,33 @@ class _MainContentPartState extends State<MainContentPart> {
 
               const SizedBox(height: 16),
 
-              // ── Reset Button ──
+              //reset button
               GestureDetector(
-                onTap: reset,
+                onTap: () {
+                 reset();
+                  
+                
+                },
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.7),
-                    borderRadius: BorderRadius.circular(14),
+                    color: Colors.white.withValues(alpha: 0.7),
+                    borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: const Color(0xFFE5E7EB),
                       width: 1.5,
                     ),
                   ),
+                  
+                  
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       Icon(Icons.refresh_rounded,
                           color: Color(0xFF9CA3AF), size: 18),
                       SizedBox(width: 8),
+                      
                       Text(
                         'Reset',
                         style: TextStyle(
@@ -373,6 +378,7 @@ class _MainContentPartState extends State<MainContentPart> {
                         ),
                       ),
                     ],
+                    
                   ),
                 ),
               ),
@@ -386,9 +392,7 @@ class _MainContentPartState extends State<MainContentPart> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// ── Animated Blueprint Banner Widget ──────────────────────────────
-// ═══════════════════════════════════════════════════════════════════
+//animated Blueprint Banner Widget
 class BlueprintBanner extends StatefulWidget {
   final VoidCallback onStartBuild;
 
@@ -446,7 +450,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFF5A623).withOpacity(0.4),
+            color: const Color(0xFFF5A623).withValues(alpha: 0.4),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -456,7 +460,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
         borderRadius: BorderRadius.circular(22),
         child: Stack(
           children: [
-            // ── Animated blueprint background ──
+            // animated blueprint background
             AnimatedBuilder(
               animation: Listenable.merge(
                   [_gridController, _drawController, _pulseController]),
@@ -472,7 +476,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
               },
             ),
 
-            // ── Content ──
+            
             Padding(
               padding: const EdgeInsets.all(22),
               child: Row(
@@ -484,12 +488,16 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                     height: 74,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       border: Border.all(
-                          color: Colors.white.withOpacity(0.4), width: 2),
+                          color: Colors.white.withValues(alpha: 0.4), width: 2),
                     ),
-                    child: const Center(
-                      child: Text('🧠', style: TextStyle(fontSize: 36)),
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/artificial-intelligence.png',
+                        width: 50,
+                        height: 50,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -518,9 +526,18 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                         ),
                         const SizedBox(height: 14),
 
-                        // ── Start Build Button ──
+                        // start build button
                         GestureDetector(
-                          onTap: widget.onStartBuild,
+                          onTap: (){
+                            print("Start Build Clicked");
+                           Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Feature1Part1(), 
+                          ),
+                           );
+                          },
+  
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 30),
@@ -529,7 +546,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                               borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.18),
+                                  color: Colors.black.withValues(alpha:0.18),
                                   blurRadius: 8,
                                   offset: const Offset(0, 3),
                                 ),
@@ -567,9 +584,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// ── Blueprint CustomPainter ────────────────────────────────────────
-// ═══════════════════════════════════════════════════════════════════
+// Blueprint Painter for animated background
 class BlueprintPainter extends CustomPainter {
   final double gridOpacity;
   final double drawProgress;
@@ -583,7 +598,7 @@ class BlueprintPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // ── Grid ──
+    // draw grid
     final gridPaint = Paint()
       ..color = Colors.white.withOpacity(gridOpacity)
       ..strokeWidth = 0.5
@@ -596,7 +611,7 @@ class BlueprintPainter extends CustomPainter {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
     }
 
-    // ── House outline with draw-on effect ──
+    //house outline
     final houseW = 90.0;
     final houseH = 60.0;
     final sx = size.width - houseW - 16;
@@ -622,7 +637,7 @@ class BlueprintPainter extends CustomPainter {
     canvas.drawPath(housePath, linePaint);
     canvas.restore();
 
-    // ── Windows ──
+   
     final winPaint = Paint()
       ..color = Colors.white.withOpacity(0.15 + pulseOpacity * 0.08)
       ..strokeWidth = 1.4
@@ -632,7 +647,7 @@ class BlueprintPainter extends CustomPainter {
     canvas.drawRect(
         Rect.fromLTWH(sx + houseW - 32, sy + 28, 20, 20), winPaint);
 
-    // ── Door ──
+    // door
     final doorPaint = Paint()
       ..color = Colors.white.withOpacity(0.2 + pulseOpacity * 0.06)
       ..strokeWidth = 1.4
@@ -641,7 +656,7 @@ class BlueprintPainter extends CustomPainter {
     canvas.drawRect(
         Rect.fromLTWH(sx + houseW / 2 - 9, sy + 30, 18, 28), doorPaint);
 
-    // ── Pulsing corner dots ──
+    // pulsing dots
     final dotPaint = Paint()
       ..color = Colors.white.withOpacity(pulseOpacity * 0.65)
       ..style = PaintingStyle.fill;
@@ -656,7 +671,7 @@ class BlueprintPainter extends CustomPainter {
       canvas.drawCircle(d, 3.5, dotPaint);
     }
 
-    // ── Dimension tick marks ──
+    // Door step lines
     final tickPaint = Paint()
       ..color = Colors.white.withOpacity(0.12)
       ..strokeWidth = 1.0
@@ -674,9 +689,7 @@ class BlueprintPainter extends CustomPainter {
   bool shouldRepaint(covariant BlueprintPainter oldDelegate) => true;
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// ── Project Card Widget ────────────────────────────────────────────
-// ═══════════════════════════════════════════════════════════════════
+// Project Card Widget
 class ProjectCard extends StatelessWidget {
   final Project project;
 
