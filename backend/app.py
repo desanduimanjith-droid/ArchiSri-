@@ -74,6 +74,14 @@ def get_recommendations():
                 "priority": "Medium"
             })
 
+        # Default fallback if soil is perfect
+        if not recommendations:
+            recommendations.append({
+                "material": "General Purpose Compost",
+                "reason": "Soil conditions look good! General compost will maintain soil health.",
+                "priority": "Low"
+            })
+
         return jsonify({
             "status": "success",
             "received_data": data,
