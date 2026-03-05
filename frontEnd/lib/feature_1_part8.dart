@@ -15,11 +15,10 @@ class _Feature1Part6State extends State<Feature1Part6> {
   List<String> selectedRooms = [];
 
   final List<Map<String, dynamic>> floorOptions = [
-    {'name': 'One single bedroom', 'icon': Icons.bathroom_rounded}, 
+    {'name': 'One single bedroom', 'icon': Icons.bathroom_rounded},
     {'name': '2nd bedroom', 'icon': Icons.bathroom_rounded},
     {'name': '3rd bedroom', 'icon': Icons.bathroom_rounded},
-    {'name': '4th bedroom', 'icon': Icons.bathroom_rounded}
-  
+    {'name': '4th bedroom', 'icon': Icons.bathroom_rounded},
   ];
 
   @override
@@ -31,7 +30,12 @@ class _Feature1Part6State extends State<Feature1Part6> {
           // Header Section
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(left: 40,top: 60, right: 40, bottom: 40),
+            padding: const EdgeInsets.only(
+              left: 40,
+              top: 60,
+              right: 40,
+              bottom: 40,
+            ),
             decoration: const BoxDecoration(
               color: Color(0xFFD4C55A),
               borderRadius: BorderRadius.only(
@@ -41,7 +45,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              
+
               children: [
                 Container(
                   height: 100,
@@ -52,15 +56,12 @@ class _Feature1Part6State extends State<Feature1Part6> {
                     border: Border.all(color: Colors.white, width: 3),
                   ),
                   padding: const EdgeInsets.all(10),
-                 
+
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
-                    
                   ),
-                  
-                
                 ),
-                const SizedBox(width: 16), 
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +99,9 @@ class _Feature1Part6State extends State<Feature1Part6> {
                           child: LinearProgressIndicator(
                             value: currentStep / totalSteps,
                             backgroundColor: Colors.white.withOpacity(0.3),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -127,86 +130,82 @@ class _Feature1Part6State extends State<Feature1Part6> {
                   const SizedBox(height: 4),
                   const Text(
                     "Select rooms to add attached bathroom to (1st floor only)",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                   const SizedBox(height: 5),
 
                   // Grid of style options
                   Flexible(
                     child: ListView.builder(
-                      
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedRooms.contains(style['name']);
+                        final isSelected = selectedRooms.contains(
+                          style['name'],
+                        );
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
-                          
+
                           child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (selectedRooms.contains(style['name'])) {
-                                selectedRooms.remove(style['name']);
-                              } else {
-                                selectedRooms.add(style['name']);
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            
-                              border: Border.all(
-                                color: isSelected
-                                    ? const Color(0xFFE68C46)
-                                    : Colors.black87,
-                                width: 3,
+                            onTap: () {
+                              setState(() {
+                                if (selectedRooms.contains(style['name'])) {
+                                  selectedRooms.remove(style['name']);
+                                } else {
+                                  selectedRooms.add(style['name']);
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+
+                                border: Border.all(
+                                  color: isSelected
+                                      ? const Color(0xFFE68C46)
+                                      : Colors.black87,
+                                  width: 3,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.10),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.10),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF5E6D3),
-                                    borderRadius: BorderRadius.circular(10),
-                                    
-                                    
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF5E6D3),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Icon(
+                                      style['icon'],
+                                      size: 30,
+                                      color: const Color(0xFFE68C46),
+                                    ),
                                   ),
-                                  child: Icon(style['icon'], size: 30, color: const Color(0xFFE68C46)),
-                                  
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  style['name'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    style['name'],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
                                   ),
-                                  ),
-                                 
-                                
-                                
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
                         );
                       },
                     ),
@@ -220,11 +219,14 @@ class _Feature1Part6State extends State<Feature1Part6> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                       style: ElevatedButton.styleFrom(
+                        style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 48,
+                            vertical: 16,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -246,14 +248,9 @@ class _Feature1Part6State extends State<Feature1Part6> {
                         ),
                       ),
 
-
-
-
-                  
                       const SizedBox(height: 8),
 
                       // Next Button
-                    
                       ElevatedButton(
                         onPressed: selectedRooms.isNotEmpty
                             ? () {
@@ -265,7 +262,10 @@ class _Feature1Part6State extends State<Feature1Part6> {
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 48,
+                            vertical: 16,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -284,21 +284,15 @@ class _Feature1Part6State extends State<Feature1Part6> {
                             SizedBox(width: 8),
                             Icon(Icons.arrow_forward, size: 25),
                           ],
-                         ),
+                        ),
                       ),
                     ],
                   ),
-                  
-                     
-                  
-                  
-
                 ],
               ),
             ),
           ),
         ],
-        
       ),
     );
   }
