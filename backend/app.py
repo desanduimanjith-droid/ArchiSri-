@@ -30,6 +30,22 @@ def get_recommendations():
 
         recommendations = []
 
+        # -- Recommendation Logic (Engineering/Agriculture Rules) --
+
+        # 1. pH Level Logic
+        if ph_level < 6.0:
+            recommendations.append({
+                "material": "Agricultural Lime",
+                "reason": f"Soil pH is low ({ph_level}). Lime will help neutralize acidity and improve nutrient availability.",
+                "priority": "High"
+            })
+        elif ph_level > 7.5:
+             recommendations.append({
+                "material": "Elemental Sulfur or Peat Moss",
+                "reason": f"Soil pH is high ({ph_level}). Acidifying materials will help lower it.",
+                "priority": "High"
+            })
+
         return jsonify({
             "status": "success",
             "received_data": data,
