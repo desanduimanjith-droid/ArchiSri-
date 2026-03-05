@@ -4,5 +4,41 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/api/recommendations', methods=['POST'])
+def get_recommendations():
+    """
+    Expects a POST request with JSON data containing soil metrics.
+    Example Input JSON:
+    {
+        "soil_type": "Clay",
+        "ph_level": 6.0,
+        "moisture": 40,
+        "nitrogen": 15,
+        "weather_condition": "Rainy"
+    }
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({"error": "No input data provided"}), 400
+
+        # Extract values (with defaults if missing)
+        ph_level = data.get('ph_level', 7.0)
+        nitrogen = data.get('nitrogen', 50)
+        moisture = data.get('moisture', 50)
+
+        recommendations = []
+
+        return jsonify({
+            "status": "success",
+            "received_data": data,
+            "recommendations": recommendations
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
