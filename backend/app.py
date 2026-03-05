@@ -46,6 +46,34 @@ def get_recommendations():
                 "priority": "High"
             })
 
+        # 2. Nitrogen Logic
+        if nitrogen < 30:
+             recommendations.append({
+                "material": "High-Nitrogen Fertilizer (e.g., Urea or Blood Meal)",
+                "reason": f"Nitrogen level is very low ({nitrogen}). Essential for leafy growth.",
+                "priority": "High"
+            })
+        elif nitrogen < 50:
+             recommendations.append({
+                "material": "Balanced NPK Fertilizer",
+                "reason": f"Nitrogen is slightly low ({nitrogen}). A balanced mix will support steady growth.",
+                "priority": "Medium"
+            })
+
+        # 3. Moisture Logic
+        if moisture < 30:
+             recommendations.append({
+                "material": "Organic Compost / Mulch",
+                "reason": f"Moisture retention is poor ({moisture}%). Compost will improve water holding capacity.",
+                "priority": "Medium"
+            })
+        elif moisture > 80:
+             recommendations.append({
+                "material": "Sand or Perlite Amendment",
+                "reason": f"Soil is waterlogged ({moisture}%). Needs improved drainage materials.",
+                "priority": "Medium"
+            })
+
         return jsonify({
             "status": "success",
             "received_data": data,
