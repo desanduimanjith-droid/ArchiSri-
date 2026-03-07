@@ -1,8 +1,6 @@
-#Import the packeges according to the folder
+//import the packeges according to the folder
 import 'package:flutter/material.dart';
 import 'package:archisri_1/main_page1.dart';
-
-
 
 void main() {
   runApp(const MainApp());
@@ -15,11 +13,9 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
-        );
-      
-    }
+    );
   }
-
+}
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
