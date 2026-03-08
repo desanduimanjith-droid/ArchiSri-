@@ -51,3 +51,7 @@ venv/
 __pycache__/
 venv/
 __pycache__/
+venv/
+__pycache__/
+build/
+.dart_tool/
