@@ -47,3 +47,5 @@ app.*.map.json
 # Ignore that useless file
 backend/requirements.txt
 frontEnd/README.md
+venv/
+__pycache__/
