@@ -12,9 +12,9 @@ def home():
         "project": "ArchiSir - AI Blueprint Service (OpenAI Version)"
     })
 
-# ===== Register blueprint =====
+#  Register blueprint for API routes
 app.register_blueprint(blueprint_api)
 
 if __name__ == "__main__":
-    print("🔥 Starting Flask app...")
+    print("Starting Flask app...")
     app.run(debug=True)
