@@ -1,4 +1,4 @@
-# app.py
+# app.py - Main entry point 
 from flask import Flask, jsonify
 from routes.blueprint import blueprint_api  # make sure the blueprint name matches your file
 
