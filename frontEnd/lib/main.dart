@@ -9,10 +9,18 @@ import 'package:archisri_1/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  
+  // Launch the App UI immediately to prevent black screen hangs
   runApp(const MainApp());
+
+  // Initialize Firebase in the background
+  Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ).then((_) {
+    print("Firebase Initialized Successfully");
+  }).catchError((e) {
+    print('Firebase initialization error: $e');
+  });
 }
 
 class MainApp extends StatelessWidget {
@@ -26,14 +34,3 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
-    );
-  }
-}
