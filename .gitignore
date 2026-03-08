@@ -49,3 +49,5 @@ backend/requirements.txt
 frontEnd/README.md
 venv/
 __pycache__/
+venv/
+__pycache__/
