@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:archisri_1/feature_1_part5.dart';
 
 class Feature1Part4 extends StatefulWidget {
   
@@ -265,6 +266,10 @@ class _Feature1Part4State extends State<Feature1Part4> {
                                 // Handle next action
                                 
                                 print('Data selected in Part 3 (Rooms): $selectedRooms'); 
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const Feature1Part5()),
+                                );
                               },
                             
                         style: ElevatedButton.styleFrom(

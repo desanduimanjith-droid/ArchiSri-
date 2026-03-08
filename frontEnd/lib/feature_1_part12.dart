@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:archisri_1/feature_1_dart13.dart';
 
 //bathroom type selection screen
 
-class Feature1Part6 extends StatefulWidget {
-  const Feature1Part6({super.key});
+class Feature1Part12 extends StatefulWidget {
+  const Feature1Part12({super.key});
 
   @override
-  State<Feature1Part6> createState() => _Feature1Part6State();
+  State<Feature1Part12> createState() => _Feature1Part12State();
 }
 
-class _Feature1Part6State extends State<Feature1Part6> {
+class _Feature1Part12State extends State<Feature1Part12> {
   double currentStep = 5;
   final double totalSteps = 8;
   List<String> selectedRooms = [];
@@ -259,6 +260,10 @@ class _Feature1Part6State extends State<Feature1Part6> {
                             ? () {
                                 // Handle next action
                                 print('Selected rooms: $selectedRooms');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const Feature1Part13()),
+                                );
                               }
                             : null,
                         style: ElevatedButton.styleFrom(
