@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
+
 //bathroom type selection screen
 
-class Feature1Part6 extends StatefulWidget {
-  const Feature1Part6({super.key});
+class Feature1Part7 extends StatefulWidget {
+  const Feature1Part7({super.key});
 
   @override
-  State<Feature1Part6> createState() => _Feature1Part6State();
+  State<Feature1Part7>createState() => _Feature1Part7State();
 }
 
-class _Feature1Part6State extends State<Feature1Part6> {
+class _Feature1Part7State extends State<Feature1Part7>{
   double currentStep = 4;
   final double totalSteps = 8;
   List<String> selectedRooms = [];

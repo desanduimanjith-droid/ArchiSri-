@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:archisri_1/feature_1_part7.dart';
+import 'package:archisri_1/feature_1_part5.dart';
+import 'package:archisri_1/feature_1_part6.dart';
+
+
+
 // 2nd floor room type selection screen
 
 class Feature1Part4 extends StatefulWidget {
+  final List<String> remainingFlow; 
+  const Feature1Part4({super.key, required this.remainingFlow});
   
 
-  // 2. Update the constructor to require this data
-  const Feature1Part4({
-    super.key, 
-    
-  });
-
+ 
   @override
   State<Feature1Part4> createState() => _Feature1Part4State();
 }
@@ -261,12 +264,29 @@ class _Feature1Part4State extends State<Feature1Part4> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: 
+                        onPressed: selectedRooms.isNotEmpty?
                              () {
                                 // Handle next action
+                                if (widget.remainingFlow.isNotEmpty) {
+                                    String nextFloor = widget.remainingFlow.first;
+                                    List<String> nextRemaining = widget.remainingFlow.sublist(1);
+
+                                    Widget nextScreen;
+                                    if (nextFloor == 'third'){
+                                     nextScreen = Feature1Part5(remainingFlow: nextRemaining);
+                                    }else if (nextFloor == 'fourth'){ nextScreen =Feature1Part6(remainingFlow: nextRemaining);
+                                    }else { nextScreen     = const Feature1Part7(); 
+                                    }
+
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => nextScreen));
+                                  }else{
+                                    
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Feature1Part7()));
+                                  }
+
                                 
-                                print('Data selected in Part 3 (Rooms): $selectedRooms'); 
-                              },
+                              
+                              } : null,
                             
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:archisri_1/feature_1_part7.dart';
+import 'package:archisri_1/feature_1_part6.dart';
+
 // 3rd floor room type selection screen
 
 class Feature1Part5 extends StatefulWidget {
-  const Feature1Part5({super.key});
+  final List<String> remainingFlow; 
+  const Feature1Part5({super.key, required this.remainingFlow});
 
   @override
   State<Feature1Part5> createState() => _Feature1Part5State();
@@ -258,7 +262,24 @@ class _Feature1Part5State extends State<Feature1Part5> {
                         onPressed: selectedRooms.isNotEmpty
                             ? () {
                                 // Handle next action
-                                print('Selected rooms: $selectedRooms');
+                                 if (widget.remainingFlow.isNotEmpty) {
+                                    String nextFloor = widget.remainingFlow.first;
+                                    List<String> nextRemaining = widget.remainingFlow.sublist(1);
+
+                                    Widget nextScreen;
+                                    if (nextFloor == 'fourth'){
+                                     nextScreen = Feature1Part6(remainingFlow: nextRemaining);
+                                      }  else {
+                                      nextScreen = const Feature1Part7(); 
+                                      }
+
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => nextScreen));
+                                  } else {
+                                    
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Feature1Part7()));
+                                  }
+
+                               
                               }
                             : null,
                         style: ElevatedButton.styleFrom(

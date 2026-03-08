@@ -1,8 +1,14 @@
+import 'package:archisri_1/feature_1_part4.dart';
 import 'package:flutter/material.dart';
-import 'package:archisri_1/feature_1_part17.dart';
+import 'package:archisri_1/feature_1_part5.dart';
+import 'package:archisri_1/feature_1_part6.dart';
+import 'package:archisri_1/feature_1_part7.dart';
+
+
 
 class Feature1Part3 extends StatefulWidget {
-  const Feature1Part3({super.key});
+  final List<String> remainingFlow;
+  const Feature1Part3({super.key, required this.remainingFlow });
 
   @override
   State<Feature1Part3> createState() => _Feature1Part3State();
@@ -11,7 +17,7 @@ class Feature1Part3 extends StatefulWidget {
 class _Feature1Part3State extends State<Feature1Part3> {
   double currentStep = 3;
   final double totalSteps = 8;
-  List<String> selectedOptions = [];
+  List<String> selectedRooms= [];
 
   final List<Map<String, dynamic>> floorOptions = [
     {'name': 'Single Room', 'image': Image(image: AssetImage('assets/images/bedroom.png'),  fit: BoxFit.contain)},
@@ -141,7 +147,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedOptions.contains(style['name']);
+                        final isSelected = selectedRooms. contains(style['name']);
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -150,9 +156,9 @@ class _Feature1Part3State extends State<Feature1Part3> {
                           onTap: () {
                             setState(() {
                               if (isSelected) {
-                                selectedOptions.remove(style['name']);
+                                selectedRooms.remove(style['name']);
                               } else {
-                                selectedOptions.add(style['name']);
+                                selectedRooms.add(style['name']);
                               }
                             });
                           },
@@ -255,19 +261,34 @@ class _Feature1Part3State extends State<Feature1Part3> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: 
+                        onPressed: selectedRooms.isNotEmpty ?
                              () {
 
                                   // Handle next action
-                                  print('Selected options: $selectedOptions');
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Feature1Part17(),
-                                    ),
-                                  );
-                                
-                              },
+
+                                  if(widget.remainingFlow. isNotEmpty){
+                                    String nextFloor =widget.remainingFlow.first;
+                                    List<String> nextRemaining = widget.remainingFlow.sublist(1);
+
+                                    Widget nextScreen;
+                                    if (nextFloor == 'second'){
+                                     nextScreen =Feature1Part4(remainingFlow :nextRemaining);
+                                      }  else if (nextFloor == 'third') {
+                                      nextScreen = Feature1Part5(remainingFlow: nextRemaining);
+                                        }  else if (nextFloor == 'fourth'){
+                                         nextScreen = Feature1Part6(remainingFlow: nextRemaining);
+                                          }  else {
+                                          nextScreen = const Feature1Part7();
+                                          }
+
+                                    Navigator.push(context, MaterialPageRoute(builder:(context) => nextScreen));
+
+
+                                  } else{
+                                    Navigator.push(context, MaterialPageRoute(builder:(context) => const Feature1Part7()));
+                                  }
+                                  
+                              }: null,
                             
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),

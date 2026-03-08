@@ -12,6 +12,7 @@ class _Feature1Part1State extends State<Feature1Part1> {
   double currentStep = 1;
   final double totalSteps = 8;
   String? selectedStyle;
+  //final _style='name';
 
   final List<Map<String, dynamic>> houseStyles = [
     {'name': 'Modern', 'image': Image(image: AssetImage('assets/images/home.png'), fit: BoxFit.contain)},
@@ -53,6 +54,7 @@ class _Feature1Part1State extends State<Feature1Part1> {
                  
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
+                    
                     
                   ),
                   
@@ -149,7 +151,7 @@ class _Feature1Part1State extends State<Feature1Part1> {
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedStyle = style['name'];
+                               selectedStyle = style['name'];
                             });
                           },
                           child: Container(

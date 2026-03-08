@@ -167,8 +167,8 @@ class _Feature1Part17State extends State<Feature1Part17> {
                       children: [
                         const Text("Your Section", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                         const SizedBox(height: 10),
-                        _summaryRow("Floors", "2"),
-                        _summaryRow("Style", "Traditional"),
+                        _summaryRow("Floors", ""),
+                        _summaryRow("Style", ""),
                         _summaryRow("Size", "${_landSize.toInt()}sq ft"),
                       ],
                     ),
@@ -176,7 +176,8 @@ class _Feature1Part17State extends State<Feature1Part17> {
                   
                   const SizedBox(height: 30),
 
-                  // 4. Generate Button
+                  // . Generate Button
+
                   Center(
                     child: ElevatedButton.icon(
                       onPressed: () {},

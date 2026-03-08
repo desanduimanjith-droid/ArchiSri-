@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part3.dart';
+import 'package:archisri_1/feature_1_part4.dart';
+import 'package:archisri_1/feature_1_part5.dart';
+import 'package:archisri_1/feature_1_part6.dart';
+
 
 class Feature1Part2 extends StatefulWidget {
   const Feature1Part2({super.key});
@@ -11,9 +15,9 @@ class Feature1Part2 extends StatefulWidget {
 class _Feature1Part2State extends State<Feature1Part2> {
   double currentStep = 2;
   final double totalSteps = 8;
-  List<String> selectedOptions = [];
+  List<String> selectedFloors = [];
 
-  final List<Map<String, dynamic>> floorOptions = [
+  final List<Map<String, dynamic>> selectOptions = [
     {'name': 'Single Floor','name1':'Single story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
     {'name': 'Double Floor','name1':'2-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
     {'name': 'Triple Floor','name1':'3-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
@@ -21,6 +25,34 @@ class _Feature1Part2State extends State<Feature1Part2> {
     
 
   ];
+  void _navigateNext(BuildContext context, List<String> flow){
+                              if (flow.isEmpty) return;
+                              String nextFloor =flow.first;
+                              List<String> remainingFlow = flow.sublist(1);
+
+
+                              Widget nextScreen;
+                              switch (nextFloor) {
+                              case 'first':
+                                nextScreen = Feature1Part3(remainingFlow: remainingFlow);
+                                break;
+                              case 'second':
+                                nextScreen = Feature1Part4(remainingFlow: remainingFlow);
+                                break;
+                              case 'third':
+                                nextScreen = Feature1Part5(remainingFlow: remainingFlow);
+                                break;
+                              case 'fourth':
+                                nextScreen = Feature1Part6(remainingFlow: remainingFlow);
+                                break;
+                              default:
+                                return;
+                            }
+
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => nextScreen));
+
+
+                            }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +87,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                  
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
-                    
+
                   ),
                   
                 
@@ -138,10 +170,10 @@ class _Feature1Part2State extends State<Feature1Part2> {
                   Flexible(
                     child: ListView.builder(
                       
-                      itemCount: floorOptions.length,
+                      itemCount: selectOptions.length,
                       itemBuilder: (context, index) {
-                        final style = floorOptions[index];
-                        final isSelected = selectedOptions.contains(style['name']);
+                        final style = selectOptions[index];
+                        final isSelected = selectedFloors.contains(style['name']);
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -150,9 +182,9 @@ class _Feature1Part2State extends State<Feature1Part2> {
                           onTap: () {
                             setState(() {
                               if (isSelected) {
-                                selectedOptions.remove(style['name']);
+                                selectedFloors.remove(style['name']);
                               } else {
-                                selectedOptions.add(style['name']);
+                                selectedFloors.add(style['name']);
                               }
                             });
                           },
@@ -262,18 +294,25 @@ class _Feature1Part2State extends State<Feature1Part2> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: selectedOptions.isNotEmpty
+                        onPressed: selectOptions.isNotEmpty
                             ? () {
                                 // Handle next action
-                                print('Selected options: $selectedOptions');
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Feature1Part3(),
-                                  ),
-                                );
+
+                                List<String> flow =[];
+                                if(selectedFloors.contains('Single Floor')) flow.add('first');
+                                if(selectedFloors.contains('Double Floor')) flow.add('second');
+                                if(selectedFloors.contains('Triple Floor')) flow.add('third');
+                                if(selectedFloors.contains('Quadruple Floor')) flow.add('fourth');
+
+
+                               _navigateNext(context, flow);
+
                               }
                             : null,
+
+                            
+
+              
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,

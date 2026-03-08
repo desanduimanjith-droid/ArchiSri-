@@ -88,6 +88,7 @@ class MainContentPart extends StatefulWidget {
   State<MainContentPart> createState() => _MainContentPartState();
 }
 
+
 class _MainContentPartState extends State<MainContentPart> {
   bool showAll = false;
   bool startBuildClicked = false;
@@ -99,6 +100,79 @@ class _MainContentPartState extends State<MainContentPart> {
       startBuildClicked = false;
       isModified = false;
     });
+  }
+
+  //profile update function
+  void showProfileDetails() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CircleAvatar(
+              radius: 40,
+              backgroundColor: Color(0xFFD4A574),
+              child: Icon(Icons.person, size: 45, color: Colors.white),
+            ),
+            const SizedBox(height: 16),
+            const Text("Alex Architect", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text("alex.design@archisri.com", style: TextStyle(color: Colors.grey)),
+            const Divider(height: 32),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text("Account Settings"),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text("Logout", style: TextStyle(color: Colors.red)),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  //Notification click handler
+  void showNotifications(){
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Notifications"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            ListTile(
+              leading: Icon(Icons.check_circle, color: Color(0xFF22C55E)),
+              title: Text("AI House Plan Designer started!"),
+              subtitle: Text("Your plan will be ready in less than 2 minutes."),
+            ),
+            ListTile(
+              leading: Icon(Icons.warning, color: Color(0xFFF59E0B)),
+              title: Text("Project Update"),
+              subtitle: Text("Your 'Modern Villa' project has been updated."),
+            ),
+            ListTile(
+              leading: Icon(Icons.error, color: Color(0xFFEF4444)),
+              title: Text("Error"),
+              subtitle: Text("Failed to load your 'Beach Cottage' project."),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
   }
 
 
