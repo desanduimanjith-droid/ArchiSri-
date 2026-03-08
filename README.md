@@ -10,3 +10,4 @@ The application for the construction base
 Frontend part is base on the Flutter and the Back end part is base on Python flask
 
 For AI base blueprint we are using some OpenAi and API and generate the text to image 
+# ArchiSri Blueprint Generator
