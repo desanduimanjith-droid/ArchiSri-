@@ -88,7 +88,7 @@ FLOOR 3
 Entire drawing must fit inside the page with no cropping.
 """
 
-
+# API route to generate blueprint
 @blueprint_api.route("/blueprint", methods=["POST"])
 def generate_blueprint():
 
@@ -126,19 +126,21 @@ def generate_blueprint():
         result = client.images.generate(
             model="gpt-image-1",
             prompt=prompt,
-            size="1024x1536"
+            size="1024x1536" # portrait orientation for floor plans
         )
 
-        image_base64 = result.data[0].b64_json
-        image_bytes = base64.b64decode(image_base64)
+        image_base64 = result.data[0].b64_json # get the base64 string from the response
+        image_bytes = base64.b64decode(image_base64) # decode the base64 string to bytes
 
+        # Send the image bytes as a file response
         return send_file(
             BytesIO(image_bytes),
             mimetype="image/png",
             as_attachment=True,
             download_name="architectural_blueprint.png"
         )
-
+    
+    # Handle any exceptions and return an error response
     except Exception as e:
         return jsonify({
             "success": False,
