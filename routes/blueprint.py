@@ -15,7 +15,7 @@ if not OPENAI_API_KEY:
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-
+# Function to build the prompt for the image generation
 def build_prompt(num_floors, style, landsize, bedrooms=None, bathrooms=None, kitchen=None, living_room=None):
 
     return f"""
