@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "286258998209",
+    "project_id": "archi-sri-sign-in",
+    "storage_bucket": "archi-sri-sign-in.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286258998209:android:7532263c704f86d4eb5d40",
+        "android_client_info": {
+          "package_name": "com.example.archisri_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286258998209-191atsp9auc0a1k96pg7kfvnk2bqma6p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.archisri_1",
+            "certificate_hash": "106d28c6bd84284854779add38740c6fc5ad55c9"
+          }
+        },
+        {
+          "client_id": "286258998209-pjvck1trcci7db4786ed2ecrjlja94q5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB07msx9D6tNXS9RIOcVUER35hG03reFn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286258998209-pjvck1trcci7db4786ed2ecrjlja94q5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

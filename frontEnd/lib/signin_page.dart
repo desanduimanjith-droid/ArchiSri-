@@ -1,5 +1,8 @@
 import 'package:archisri_1/login_page.dart';
+import 'package:archisri_1/main_content_part.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -199,30 +202,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   
 
-  // Simulates the sign up action
-  void _handleSignUp() {
-     String name = _nameController.text;
-     String email = _emailController.text;
+  // Handles the sign up action using Firebase Auth and Firestore
+  Future<void> _handleSignUp() async {
+     String name = _nameController.text.trim();
+     String email = _emailController.text.trim();
      String pass = _passwordController.text;
      String confirmPass = _confirmPasswordController.text;
 
      if(name.isEmpty || email.isEmpty || pass.isEmpty) {
-       print("Error: Please fill all fields");
-       // Show snackbar in real app
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error: Please fill all fields")));
        return;
      }
 
      if(pass != confirmPass) {
-       print("Error: Passwords do not match");
-       // Show snackbar in real app
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error: Passwords do not match")));
        return;
      }
 
-     print("Sign Up Successful Details:");
-     print("Name: $name");
-     print("Email: $email");
-     print("Password: $pass");
-     // Proceed to next screen...
+     try {
+       // Create user with Firebase Auth
+       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+         email: email,
+         password: pass,
+       );
+
+       // Insert details to Firestore
+       await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+         'fullName': name,
+         'email': email,
+         'createdAt': FieldValue.serverTimestamp(),
+       });
+
+       if (!context.mounted) return;
+       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Sign Up Successful!")));
+       
+       // Navigate to MainContent instead of LoginPage
+       Navigator.pushReplacement(
+         context,
+         MaterialPageRoute(
+           builder: (context) => const MainContentPart(), 
+         ),
+       );
+     } on FirebaseAuthException catch (e) {
+       if (!context.mounted) return;
+       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.message}")));
+     } catch (e) {
+       if (!context.mounted) return;
+       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+     }
   }
 
   // Helper widget to build consistent text fields

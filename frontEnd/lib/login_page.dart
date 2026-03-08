@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/signin_page.dart';
+import 'package:archisri_1/main_content_part.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -144,9 +148,58 @@ class _SignInScreenState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             print("Sign In Clicked");
-                            // Add your login logic here
+                            try {
+                              final email = _emailController.text.trim();
+                              final password = _passwordController.text.trim();
+                              
+                              if (email.isEmpty || password.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Please enter email and password')),
+                                );
+                                return;
+                              }
+                              
+                              // Sign in with Firebase Authentication
+                              final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                                email: email,
+                                password: password,
+                              );
+
+                              // Navigate to home page on successful login
+                              if (userCredential.user != null && mounted) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MainContentPart(), 
+                                  ),
+                                );
+                              }
+                            } on FirebaseAuthException catch (e) {
+                              if (mounted) {
+                                String errorMessage = 'Authentication failed';
+                                if (e.code == 'user-not-found') {
+                                  errorMessage = 'No user found for that email.';
+                                } else if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
+                                  errorMessage = 'Wrong email or password.';
+                                } else if (e.message != null) {
+                                  errorMessage = e.message!;
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(errorMessage, style: const TextStyle(color: Colors.white)), 
+                                    backgroundColor: Colors.red
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error: $e')),
+                                );
+                              }
+                            }
                           },
                           child: const Text(
                             "Sign In",
@@ -205,7 +258,18 @@ class _SignInScreenState extends State<LoginPage> {
                         width: 28,
                         
                         ),
-                      onTap: () {
+                      onTap: () async {
+                        // Changed to match your defined method name
+                        final user = await _googleSignInGoogle(); 
+
+                        if(user != null){
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainContentPart(), 
+                            ),
+                          );
+                        }
                         print("Google Login Clicked");
                       },
                     ),
@@ -265,7 +329,31 @@ class _SignInScreenState extends State<LoginPage> {
       ),
     );
   }
-
+  // Added a '?' after UserCredential
+  Future<UserCredential?> _googleSignInGoogle() async { 
+    try {
+      if (kIsWeb) {
+        // Correct implementation for Flutter Web
+        GoogleAuthProvider authProvider = GoogleAuthProvider();
+        return await FirebaseAuth.instance.signInWithPopup(authProvider);
+      } else {
+        // Native Implementation (Android/iOS)
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+        if(googleUser == null){
+          return null;
+        }
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        return await FirebaseAuth.instance.signInWithCredential(credential);
+      }
+    } catch (e) {
+      print("Google Sign In Error: $e");
+      return null;
+    }
+  }
   // Helper widget to create the Social Buttons (Google/Facebook)
   Widget _socialButton({required String label, required Widget icon, required VoidCallback onTap}) {
     return Expanded(

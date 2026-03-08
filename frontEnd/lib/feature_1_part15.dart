@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'feature_1_part2.dart';
+import 'package:archisri_1/feature_1_dart16.dart';
 
 //living room selection screen (3rd floor living room)
 
-class Feature1Part1 extends StatefulWidget {
-  const Feature1Part1({super.key});
+class Feature1Part15 extends StatefulWidget {
+  const Feature1Part15({super.key});
 
   @override
-  State<Feature1Part1> createState() => _Feature1Part1State();
+  State<Feature1Part15> createState() => _Feature1Part15State();
 }
 
-class _Feature1Part1State extends State<Feature1Part1> {
+class _Feature1Part15State extends State<Feature1Part15> {
   double currentStep = 6;
   final double totalSteps = 8;
   List<String> selectedRooms = [];
@@ -218,7 +218,7 @@ class _Feature1Part1State extends State<Feature1Part1> {
                               print('Selected rooms: $selectedRooms');
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const Feature1Part2()),
+                                MaterialPageRoute(builder: (context) => const Feature1Part16()),
                               );
                             }
                           : null,

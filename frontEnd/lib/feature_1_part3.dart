@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:archisri_1/feature_1_part4.dart';
 
 class Feature1Part3 extends StatefulWidget {
   const Feature1Part3({
@@ -259,9 +260,10 @@ class _Feature1Part3State extends State<Feature1Part3> {
                       ElevatedButton(
                         onPressed: 
                              () {
-                                // Handle next action
-                                
-                              
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const Feature1Part4()),
+                                );
                               },
                             
                         style: ElevatedButton.styleFrom(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:archisri_1/feature_1_part7.dart';
 
 // Feature: Third-floor room selector
 // This file implements a UI step in the multi-step "AI House Plan Designer"
@@ -6,14 +7,14 @@ import 'package:flutter/material.dart';
 // progress information at the top. State is maintained locally in the
 // `StatefulWidget` below.
 
-class Feature1Part5 extends StatefulWidget {
-  const Feature1Part5({super.key});
+class Feature1Part6 extends StatefulWidget {
+  const Feature1Part6({super.key});
 
   @override
-  State<Feature1Part5> createState() => _Feature1Part5State();
+  State<Feature1Part6> createState() => _Feature1Part6State();
 }
 
-class _Feature1Part5State extends State<Feature1Part5> {
+class _Feature1Part6State extends State<Feature1Part6> {
   // currentStep: the current step index in the multi-step flow
   double currentStep = 3;
 
@@ -257,6 +258,10 @@ class _Feature1Part5State extends State<Feature1Part5> {
                                 // Handle next action (stub): in a real flow this
                                 // would navigate forward or save the selection.
                                 print('Selected floor: $selectedFloor');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const Feature1Part7()),
+                                );
                               }
                             : null,
                         style: ElevatedButton.styleFrom(
