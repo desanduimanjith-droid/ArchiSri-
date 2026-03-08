@@ -4,7 +4,7 @@ from routes.blueprint import blueprint_api  # make sure the blueprint name match
 
 app = Flask(__name__)
 
-# ===== Test route =====
+# Test route to confirm the backend is running
 @app.route("/")
 def home():
     return jsonify({
