@@ -1,4 +1,4 @@
-#include <Arduino.h>
+  #include <Arduino.h>
 
 // 1. Identify the Pin
 const int sensorPin = 34; // Yellow wire connected to D34
