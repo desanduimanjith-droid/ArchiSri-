@@ -2,9 +2,10 @@ import os
 from flask import Blueprint, request, send_file, jsonify
 from huggingface_hub import InferenceClient
 from PIL import ImageDraw, ImageFont
-from routes import auth_routes
 
 blueprint_api = Blueprint("blueprint_api", __name__)
+
+from routes import auth_routes
 
 # Get token from environment variable (SAFE way)
 HF_TOKEN = "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"

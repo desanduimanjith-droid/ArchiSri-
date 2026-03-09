@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/signin_page.dart';
 import 'package:archisri_1/main_content_part.dart';
+import 'package:archisri_1/main_page5.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -31,6 +32,25 @@ class _SignInScreenState extends State<LoginPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    tooltip: 'Back',
+                    onPressed: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainPage5(),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
                 const SizedBox(height: 40),
 
                 
