@@ -9,7 +9,6 @@ import os
 
 # Import database and models
 from database import init_db, seed_database, db
-import models
 
 # Import route blueprints
 from routes.constructors import constructors_bp
@@ -97,8 +96,6 @@ def create_app():
     
     
     with app.app_context():
-        # Create all tables
-        db.create_all()
         # Seed with sample data
         seed_database(app)
     

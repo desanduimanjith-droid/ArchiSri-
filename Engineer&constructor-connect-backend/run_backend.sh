@@ -3,7 +3,7 @@
 # Constructor Connect Backend - Run Script
 # This script automatically activates the virtual environment and starts the backend
 
-cd "$(dirname "$0")/backend" || exit
+cd "$(dirname "$0")" || exit
 
 # Check if virtual environment exists
 if [ ! -d "venv" ]; then
