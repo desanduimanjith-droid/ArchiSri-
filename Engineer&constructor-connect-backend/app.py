@@ -26,9 +26,9 @@ def create_app():
     # Initialize Flask app
     app = Flask(__name__)
     
-    # ===================================
+   
     # CONFIGURATION
-    # ===================================
+
     
     # Database configuration
     basedir = os.path.abspath(os.path.dirname(__file__))
@@ -36,9 +36,9 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = os.path.join(basedir, 'uploads')
     
-    # ===================================
+    
     # INITIALIZE EXTENSIONS
-    # ===================================
+   
     
     # Enable CORS for Flutter frontend
     CORS(app, resources={
@@ -52,17 +52,17 @@ def create_app():
     # Initialize database
     init_db(app)
     
-    # ===================================
+
     # REGISTER BLUEPRINTS
-    # ===================================
+
     
     app.register_blueprint(constructors_bp)
     app.register_blueprint(requests_bp)
     app.register_blueprint(engineers_bp)
     
-    # ===================================
+
     # ERROR HANDLERS
-    # ===================================
+
     
     @app.errorhandler(404)
     def not_found(error):
@@ -75,9 +75,9 @@ def create_app():
         db.session.rollback()
         return jsonify({'error': 'Internal server error'}), 500
     
-    # ===================================
+
     # HEALTH CHECK ENDPOINT
-    # ===================================
+
     
     @app.route('/api/health', methods=['GET'])
     def health_check():
@@ -92,9 +92,9 @@ def create_app():
         """Serve uploaded files"""
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     
-    # ===================================
+    
     # SEED DATABASE
-    # ===================================
+    
     
     with app.app_context():
         # Create all tables

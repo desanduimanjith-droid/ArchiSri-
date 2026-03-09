@@ -3,13 +3,6 @@ import 'package:url_launcher/url_launcher.dart';
 /// WhatsApp Helper - Opens WhatsApp with pre-filled message
 class WhatsAppHelper {
   /// Opens WhatsApp with the given phone number and optional message
-  /// 
-  /// Parameters:
-  /// - [phoneNumber]: Phone number in international format (e.g., +91XXXXXXXXXX)
-  /// - [message]: Optional pre-filled message text
-  /// 
-  /// Returns: true if WhatsApp was opened successfully, false otherwise
-  static Future<bool> openWhatsApp({
     required String phoneNumber,
     String? message,
   }) async {

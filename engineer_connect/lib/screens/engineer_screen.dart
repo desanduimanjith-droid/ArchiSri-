@@ -11,55 +11,6 @@ class EngineerHomeScreen extends StatefulWidget {
   State<EngineerHomeScreen> createState() => _EngineerHomeScreenState();
 }
 
-// After ApI intergration this want to be a Stateful widget to handle the API data 
-/* class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
-  // --- LOGIC VARIABLES ---
-  final ScrollController _scrollController = ScrollController();
-  List<Engineer> _engineers = [];
-  int _currentPage = 1;
-  bool _isLoading = false;
-  bool _hasMore = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchPage(); // Fetch first 20 engineers
-    
-    // Listen to scrolling to load more items
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.9) {
-        _fetchPage();
-      }
-    });
-  }
-
-  Future<void> _fetchPage() async {
-    if (_isLoading || !_hasMore) return;
-    setState(() => _isLoading = true);
-
-    try {
-      // Calling the service we created
-      final newItems = await ApiService().fetchEngineers(page: _currentPage);
-      setState(() {
-        _currentPage++;
-        _isLoading = false;
-        if (newItems.isEmpty) {
-          _hasMore = false;
-        } else {
-          _engineers.addAll(newItems);
-        }
-      });
-    } catch (e) {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-*/
 
 class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
   late Future<List<Engineer>> _engineersFuture;
