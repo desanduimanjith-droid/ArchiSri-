@@ -24,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       TextEditingController();
   final TextEditingController _experienceController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
+  final TextEditingController _rateController = TextEditingController();
 
   // Dropdown value for Specialization
   String? _selectedSpecialization;
@@ -47,6 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _registrationNumberController.dispose();
     _experienceController.dispose();
     _companyController.dispose();
+    _rateController.dispose();
     super.dispose();
   }
 
@@ -242,6 +244,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 16),
 
+                      _buildInputField(
+                        label: "Rate per Hour (LKR)",
+                        controller: _rateController,
+                        hint: "e.g. 1200",
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 16),
+
                       // Professional ID Upload Button
                       const Text(
                         "Professional ID Upload",
@@ -356,6 +366,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String registrationNo = _registrationNumberController.text.trim();
     String experience = _experienceController.text.trim();
     String company = _companyController.text.trim();
+    String ratePerHour = _rateController.text.trim();
 
     if (name.isEmpty ||
         email.isEmpty ||
@@ -392,6 +403,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             'specialization': _selectedSpecialization,
             'yearsOfExperience': experience,
             'company': company,
+            'ratePerHour': ratePerHour,
             'isVerified': false,
             'createdAt': FieldValue.serverTimestamp(),
           });
