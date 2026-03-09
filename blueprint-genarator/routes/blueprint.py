@@ -124,9 +124,10 @@ def generate_blueprint():
         )
 
         result = client.images.generate(
-            model="gpt-image-1",
+            model="dall-e-3",
             prompt=prompt,
-            size="1024x1536" # portrait orientation for floor plans
+            size="1024x1792", # portrait orientation for floor plans
+            response_format="b64_json"
         )
 
         image_base64 = result.data[0].b64_json # get the base64 string from the response

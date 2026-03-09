@@ -17,4 +17,4 @@ app.register_blueprint(blueprint_api)
 
 if __name__ == "__main__":
     print("Starting Flask app...")
-    app.run(debug=True)
+    app.run(debug=True, port=5002)

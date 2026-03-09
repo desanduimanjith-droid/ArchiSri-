@@ -1,4 +1,5 @@
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart';
 
 /// WhatsApp Helper - Opens WhatsApp with pre-filled message
 class WhatsAppHelper {
@@ -44,7 +45,7 @@ class WhatsAppHelper {
       
       return false;
     } catch (e) {
-      print('Error opening WhatsApp: $e');
+      debugPrint('Error opening WhatsApp: $e');
       return false;
     }
   }

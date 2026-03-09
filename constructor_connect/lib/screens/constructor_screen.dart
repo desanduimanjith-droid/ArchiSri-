@@ -669,7 +669,7 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
                     decoration: BoxDecoration(
                       color: const Color(0xFFF0F8FF),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFF4DA6FF).withOpacity(0.3)),
+                      border: Border.all(color: const Color(0xFF4DA6FF).withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       children: [
@@ -746,6 +746,7 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
           try {
             await launchUrl(emailLaunchUri);
           } catch (e) {
+            if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Could not open email: $e")),
             );
@@ -758,6 +759,7 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
           try {
             await launchUrl(phoneLaunchUri);
           } catch (e) {
+            if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Could not open phone: $e")),
             );
