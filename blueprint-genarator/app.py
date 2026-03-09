@@ -1,10 +1,8 @@
-# app.py - Main entry point 
 from flask import Flask, jsonify
-from routes.blueprint import blueprint_api  # make sure the blueprint name matches your file
+from routes.blueprint import blueprint_api
 
 app = Flask(__name__)
 
-# Test route to confirm the backend is running
 @app.route("/")
 def home():
     return jsonify({
@@ -12,7 +10,6 @@ def home():
         "project": "ArchiSir - AI Blueprint Service (OpenAI Version)"
     })
 
-#  Register blueprint for API routes
 app.register_blueprint(blueprint_api)
 
 if __name__ == "__main__":
