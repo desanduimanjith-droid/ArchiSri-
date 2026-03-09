@@ -11,8 +11,8 @@ class ArchieSriApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF4EBD7), // Default cream color for bg
-        fontFamily: 'Roboto', // Default text font
+        scaffoldBackgroundColor: const Color(0xFFF4EBD7),
+        fontFamily: 'Roboto',
         useMaterial3: true,
       ),
       home: const HomeScreen(),

@@ -1,4 +1,3 @@
-// This defines the Constructor model 
 class Constructor {
   final int id;
   final String name;
@@ -26,15 +25,13 @@ class Constructor {
     required this.phone,
   });
 
-  // This converts JSON from the backend into a Constructor object
   factory Constructor.fromJson(Map<String, dynamic> json) {
     return Constructor(
       id: json['id'] ?? 0,
       name: json['name'] ?? 'Unknown',
       specialty: json['specialty'] ?? 'General',
       description: json['description'] ?? '',
-      // Backend might send doubles as ints, so we use .toDouble()
-      rating: (json['rating'] ?? 0.0).toDouble(), 
+      rating: (json['rating'] ?? 0.0).toDouble(),
       location: json['location'] ?? 'Not specified',
       projects: json['projects'] ?? 0,
       reviews: json['reviews'] ?? 0,
@@ -45,8 +42,6 @@ class Constructor {
   }
 }
 
-  
-// Dummy data for testing purposes
 final List<Constructor> dummyData = [
   Constructor(
     id: 1,

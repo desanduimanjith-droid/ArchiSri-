@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/constructor_model.dart'; // Ensure this file has 'dummyData'
+import '../models/constructor_model.dart';
 import '../service/api_service.dart';
 import '../service/whatsapp_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,14 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize the API call once
     _constructorsFuture = ApiService().fetchConstructors().catchError((_) {
-      // Fallback to dummy data if API fails
       return dummyData;
     });
   }
 
-  // Filter constructors based on search and filters
   List<Constructor> _filterConstructors(List<Constructor> constructors) {
     return constructors.where((constructor) {
       final matchesSearch = _searchQuery.isEmpty ||
@@ -53,7 +50,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }).toList();
   }
 
-  // Function to open the filter pop-up
   void _openFilter() {
     showModalBottomSheet(
       context: context,
@@ -79,13 +75,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Column(
         children: [
-          // The header banner
           Container(
             width: double.infinity,
             height: 200,
             padding: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
-              color: Color(0xFFCABF58), // The light green background
+              color: Color(0xFFCABF58),
             ),
             child: Row(
               children: [
@@ -94,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 120,
                   width: 120,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFDD8436), // The icon box color
+                    color: const Color(0xFFDD8436),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Icon(
@@ -134,7 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // --- SEARCH BAR & FILTER BUTTON ---
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -161,7 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                // The Filter Icon
                 GestureDetector(
                   onTap: _openFilter,
                   child: Container(
@@ -178,7 +171,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // The constructors list count
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Align(
@@ -197,7 +189,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 10),
 
-          // Fetch constructors from API
           Expanded(
             child: FutureBuilder<List<Constructor>>(
               future: _constructorsFuture,
@@ -261,7 +252,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// Constructor Card Widget
 class ConstructorCard extends StatelessWidget {
   final Constructor item;
   const ConstructorCard({super.key, required this.item});
@@ -277,7 +267,6 @@ class ConstructorCard extends StatelessWidget {
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
           ),
-          // Pop up constructorDetailSheet
           builder: (context) => ConstructorDetailSheet(item: item),
         );
       },
@@ -355,7 +344,6 @@ class ConstructorCard extends StatelessWidget {
   }
 }
 
-// The details sheet that opens when tap a constructor
 class ConstructorDetailSheet extends StatefulWidget {
   final Constructor item;
   const ConstructorDetailSheet({super.key, required this.item});
@@ -397,12 +385,10 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
             Center(child: Container(width: 80, height: 6, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
             const SizedBox(height: 16),
             
-            // Content
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // 1. Header with "Verified" badge
                 Row(
                   children: [
                     ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.network(widget.item.imageUrl, width: 100, height: 100, fit: BoxFit.cover)),
@@ -449,7 +435,6 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
                   const Divider(height: 1),
                   const SizedBox(height: 10),
 
-                  // 2. ABOUT SECTION
                   const Text(
                     "About",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -464,7 +449,6 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
                   const Divider(height: 1),
                   const SizedBox(height: 10),
 
-                  // 3. STATS ROW
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Row(
@@ -481,7 +465,6 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
                   const Divider(height: 1),
                   const SizedBox(height: 10),
 
-                  // 4. CONTACT INFORMATION SECTION
                   const Text(
                     "Contact Information",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -506,7 +489,6 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
                   const Divider(height: 1),
                   const SizedBox(height: 16),
 
-                  // 5. TIP NOTICE
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -533,11 +515,10 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
 
             const SizedBox(height: 4),
 
-            // 6. BOTTOM BUTTON
             ElevatedButton.icon(
               onPressed: _connectWhatsApp,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF25D366), // WhatsApp green
+                backgroundColor: const Color(0xFF25D366),
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 minimumSize: const Size(double.infinity, 48),
@@ -560,7 +541,6 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
     );
   }
 
-  // Helper for Rating/Projects/Location stats
   Widget _buildStatColumn(String label, String value) {
     return Column(
       children: [
@@ -571,7 +551,6 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
     );
   }
 
-  // Helper for Contact Cards
   Widget _buildContactCard(
     IconData icon,
     String label,
@@ -640,7 +619,6 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
   }
 }
 
-// Filter Sheet Widget
 class FilterSheet extends StatefulWidget {
   const FilterSheet({super.key});
 
@@ -649,13 +627,12 @@ class FilterSheet extends StatefulWidget {
 }
 
 class _FilterSheetState extends State<FilterSheet> {
-  bool isVerified =
-      false; // Tracks the checkbox state for Verified Constructors
-  bool isResidential = false; // Tracks the checkbox state for Residential
-  bool isCommercial = false; // Tracks the checkbox state for Commercial
-  bool isIndustrial = false; // Tracks the checkbox state for Industrial
-  bool isSustainable = false; // Tracks the checkbox state for Sustainable
-  bool isRestoration = false; // Tracks the checkbox state for Restoration
+  bool isVerified = false;
+  bool isResidential = false;
+  bool isCommercial = false;
+  bool isIndustrial = false;
+  bool isSustainable = false;
+  bool isRestoration = false;
   final List<String> _districts = [
     "Colombo",
     "Gampaha",
@@ -683,7 +660,7 @@ class _FilterSheetState extends State<FilterSheet> {
     "Ratnapura",
     "Kegalle",
   ];
-  String? selectedDistrict; //  to store the selected district
+  String? selectedDistrict;
   double _currentRating = 4.0;
 
   @override
@@ -694,7 +671,6 @@ class _FilterSheetState extends State<FilterSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // The top drag bar
           Center(
             child: Container(
               width: 80,
@@ -712,10 +688,9 @@ class _FilterSheetState extends State<FilterSheet> {
           ),
           const Divider(),
 
-          // This Row handles the right side check box alignment
           Row(
             mainAxisAlignment: MainAxisAlignment
-                .spaceBetween, // This pushes items to the far ends
+                .spaceBetween,
             children: [
               const Text(
                 "Verified Constructors Only",
@@ -741,13 +716,12 @@ class _FilterSheetState extends State<FilterSheet> {
           ),
           const SizedBox(height: 10),
 
-          // Residential filter with its own checkbox
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Residential", style: TextStyle(fontSize: 14)),
               Checkbox(
-                value: isResidential, // Uses the separate residential variable
+                value: isResidential,
                 activeColor: Colors.black,
                 visualDensity: const VisualDensity(vertical: -4),
                 onChanged: (bool? value) {
@@ -759,13 +733,12 @@ class _FilterSheetState extends State<FilterSheet> {
             ],
           ),
 
-          // Commercial filter with its own checkbox
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Commercial", style: TextStyle(fontSize: 14)),
               Checkbox(
-                value: isCommercial, // Uses the separate commercial variable
+                value: isCommercial,
                 activeColor: Colors.black,
                 visualDensity: const VisualDensity(vertical: -4),
                 onChanged: (bool? value) {
@@ -777,13 +750,12 @@ class _FilterSheetState extends State<FilterSheet> {
             ],
           ),
 
-          // Industrial filter with its own checkbox
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Industrial", style: TextStyle(fontSize: 14)),
               Checkbox(
-                value: isIndustrial, // Uses the separate industrial variable
+                value: isIndustrial,
                 activeColor: Colors.black,
                 visualDensity: const VisualDensity(vertical: -4),
                 onChanged: (bool? value) {
@@ -795,13 +767,12 @@ class _FilterSheetState extends State<FilterSheet> {
             ],
           ),
 
-          // Sustainable filter with its own checkbox
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Sustainable", style: TextStyle(fontSize: 14)),
               Checkbox(
-                value: isSustainable, // Uses the separate sustainable variable
+                value: isSustainable,
                 activeColor: Colors.black,
                 visualDensity: const VisualDensity(vertical: -4),
                 onChanged: (bool? value) {
@@ -813,13 +784,12 @@ class _FilterSheetState extends State<FilterSheet> {
             ],
           ),
 
-          // Restoration filter with its own checkbox
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Restoration", style: TextStyle(fontSize: 14)),
               Checkbox(
-                value: isRestoration, // Uses the separate restoration variable
+                value: isRestoration,
                 activeColor: Colors.black,
                 visualDensity: const VisualDensity(vertical: -4),
                 onChanged: (bool? value) {
@@ -835,7 +805,6 @@ class _FilterSheetState extends State<FilterSheet> {
 
           const Divider(),
           const SizedBox(height: 10),
-          // Location dropdown
           const Text(
             "Location",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -880,7 +849,7 @@ class _FilterSheetState extends State<FilterSheet> {
             max: 5,
             divisions: 5,
             label: _currentRating.toString(),
-            activeColor: const Color(0xFFCABF58), // Using your header color
+            activeColor: const Color(0xFFCABF58),
             onChanged: (v) {
               setState(() {
                 _currentRating = v;
@@ -898,7 +867,6 @@ class _FilterSheetState extends State<FilterSheet> {
               if (isSustainable) specialties.add("Eco-Friendly");
               if (isRestoration) specialties.add("Restoration");
 
-              // Pop with filter values
               Navigator.pop(context, {
                 'specialties': specialties,
                 'location': selectedDistrict ?? "",

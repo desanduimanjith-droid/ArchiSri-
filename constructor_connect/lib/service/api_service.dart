@@ -3,10 +3,6 @@ import 'package:http/http.dart' as http;
 import '../models/constructor_model.dart';
 
 class ApiService {
-  //  IP address/URL  of API backend
-  // For iOS Simulator: use localhost with port 8000
-  // For Android Emulator: use 10.0.2.2:8000
-  // For real devices: use your machine's IP address (e.g., http://192.168.1.100:8000/api)
   static const String baseUrl = "http://10.31.27.46:8000/api";
 
   Future<List<Constructor>> fetchConstructors({String? location}) async {
