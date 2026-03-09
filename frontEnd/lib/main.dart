@@ -2,25 +2,22 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/main_page1.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-
-
 import 'package:archisri_1/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Launch the App UI immediately to prevent black screen hangs
   runApp(const MainApp());
 
   // Initialize Firebase in the background
-  Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  ).then((_) {
-    print("Firebase Initialized Successfully");
-  }).catchError((e) {
-    print('Firebase initialization error: $e');
-  });
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
+      .then((_) {
+        print("Firebase Initialized Successfully");
+      })
+      .catchError((e) {
+        print('Firebase initialization error: $e');
+      });
 }
 
 class MainApp extends StatelessWidget {
@@ -33,4 +30,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-

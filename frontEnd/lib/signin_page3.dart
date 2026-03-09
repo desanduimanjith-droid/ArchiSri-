@@ -14,14 +14,17 @@ class signin_page3 extends StatefulWidget {
 class _CompanySignUpScreenState extends State<signin_page3> {
   // Required Text Controllers
   final TextEditingController _companyNameController = TextEditingController();
-  final TextEditingController _businessRegNoController = TextEditingController();
+  final TextEditingController _businessRegNoController =
+      TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactPersonController = TextEditingController();
+  final TextEditingController _contactPersonController =
+      TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _experienceController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   // Dropdown value for Construction Type
   String? _selectedConstructionType;
@@ -32,7 +35,7 @@ class _CompanySignUpScreenState extends State<signin_page3> {
     'Infrastructure',
     'Mixed-Use',
     'Renovation & Remodeling',
-    'Other'
+    'Other',
   ];
 
   @override
@@ -122,7 +125,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                     children: [
                       const Text(
                         "Company Details",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.indigo),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.indigo,
+                        ),
                       ),
                       const SizedBox(height: 16),
 
@@ -148,7 +155,7 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                       ),
                       const SizedBox(height: 16),
 
-                        _buildInputField(
+                      _buildInputField(
                         label: "Company Address",
                         controller: _addressController,
                         hint: "123 Main St, City",
@@ -156,11 +163,17 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                       const SizedBox(height: 16),
 
                       // Construction Type Dropdown
-                      const Text("Construction Type", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        "Construction Type",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: Colors.grey.shade300),
@@ -195,13 +208,19 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                       const SizedBox(height: 16),
 
                       // Business Registration Upload Button
-                      const Text("Registration Certificate", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        "Registration Certificate",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300, style: BorderStyle.solid),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                            style: BorderStyle.solid,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                           color: Colors.grey.shade50,
                         ),
@@ -209,9 +228,17 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                           onPressed: () {
                             // TODO: Add file picker logic
                             ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Certificate upload logic coming soon!")));
+                              const SnackBar(
+                                content: Text(
+                                  "Certificate upload logic coming soon!",
+                                ),
+                              ),
+                            );
                           },
-                          icon: const Icon(Icons.upload_file, color: Colors.indigo),
+                          icon: const Icon(
+                            Icons.upload_file,
+                            color: Colors.indigo,
+                          ),
                           label: const Text(
                             "Upload Business Registration",
                             style: TextStyle(color: Colors.black87),
@@ -227,7 +254,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                       // --- CONTACT DETAILS ---
                       const Text(
                         "Representative Details",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.indigo),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.indigo,
+                        ),
                       ),
                       const SizedBox(height: 16),
 
@@ -268,7 +299,9 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2D2D2D), // Dark charcoal
+                            backgroundColor: const Color(
+                              0xFF2D2D2D,
+                            ), // Dark charcoal
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -297,7 +330,9 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                       onTap: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const login_page3()),
+                          MaterialPageRoute(
+                            builder: (context) => const login_page3(),
+                          ),
                         );
                       },
                       child: const Text(
@@ -359,19 +394,22 @@ class _CompanySignUpScreenState extends State<signin_page3> {
           .createUserWithEmailAndPassword(email: email, password: pass);
 
       // Save company details into Firestore
-      await FirebaseFirestore.instance.collection('companies').doc(userCredential.user!.uid).set({
-        'companyName': companyName,
-        'businessRegistrationNumber': regNo,
-        'email': email,
-        'contactPersonName': contactPerson,
-        'phoneNumber': phone,
-        'companyAddress': address,
-        'constructionType': _selectedConstructionType,
-        'yearsOfExperience': experience,
-        'role': 'Construction Company', 
-        'isVerified': false, 
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      await FirebaseFirestore.instance
+          .collection('companies')
+          .doc(userCredential.user!.uid)
+          .set({
+            'companyName': companyName,
+            'businessRegistrationNumber': regNo,
+            'email': email,
+            'contactPersonName': contactPerson,
+            'phoneNumber': phone,
+            'companyAddress': address,
+            'constructionType': _selectedConstructionType,
+            'yearsOfExperience': experience,
+            'role': 'Construction Company',
+            'isVerified': false,
+            'createdAt': FieldValue.serverTimestamp(),
+          });
 
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -381,16 +419,20 @@ class _CompanySignUpScreenState extends State<signin_page3> {
       // Auto-navigate to MainContent upon successful registration
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const connection_Construction()),
+        MaterialPageRoute(
+          builder: (context) => const connection_Construction(),
+        ),
       );
     } on FirebaseAuthException catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Auth Error: ${e.message}")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Auth Error: ${e.message}")));
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Error: $e")));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
     }
   }
 
@@ -414,7 +456,10 @@ class _CompanySignUpScreenState extends State<signin_page3> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey[400]),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey.shade300),

@@ -16,13 +16,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   // Controllers for Engineer-specific fields
-  final TextEditingController _registrationNumberController = TextEditingController();
+  final TextEditingController _registrationNumberController =
+      TextEditingController();
   final TextEditingController _experienceController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
-  
+
   // Dropdown value for Specialization
   String? _selectedSpecialization;
   final List<String> _specializations = [
@@ -32,7 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     'Geotechnical Engineering',
     'Electrical Engineering',
     'Mechanical Engineering',
-    'Other'
+    'Other',
   ];
 
   @override
@@ -65,9 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             // Go back to Engineer Login Screen
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                builder: (context) => const login_page2(), 
-              ),
+              MaterialPageRoute(builder: (context) => const login_page2()),
             );
           },
         ),
@@ -85,14 +85,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   'assets/images/ARCHISHI.png',
                   height: 125.0,
                   width: 125.0,
-                ), 
+                ),
                 const Text(
                   "Engineer Registration",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'Serif', 
+                    fontFamily: 'Serif',
                     color: Colors.black,
                   ),
                 ),
@@ -127,37 +127,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // --- STANDARD FIELDS ---
-                      const Text("Personal Details", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.indigo)),
-                      const SizedBox(height: 16),
-                      
-                      _buildInputField(
-                        label: "Full Name", 
-                        controller: _nameController, 
-                        hint: "John Doe"
+                      const Text(
+                        "Personal Details",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.indigo,
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       _buildInputField(
-                        label: "Email", 
-                        controller: _emailController, 
+                        label: "Full Name",
+                        controller: _nameController,
+                        hint: "John Doe",
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildInputField(
+                        label: "Email",
+                        controller: _emailController,
                         hint: "engineer@email.com",
                         keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 16),
 
                       _buildInputField(
-                        label: "Password", 
-                        controller: _passwordController, 
+                        label: "Password",
+                        controller: _passwordController,
                         hint: "********",
-                        isPassword: true
+                        isPassword: true,
                       ),
                       const SizedBox(height: 16),
-                      
+
                       _buildInputField(
-                        label: "Confirm Password", 
-                        controller: _confirmPasswordController, 
+                        label: "Confirm Password",
+                        controller: _confirmPasswordController,
                         hint: "********",
-                        isPassword: true
+                        isPassword: true,
                       ),
 
                       const Padding(
@@ -166,22 +173,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
 
                       // --- PROFESSIONAL FIELDS ---
-                      const Text("Professional Details", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.indigo)),
+                      const Text(
+                        "Professional Details",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.indigo,
+                        ),
+                      ),
                       const SizedBox(height: 16),
-                      
+
                       _buildInputField(
-                        label: "Engineer Registration Number", 
-                        controller: _registrationNumberController, 
-                        hint: "e.g. EC-123456"
+                        label: "Engineer Registration Number",
+                        controller: _registrationNumberController,
+                        hint: "e.g. EC-123456",
                       ),
                       const SizedBox(height: 16),
 
                       // Dropdown for Specialization
-                      const Text("Engineering Field / Specialization", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        "Engineering Field / Specialization",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: Colors.grey.shade300),
@@ -208,28 +228,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 16),
 
                       _buildInputField(
-                        label: "Years of Experience", 
-                        controller: _experienceController, 
+                        label: "Years of Experience",
+                        controller: _experienceController,
                         hint: "e.g. 5",
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 16),
 
                       _buildInputField(
-                        label: "Engineering Company / Organization", 
-                        controller: _companyController, 
-                        hint: "e.g. BuildPro Corp"
+                        label: "Engineering Company / Organization",
+                        controller: _companyController,
+                        hint: "e.g. BuildPro Corp",
                       ),
                       const SizedBox(height: 16),
 
                       // Professional ID Upload Button
-                      const Text("Professional ID Upload", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        "Professional ID Upload",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300, style: BorderStyle.solid),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                            style: BorderStyle.solid,
+                          ),
                           borderRadius: BorderRadius.circular(8),
                           color: Colors.grey.shade50,
                         ),
@@ -237,9 +263,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           onPressed: () {
                             // TODO: Implement file picking logic
                             print("Upload Professional ID Initialized");
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("File upload logic coming soon!")));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("File upload logic coming soon!"),
+                              ),
+                            );
                           },
-                          icon: const Icon(Icons.upload_file, color: Colors.indigo),
+                          icon: const Icon(
+                            Icons.upload_file,
+                            color: Colors.indigo,
+                          ),
                           label: const Text(
                             "Upload License / IESL Card / Company ID",
                             style: TextStyle(color: Colors.black87),
@@ -255,7 +288,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2D2D2D), // Dark charcoal
+                            backgroundColor: const Color(
+                              0xFF2D2D2D,
+                            ), // Dark charcoal
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -287,14 +322,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const login_page2(), 
+                            builder: (context) => const login_page2(),
                           ),
                         );
                       },
                       child: const Text(
                         "Sign In Here",
                         style: TextStyle(
-                          color: Colors.pinkAccent, 
+                          color: Colors.pinkAccent,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -312,69 +347,82 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // Handles the sign up action using Firebase Auth and Firestore
   Future<void> _handleSignUp() async {
-     String name = _nameController.text.trim();
-     String email = _emailController.text.trim();
-     String pass = _passwordController.text;
-     String confirmPass = _confirmPasswordController.text;
-     
-     // Professional details
-     String registrationNo = _registrationNumberController.text.trim();
-     String experience = _experienceController.text.trim();
-     String company = _companyController.text.trim();
+    String name = _nameController.text.trim();
+    String email = _emailController.text.trim();
+    String pass = _passwordController.text;
+    String confirmPass = _confirmPasswordController.text;
 
-     if (name.isEmpty || email.isEmpty || pass.isEmpty || registrationNo.isEmpty || _selectedSpecialization == null) {
-       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error: Please fill all required fields")));
-       return;
-     }
+    // Professional details
+    String registrationNo = _registrationNumberController.text.trim();
+    String experience = _experienceController.text.trim();
+    String company = _companyController.text.trim();
 
-     if (pass != confirmPass) {
-       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error: Passwords do not match")));
-       return;
-     }
+    if (name.isEmpty ||
+        email.isEmpty ||
+        pass.isEmpty ||
+        registrationNo.isEmpty ||
+        _selectedSpecialization == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error: Please fill all required fields")),
+      );
+      return;
+    }
 
-     try {
-       // Create user with Firebase Auth
-       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-         email: email,
-         password: pass,
-       );
+    if (pass != confirmPass) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error: Passwords do not match")),
+      );
+      return;
+    }
 
-       // Insert details to Firestore under a specific 'engineers' collection
-       await FirebaseFirestore.instance.collection('engineers').doc(userCredential.user!.uid).set({
-         'fullName': name,
-         'email': email,
-         'role': 'Engineer', // Tagging the role explicitly
-         'registrationNumber': registrationNo,
-         'specialization': _selectedSpecialization,
-         'yearsOfExperience': experience,
-         'company': company,
-         'isVerified': false, 
-         'createdAt': FieldValue.serverTimestamp(),
-       });
+    try {
+      // Create user with Firebase Auth
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: pass);
 
-       if (!context.mounted) return;
-       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Engineer Registration Successful!")));
-       
-       // Navigate to MainContent automatically
-       Navigator.pushReplacement(
-         context,
-         MaterialPageRoute(
-           builder: (context) => const connection_Engineer(), 
-         ),
-       );
-     } on FirebaseAuthException catch (e) {
-       if (!context.mounted) return;
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.message}")));
-     } catch (e) {
-       if (!context.mounted) return;
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
-     }
+      // Insert details to Firestore under a specific 'engineers' collection
+      await FirebaseFirestore.instance
+          .collection('engineers')
+          .doc(userCredential.user!.uid)
+          .set({
+            'fullName': name,
+            'email': email,
+            'role': 'Engineer', // Tagging the role explicitly
+            'registrationNumber': registrationNo,
+            'specialization': _selectedSpecialization,
+            'yearsOfExperience': experience,
+            'company': company,
+            'isVerified': false,
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Engineer Registration Successful!")),
+      );
+
+      // Navigate to MainContent automatically
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const connection_Engineer()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: ${e.message}")));
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    }
   }
 
   // Helper widget to build consistent text fields
   Widget _buildInputField({
-    required String label, 
-    required TextEditingController controller, 
+    required String label,
+    required TextEditingController controller,
     required String hint,
     bool isPassword = false,
     TextInputType keyboardType = TextInputType.text,
@@ -391,7 +439,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey[400]),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey.shade300),

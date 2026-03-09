@@ -181,19 +181,20 @@ class _CompanyLoginScreenState extends State<login_page3> {
                               return;
                             }
 
-                            // For now, we are skipping actual Firebase Email/Password check 
-                          // since companies login with Company Name + Email instead of a password.
-                          // You will need a custom backend function or to verify document existence in Firestore.
-                          
-                          // Simulating successful login navigation:
-                          if (context.mounted) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const connection_Construction(),
-                              ),
-                            );
-                          }
+                            // For now, we are skipping actual Firebase Email/Password check
+                            // since companies login with Company Name + Email instead of a password.
+                            // You will need a custom backend function or to verify document existence in Firestore.
+
+                            // Simulating successful login navigation:
+                            if (context.mounted) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const connection_Construction(),
+                                ),
+                              );
+                            }
                           },
                           child: const Text(
                             "Sign In",
@@ -218,12 +219,12 @@ class _CompanyLoginScreenState extends State<login_page3> {
                     GestureDetector(
                       onTap: () {
                         print("Company Sign Up Clicked");
-                        
+
                         // Navigate to Company Sign Up Screen (signin_page3)
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const signin_page3(), 
+                            builder: (context) => const signin_page3(),
                           ),
                         );
                       },
