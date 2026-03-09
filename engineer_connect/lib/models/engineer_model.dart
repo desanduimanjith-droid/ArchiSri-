@@ -1,4 +1,3 @@
-// This defines the Engineer model 
 class Engineer {
   final int id;
   final String name;
@@ -32,19 +31,20 @@ class Engineer {
     required this.phone,
   });
 
-  // This converts JSON from the Flask backend into an Engineer object
   factory Engineer.fromJson(Map<String, dynamic> json) {
     return Engineer(
       id: json['id'] ?? 0,
       name: json['name'] ?? 'Unknown',
       specialty: json['specialty'] ?? 'General',
       description: json['description'] ?? '',
-      // Backend might send doubles as ints, so we use .toDouble()
-      rating: (json['rating'] ?? 0.0).toDouble(), 
+      rating: (json['rating'] ?? 0.0).toDouble(),
       location: json['location'] ?? 'Not specified',
       projects: json['projects'] ?? 0,
       reviews: json['reviews'] ?? 0,
-      imageUrl: json['image_url'] ?? json['imageUrl'] ?? 'https://via.placeholder.com/150',
+      imageUrl:
+          json['image_url'] ??
+          json['imageUrl'] ??
+          'https://via.placeholder.com/150',
       experience: json['experience'] ?? 'Not specified',
       hourlyRate: json['hourly_rate'] ?? json['hourlyRate'] ?? 'Not specified',
       tags: List<String>.from(json['tags'] ?? []),
@@ -53,7 +53,6 @@ class Engineer {
     );
   }
 
-  // Convert Engineer object to JSON for sending to backend
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -74,14 +73,13 @@ class Engineer {
   }
 }
 
-  
-// Dummy data for testing purposes (Engineering Version)
 final List<Engineer> engineerDummyData = [
   Engineer(
     id: 1,
     name: "Dr. Sarah Chan",
     specialty: "Structural Engineer",
-    description: "Expert in high-rise structural integrity and modern seismic design.",
+    description:
+        "Expert in high-rise structural integrity and modern seismic design.",
     rating: 4.8,
     location: "Colombo",
     projects: 287,
@@ -97,7 +95,8 @@ final List<Engineer> engineerDummyData = [
     id: 2,
     name: "Eng. Sarah Ahmed",
     specialty: "Civil Engineering",
-    description: "Specialized in urban infrastructure and sustainable drainage systems.",
+    description:
+        "Specialized in urban infrastructure and sustainable drainage systems.",
     rating: 4.7,
     location: "Kandy",
     projects: 30,
@@ -113,7 +112,8 @@ final List<Engineer> engineerDummyData = [
     id: 3,
     name: "Apex Engineering Solutions",
     specialty: "MEP Engineering",
-    description: "Providing high-end Mechanical, Electrical, and Plumbing blueprints.",
+    description:
+        "Providing high-end Mechanical, Electrical, and Plumbing blueprints.",
     rating: 4.8,
     location: "Galle",
     projects: 120,

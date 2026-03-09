@@ -1,25 +1,17 @@
-// API Service Layer for Engineer Connect
-// This service layer handles all API calls to the Python Flask backend
+import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 import '../models/engineer_model.dart';
 
 class ApiService {
-  // Backend API configuration
-  // For iOS Simulator: use localhost with port 8000
-  // For Android Emulator: use 10.0.2.2:8000
-  // For real devices: use your machine's IP address (e.g., http://192.168.1.100:8000/api)
   static const String baseUrl = 'http://10.31.27.46:8000/api';
 
-  // Fetch all engineers with pagination
-  Future<List<Engineer>> fetchEngineers({int page = 1, int limit = 20}) async {
+  Future<List<Engineer>> fetchEngineers() async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/engineers'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
 
       if (response.statusCode == 200) {
@@ -33,14 +25,11 @@ class ApiService {
     }
   }
 
-  // Get engineer details by ID
   Future<Engineer> getEngineerById(String engineerId) async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/engineers/$engineerId'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
 
       if (response.statusCode == 200) {
@@ -53,12 +42,10 @@ class ApiService {
     }
   }
 
-  // Search engineers by specialty/location/name
   Future<List<Engineer>> searchEngineers({
     required String query,
     String? specialty,
     String? location,
-    double? minRating,
   }) async {
     try {
       String queryString = '?search=$query';
@@ -67,9 +54,7 @@ class ApiService {
 
       final response = await http.get(
         Uri.parse('$baseUrl/engineers$queryString'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
 
       if (response.statusCode == 200) {
@@ -83,7 +68,6 @@ class ApiService {
     }
   }
 
-  // Create a new engineer (admin only)
   Future<Engineer> createEngineer({
     required String name,
     required String specialty,
@@ -99,9 +83,7 @@ class ApiService {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/engineers'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'name': name,
           'specialty': specialty,
@@ -126,7 +108,6 @@ class ApiService {
     }
   }
 
-  // Update engineer details
   Future<Engineer> updateEngineer({
     required String engineerId,
     String? name,
@@ -157,9 +138,7 @@ class ApiService {
 
       final response = await http.put(
         Uri.parse('$baseUrl/engineers/$engineerId'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode(updateData),
       );
 
@@ -173,14 +152,11 @@ class ApiService {
     }
   }
 
-  // Delete an engineer
   Future<bool> deleteEngineer(String engineerId) async {
     try {
       final response = await http.delete(
         Uri.parse('$baseUrl/engineers/$engineerId'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
 
       if (response.statusCode == 200) {
@@ -192,5 +168,4 @@ class ApiService {
       throw Exception('Error deleting engineer: $e');
     }
   }
-  // WhatsApp-only flow: remove backend hooks that are not implemented.
 }

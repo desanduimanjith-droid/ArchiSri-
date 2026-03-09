@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/engineer_model.dart'; // Ensure this file has 'engineerDummyData'
+import '../models/engineer_model.dart';
 import '../services/api_service.dart';
 import '../services/whatsapp_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,7 +11,6 @@ class EngineerHomeScreen extends StatefulWidget {
   State<EngineerHomeScreen> createState() => _EngineerHomeScreenState();
 }
 
-
 class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
   late Future<List<Engineer>> _engineersFuture;
   String _searchQuery = "";
@@ -21,40 +20,41 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize the API call once
     _engineersFuture = ApiService().fetchEngineers().catchError((_) {
-      // Fallback to dummy data if API fails
       return engineerDummyData;
     });
   }
 
-  // Filter engineers based on search and filters
   List<Engineer> _filterEngineers(List<Engineer> engineers) {
     return engineers.where((engineer) {
-      final matchesSearch = _searchQuery.isEmpty ||
+      final matchesSearch =
+          _searchQuery.isEmpty ||
           engineer.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          engineer.specialty
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()) ||
-          engineer.description
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase());
+          engineer.specialty.toLowerCase().contains(
+            _searchQuery.toLowerCase(),
+          ) ||
+          engineer.description.toLowerCase().contains(
+            _searchQuery.toLowerCase(),
+          );
 
-        final matchesSpecialty = _selectedSpecialties.isEmpty ||
-          _selectedSpecialties.any((specialty) => engineer.specialty
-            .toLowerCase()
-            .contains(specialty.toLowerCase()));
+      final matchesSpecialty =
+          _selectedSpecialties.isEmpty ||
+          _selectedSpecialties.any(
+            (specialty) => engineer.specialty.toLowerCase().contains(
+              specialty.toLowerCase(),
+            ),
+          );
 
-      final matchesLocation = _selectedLocation.isEmpty ||
-          engineer.location
-              .toLowerCase()
-              .contains(_selectedLocation.toLowerCase());
+      final matchesLocation =
+          _selectedLocation.isEmpty ||
+          engineer.location.toLowerCase().contains(
+            _selectedLocation.toLowerCase(),
+          );
 
       return matchesSearch && matchesSpecialty && matchesLocation;
     }).toList();
   }
 
-  // Function to open the filter pop-up
   void _openFilter() {
     showModalBottomSheet(
       context: context,
@@ -80,14 +80,11 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
     return Scaffold(
       body: Column(
         children: [
-          // The header banner
           Container(
             width: double.infinity,
             height: 200,
             padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              color: Color(0xFFCABF58), // The light green background
-            ),
+            decoration: const BoxDecoration(color: Color(0xFFCABF58)),
             child: Row(
               children: [
                 Container(
@@ -95,11 +92,11 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
                   height: 120,
                   width: 120,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFDD8436), // The icon box color
+                    color: const Color(0xFFDD8436),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Icon(
-                    Icons.architecture, // Changed to architecture for Engineers
+                    Icons.architecture,
                     size: 90,
                     color: Colors.black,
                   ),
@@ -135,7 +132,6 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
             ),
           ),
 
-          // --- SEARCH BAR & FILTER BUTTON ---
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -162,7 +158,6 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                // The Filter Icon
                 GestureDetector(
                   onTap: _openFilter,
                   child: Container(
@@ -179,7 +174,6 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
             ),
           ),
 
-          // The engineers list count
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Align(
@@ -190,7 +184,10 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
                   final filtered = _filterEngineers(snapshot.data ?? []);
                   return Text(
                     "${filtered.length} engineers found",
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   );
                 },
               ),
@@ -198,13 +195,14 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
           ),
           const SizedBox(height: 10),
 
-          // Fetch engineers from API
           Expanded(
             child: FutureBuilder<List<Engineer>>(
               future: _engineersFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color: Color(0xFFCABF58)));
+                  return const Center(
+                    child: CircularProgressIndicator(color: Color(0xFFCABF58)),
+                  );
                 }
 
                 if (snapshot.hasError) {
@@ -212,7 +210,11 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                        const Icon(
+                          Icons.error_outline,
+                          size: 60,
+                          color: Colors.red,
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text("Error: ${snapshot.error}"),
@@ -220,13 +222,15 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
                         ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              _engineersFuture = ApiService().fetchEngineers().catchError((_) {
-                                return engineerDummyData;
-                              });
+                              _engineersFuture = ApiService()
+                                  .fetchEngineers()
+                                  .catchError((_) {
+                                    return engineerDummyData;
+                                  });
                             });
                           },
                           child: const Text("Retry"),
-                        )
+                        ),
                       ],
                     ),
                   );
@@ -234,12 +238,15 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
 
                 final filtered = _filterEngineers(snapshot.data ?? []);
                 if (filtered.isEmpty) {
-                  return const Center(child: Text("No engineers found matching your criteria."));
+                  return const Center(
+                    child: Text("No engineers found matching your criteria."),
+                  );
                 }
 
                 return ListView.builder(
                   itemCount: filtered.length,
-                  itemBuilder: (context, index) => EngineerCard(item: filtered[index]),
+                  itemBuilder: (context, index) =>
+                      EngineerCard(item: filtered[index]),
                 );
               },
             ),
@@ -258,7 +265,6 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
   }
 }
 
-// Engineer Card Widget
 class EngineerCard extends StatelessWidget {
   final Engineer item;
   const EngineerCard({super.key, required this.item});
@@ -274,7 +280,6 @@ class EngineerCard extends StatelessWidget {
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
           ),
-          // Pop up EngineerDetailSheet
           builder: (context) => EngineerDetailSheet(item: item),
         );
       },
@@ -337,17 +342,28 @@ class EngineerCard extends StatelessWidget {
                   Wrap(
                     spacing: 4,
                     runSpacing: 4,
-                    children: item.tags.take(2).map((tag) => Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFC5E1EB),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        tag,
-                        style: const TextStyle(fontSize: 10, color: Colors.indigo),
-                      ),
-                    )).toList(),
+                    children: item.tags
+                        .take(2)
+                        .map(
+                          (tag) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFC5E1EB),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              tag,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.indigo,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                   const SizedBox(height: 6),
                   Row(
@@ -362,13 +378,19 @@ class EngineerCard extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(Icons.location_on_outlined, size: 16),
-                          Text(" ${item.location}", style: const TextStyle(fontSize: 12)),
+                          Text(
+                            " ${item.location}",
+                            style: const TextStyle(fontSize: 12),
+                          ),
                         ],
                       ),
                       Row(
                         children: [
                           const Icon(Icons.business_center_outlined, size: 16),
-                          Text(" ${item.projects}", style: const TextStyle(fontSize: 12)),
+                          Text(
+                            " ${item.projects}",
+                            style: const TextStyle(fontSize: 12),
+                          ),
                         ],
                       ),
                     ],
@@ -383,24 +405,25 @@ class EngineerCard extends StatelessWidget {
   }
 }
 
-// tag widget for the engineer details sheet
 Widget _buildTag(String label) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     decoration: BoxDecoration(
-      color: const Color(0xFFC5E1EB), // Light blue from your screenshot
+      color: const Color(0xFFC5E1EB),
       borderRadius: BorderRadius.circular(10),
       border: Border.all(color: Colors.indigo.shade200),
     ),
     child: Text(
       label,
       style: const TextStyle(
-          color: Colors.indigo, fontSize: 12, fontWeight: FontWeight.w500),
+        color: Colors.indigo,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+      ),
     ),
   );
 }
 
-// The details sheet that opens when tap an engineer
 class EngineerDetailSheet extends StatefulWidget {
   final Engineer item;
   const EngineerDetailSheet({super.key, required this.item});
@@ -417,12 +440,17 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
     final success = await WhatsAppHelper.contactEngineer(
       engineerName: widget.item.name,
       engineerPhone: widget.item.phone,
-      projectDetails: 'Hi, I found your profile on Engineer Connect and would like to discuss a project.',
+      projectDetails:
+          'Hi, I found your profile on Engineer Connect and would like to discuss a project.',
     );
 
     if (!success) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('Could not open WhatsApp. Please make sure WhatsApp is installed.')),
+        const SnackBar(
+          content: Text(
+            'Could not open WhatsApp. Please make sure WhatsApp is installed.',
+          ),
+        ),
       );
     }
   }
@@ -439,158 +467,230 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Center(child: Container(width: 80, height: 6, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
+            Center(
+              child: Container(
+                width: 80,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
-            
-            // Content
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // 1. Header with "Available" status
                 Row(
                   children: [
-                      ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.network(widget.item.imageUrl, width: 100, height: 100, fit: BoxFit.cover)),
-                      const SizedBox(width: 16),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        widget.item.imageUrl,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  widget.item.name,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  "Available",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            widget.item.specialty,
+                            style: const TextStyle(
+                              color: Color(0xFFDD8436),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star_outline,
+                                color: Colors.black,
+                                size: 18,
+                              ),
+                              Text(
+                                " ${widget.item.rating}",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              const Icon(
+                                Icons.location_on_outlined,
+                                color: Colors.black,
+                                size: 18,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  " ${widget.item.location}",
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 10),
+
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: widget.item.tags
+                      .map((tag) => _buildTag(tag))
+                      .toList(),
+                ),
+
+                const SizedBox(height: 10),
+                const Divider(height: 1),
+                const SizedBox(height: 10),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildStatColumn("Experience", widget.item.experience),
+                      _buildStatColumn("Projects", "${widget.item.projects}"),
+                      _buildStatColumn("Rate", widget.item.hourlyRate),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+                const Divider(height: 1),
+                const SizedBox(height: 10),
+
+                const Text(
+                  "Contact Information",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 15),
+                _buildContactCard(
+                  Icons.email_outlined,
+                  "Email",
+                  widget.item.email,
+                  const Color(0xFFE5D7F5),
+                  context,
+                ),
+                const SizedBox(height: 10),
+                _buildContactCard(
+                  Icons.phone_outlined,
+                  "Phone",
+                  widget.item.phone,
+                  const Color(0xFFF3E7D5),
+                  context,
+                ),
+                const SizedBox(height: 10),
+                const Divider(height: 1),
+                const SizedBox(height: 16),
+
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0F8FF),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: const Color(0xFF4DA6FF).withOpacity(0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.info_outline,
+                        color: Color(0xFF1E88E5),
+                        size: 24,
+                      ),
+                      const SizedBox(width: 12),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(widget.item.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                ),
-                                const SizedBox(width: 8),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(20)),
-                                  child: const Text("Available", style: TextStyle(color: Colors.black, fontSize: 11, fontWeight: FontWeight.bold)),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(widget.item.specialty, style: const TextStyle(color: Color(0xFFDD8436), fontWeight: FontWeight.w600, fontSize: 13)),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                const Icon(Icons.star_outline, color: Colors.black, size: 18),
-                                Text(" ${widget.item.rating}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                                const SizedBox(width: 12),
-                                const Icon(Icons.location_on_outlined, color: Colors.black, size: 18),
-                                Expanded(
-                                  child: Text(" ${widget.item.location}", style: const TextStyle(fontSize: 13)),
-                                ),
-                              ],
-                            ),
-                          ],
+                        child: Text(
+                          'You can attach your plan files and add project details directly in the WhatsApp chat.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[800],
+                            height: 1.4,
+                          ),
                         ),
                       ),
                     ],
                   ),
+                ),
 
-                  const SizedBox(height: 10),
-
-                  // 2. TAGS SECTION
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: widget.item.tags.map((tag) => _buildTag(tag)).toList(),
-                  ),
-
-                  const SizedBox(height: 10),
-                  const Divider(height: 1),
-                  const SizedBox(height: 10),
-
-                  // 3. STATS ROW
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildStatColumn("Experience", widget.item.experience),
-                        _buildStatColumn("Projects", "${widget.item.projects}"),
-                        _buildStatColumn("Rate", widget.item.hourlyRate),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-                  const Divider(height: 1),
-                  const SizedBox(height: 10),
-
-                  // 3.5 CONTACT INFORMATION SECTION
-                  const Text(
-                    "Contact Information",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 15),
-                  _buildContactCard(
-                    Icons.email_outlined,
-                    "Email",
-                    widget.item.email,
-                    const Color(0xFFE5D7F5),
-                     context,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildContactCard(
-                    Icons.phone_outlined,
-                    "Phone",
-                    widget.item.phone,
-                    const Color(0xFFF3E7D5),
-                     context,
-                  ),
-                  const SizedBox(height: 10),
-                  const Divider(height: 1),
-                  const SizedBox(height: 16),
-
-                  // 4. TIP NOTICE
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF0F8FF),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFF4DA6FF).withOpacity(0.3)),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.info_outline, color: Color(0xFF1E88E5), size: 24),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'You can attach your plan files and add project details directly in the WhatsApp chat.',
-                            style: TextStyle(fontSize: 13, color: Colors.grey[800], height: 1.4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             ),
 
             const SizedBox(height: 4),
 
-            // 5. BOTTOM BUTTON
             ElevatedButton.icon(
               onPressed: _connectWhatsApp,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF25D366), // WhatsApp green
+                backgroundColor: const Color(0xFF25D366),
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
                 minimumSize: const Size(double.infinity, 48),
               ),
               icon: Image.asset(
                 'assets/whatsapp_icon.png',
                 width: 24,
                 height: 24,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.chat, color: Colors.white),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.chat, color: Colors.white),
               ),
               label: const Text(
                 "Connect via WhatsApp",
-                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -600,18 +700,19 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
     );
   }
 
-  // Helper for Experience/Projects/Rate
   Widget _buildStatColumn(String label, String value) {
     return Column(
       children: [
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
         const SizedBox(height: 8),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
       ],
     );
   }
 
-  // Helper for Contact Cards
   Widget _buildContactCard(
     IconData icon,
     String label,
@@ -622,28 +723,22 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
     return GestureDetector(
       onTap: () async {
         if (label == "Email") {
-          final Uri emailLaunchUri = Uri(
-            scheme: 'mailto',
-            path: value,
-          );
+          final Uri emailLaunchUri = Uri(scheme: 'mailto', path: value);
           try {
             await launchUrl(emailLaunchUri);
           } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Could not open email: $e")),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Could not open email: $e")));
           }
         } else if (label == "Phone") {
-          final Uri phoneLaunchUri = Uri(
-            scheme: 'tel',
-            path: value,
-          );
+          final Uri phoneLaunchUri = Uri(scheme: 'tel', path: value);
           try {
             await launchUrl(phoneLaunchUri);
           } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Could not open phone: $e")),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Could not open phone: $e")));
           }
         }
       },
@@ -667,7 +762,10 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -678,7 +776,6 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
   }
 }
 
-// Filter Sheet Widget (Same logic, but can be customized for Engineers later)
 class FilterSheet extends StatefulWidget {
   const FilterSheet({super.key});
 
@@ -693,16 +790,36 @@ class _FilterSheetState extends State<FilterSheet> {
   bool isElectrical = false;
   bool isMechanical = false;
   bool isEnvironmental = false;
-  
+
   final List<String> _districts = [
-    "Colombo", "Gampaha", "Kalutara", "Kandy", "Matale", "Nuwara Eliya",
-    "Galle", "Matara", "Hambantota", "Jaffna", "Kilinochchi", "Mannar",
-    "Vavuniya", "Mullaitivu", "Batticaloa", "Ampara", "Trincomalee",
-    "Kurunegala", "Puttalam", "Anuradhapura", "Polonnaruwa", "Badulla",
-    "Moneragala", "Ratnapura", "Kegalle",
+    "Colombo",
+    "Gampaha",
+    "Kalutara",
+    "Kandy",
+    "Matale",
+    "Nuwara Eliya",
+    "Galle",
+    "Matara",
+    "Hambantota",
+    "Jaffna",
+    "Kilinochchi",
+    "Mannar",
+    "Vavuniya",
+    "Mullaitivu",
+    "Batticaloa",
+    "Ampara",
+    "Trincomalee",
+    "Kurunegala",
+    "Puttalam",
+    "Anuradhapura",
+    "Polonnaruwa",
+    "Badulla",
+    "Moneragala",
+    "Ratnapura",
+    "Kegalle",
   ];
-  
-  String? selectedDistrict; 
+
+  String? selectedDistrict;
   double _currentRating = 4.0;
 
   @override
@@ -731,7 +848,7 @@ class _FilterSheetState extends State<FilterSheet> {
           const Divider(),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 "Verified Engineers Only",
@@ -757,7 +874,6 @@ class _FilterSheetState extends State<FilterSheet> {
           ),
           const SizedBox(height: 10),
 
-          // Custom engineering specialties could go here (Civil, Structural, etc.)
           _buildFilterRow(
             "Civil Engineer",
             isCivil,
@@ -849,7 +965,6 @@ class _FilterSheetState extends State<FilterSheet> {
               if (isMechanical) specialties.add("Mechanical Engineer");
               if (isEnvironmental) specialties.add("Environmental Engineer");
 
-              // Pop with filter values
               Navigator.pop(context, {
                 'specialties': specialties,
                 'location': selectedDistrict ?? "",
@@ -887,5 +1002,4 @@ class _FilterSheetState extends State<FilterSheet> {
       ],
     );
   }
-
 }

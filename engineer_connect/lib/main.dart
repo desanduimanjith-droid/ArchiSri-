@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/engineer_screen.dart'; // This must match your file name
+import 'screens/engineer_screen.dart';
 
 void main() => runApp(const ArchieSriApp());
 
@@ -11,11 +11,10 @@ class ArchieSriApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF4EBD7), // Default cream color for bg
-        fontFamily: 'Roboto', // Default text font
+        scaffoldBackgroundColor: const Color(0xFFF4EBD7),
+        fontFamily: 'Roboto',
       ),
-      // Update this line to match the class name in engineer_screen.dart
-      home: const EngineerHomeScreen(), 
+      home: const EngineerHomeScreen(),
     );
   }
 }
