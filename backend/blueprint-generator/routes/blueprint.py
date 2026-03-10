@@ -10,11 +10,8 @@ print("routes/blueprint.py loaded")
 blueprint_api = Blueprint("blueprint_api", __name__)
 
 # ===== OpenAI client =====
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    raise RuntimeError("Please set the OPENAI_API_KEY environment variable!")
-
-client = OpenAI(api_key=OPENAI_API_KEY)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 # ===== Helper: build prompt =====
 def build_prompt(floor_number, num_floors, style, landsize, bedrooms=None, bathrooms=None, kitchen=None, living_room=None):
@@ -67,6 +64,9 @@ def generate_blueprint():
         generated_files = []
 
         # ===== Generate images =====
+        if not client:
+            return jsonify({"success": False, "error": "OpenAI API key is missing on the backend"}), 500
+
         for floor_number in range(1, num_floors + 1):
             prompt = build_prompt(floor_number, num_floors, style, landsize, bedrooms, bathrooms, kitchen, living_room)
 
