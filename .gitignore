@@ -47,3 +47,6 @@ app.*.map.json
 # Ignore that useless file
 backend/requirements.txt
 frontEnd/README.md
+backend/serviceAccountKey.json
+backend/serviceAccountKey.json
+backend/serviceAccountKey.json
