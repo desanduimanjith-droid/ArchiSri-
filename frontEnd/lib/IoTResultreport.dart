@@ -49,7 +49,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // ================= HEADER =================
+  // HEADER part
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(24.0),
@@ -99,7 +99,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // ================= CONNECTION BAR =================
+  //  CONNECTION BAR 
   Widget _buildConnectionBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -132,7 +132,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // ================= MOISTURE CARD =================
+  // MOISTURE CARD 
   Widget _buildMoistureCard() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -190,7 +190,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // ================= SMALL CARDS =================
+  // SMALL CARDS 
   Widget _buildSmallCards() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -249,7 +249,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // ================= MOISTURE CHART =================
+  //  MOISTURE CHART 
   Widget _buildMoistureChart() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -324,7 +324,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // ================= DETAILED ANALYSIS =================
+  //  DETAILED ANALYSIS 
   Widget _buildDetailedAnalysis() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -355,7 +355,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // ================= SCAN BUTTON =================
+  //  SCAN BUTTON 
   Widget _buildScanButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
