@@ -7,9 +7,11 @@ import 'package:archisri_1/feature_1_part6.dart';
 
 class Feature1Part3 extends StatefulWidget {
   final List<String> remainingFlow;
+
   const Feature1Part3({
     super.key, 
-    required this.remainingFlow
+    required this.remainingFlow,
+  
 
     
   });
@@ -269,7 +271,10 @@ class _Feature1Part3State extends State<Feature1Part3> {
                              () {
 
                               // handle next action
+                              
 
+
+                              // get the floor selction
                               if(widget.remainingFlow.isNotEmpty){
                                 String nextFloor =widget.remainingFlow.first;
                                 List<String> nextRemaining =widget.remainingFlow.sublist(1);
