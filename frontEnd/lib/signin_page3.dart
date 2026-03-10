@@ -19,9 +19,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _contactPersonController =
       TextEditingController();
+  final TextEditingController _aboutController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _experienceController = TextEditingController();
+  final TextEditingController _projectsController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -44,9 +46,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
     _businessRegNoController.dispose();
     _emailController.dispose();
     _contactPersonController.dispose();
+    _aboutController.dispose();
     _phoneController.dispose();
-    _addressController.dispose();
+    _locationController.dispose();
     _experienceController.dispose();
+    _projectsController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -156,9 +160,17 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                       const SizedBox(height: 16),
 
                       _buildInputField(
-                        label: "Company Address",
-                        controller: _addressController,
-                        hint: "123 Main St, City",
+                        label: "About (Max 70 chars)",
+                        controller: _aboutController,
+                        hint: "Short description...",
+                        maxLength: 70,
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildInputField(
+                        label: "Location",
+                        controller: _locationController,
+                        hint: "e.g. Colombo",
                       ),
                       const SizedBox(height: 16),
 
@@ -203,6 +215,14 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                         label: "Years of Experience",
                         controller: _experienceController,
                         hint: "e.g. 10",
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildInputField(
+                        label: "Projects",
+                        controller: _projectsController,
+                        hint: "e.g. 25",
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 16),
@@ -360,9 +380,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
     String regNo = _businessRegNoController.text.trim();
     String email = _emailController.text.trim();
     String contactPerson = _contactPersonController.text.trim();
+    String about = _aboutController.text.trim();
     String phone = _phoneController.text.trim();
-    String address = _addressController.text.trim();
+    String location = _locationController.text.trim();
     String experience = _experienceController.text.trim();
+    String projects = _projectsController.text.trim();
     String pass = _passwordController.text;
     String confirmPass = _confirmPasswordController.text;
 
@@ -371,8 +393,10 @@ class _CompanySignUpScreenState extends State<signin_page3> {
         email.isEmpty ||
         contactPerson.isEmpty ||
         phone.isEmpty ||
-        address.isEmpty ||
+        about.isEmpty ||
+        location.isEmpty ||
         experience.isEmpty ||
+        projects.isEmpty ||
         pass.isEmpty ||
         _selectedConstructionType == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -403,9 +427,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
             'email': email,
             'contactPersonName': contactPerson,
             'phoneNumber': phone,
-            'companyAddress': address,
+            'about': about,
+            'location': location,
             'constructionType': _selectedConstructionType,
             'yearsOfExperience': experience,
+            'projects': projects,
             'role': 'Construction Company',
             'isVerified': false,
             'createdAt': FieldValue.serverTimestamp(),
@@ -443,6 +469,7 @@ class _CompanySignUpScreenState extends State<signin_page3> {
     required String hint,
     bool isPassword = false,
     TextInputType keyboardType = TextInputType.text,
+    int? maxLength,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -453,6 +480,7 @@ class _CompanySignUpScreenState extends State<signin_page3> {
           controller: controller,
           obscureText: isPassword,
           keyboardType: keyboardType,
+          maxLength: maxLength,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey[400]),

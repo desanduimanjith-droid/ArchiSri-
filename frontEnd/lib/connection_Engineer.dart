@@ -55,7 +55,11 @@ class _connection_EngineerState extends State<connection_Engineer> {
       appBar: AppBar(
         title: const Text(
           "My Profile",
-          style: TextStyle(fontFamily: 'Serif', color: Colors.black87, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Serif',
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -65,7 +69,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
             icon: const Icon(Icons.logout),
             onPressed: _logout,
             tooltip: 'Logout',
-          )
+          ),
         ],
       ),
       body: SafeArea(
@@ -77,34 +81,47 @@ class _connection_EngineerState extends State<connection_Engineer> {
             } else if (snapshot.hasError) {
               return const Center(child: Text("Error loading profile."));
             } else if (!snapshot.hasData || snapshot.data == null) {
-              return const Center(child: Text("No profile data found. Please sign in again."));
+              return const Center(
+                child: Text("No profile data found. Please sign in again."),
+              );
             }
 
             final data = snapshot.data!;
-            
+
             String _capitalizeWords(String input) {
               if (input.isEmpty) return input;
-              return input.split(' ').map((word) {
-                if (word.isEmpty) return word;
-                return word[0].toUpperCase() + word.substring(1).toLowerCase();
-              }).join(' ');
+              return input
+                  .split(' ')
+                  .map((word) {
+                    if (word.isEmpty) return word;
+                    return word[0].toUpperCase() +
+                        word.substring(1).toLowerCase();
+                  })
+                  .join(' ');
             }
 
             final String fullName = _capitalizeWords(data['fullName'] ?? 'N/A');
             final String specialization = data['specialization'] ?? 'N/A';
-            final String registrationNumber = data['registrationNumber'] ?? 'N/A';
             final String company = data['company'] ?? 'N/A';
             final String experience = data['yearsOfExperience'] ?? '0';
             final String email = data['email'] ?? 'N/A';
             final String ratePerHour = data['ratePerHour'] ?? '0';
+            final int rating = data['rating'] is num
+                ? (data['rating'] as num).round()
+                : int.tryParse('${data['rating'] ?? ''}') ??
+                      (double.tryParse('${data['rating'] ?? ''}')?.round() ??
+                          5);
 
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 10.0,
+                ),
                 child: Container(
                   padding: const EdgeInsets.all(24.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFF6F0), 
+                    color: const Color(0xFFFFF6F0),
                     borderRadius: BorderRadius.circular(24.0),
                     boxShadow: [
                       BoxShadow(
@@ -128,7 +145,10 @@ class _connection_EngineerState extends State<connection_Engineer> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.grey.shade200,
-                              border: Border.all(color: Colors.black87, width: 1.5),
+                              border: Border.all(
+                                color: Colors.black87,
+                                width: 1.5,
+                              ),
                             ),
                             child: Icon(
                               Icons.person,
@@ -143,10 +163,10 @@ class _connection_EngineerState extends State<connection_Engineer> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                         fullName,
                                         style: const TextStyle(
@@ -157,12 +177,22 @@ class _connection_EngineerState extends State<connection_Engineer> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
+                                    const SizedBox(width: 8),
+                                    _buildRatingBadge(rating),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
                                     // Status Badge ("Available" style)
                                     Container(
-                                      margin: const EdgeInsets.only(left: 8),
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: Colors.green.shade200.withOpacity(0.7),
+                                        color: Colors.green.shade200
+                                            .withOpacity(0.7),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
@@ -191,15 +221,12 @@ class _connection_EngineerState extends State<connection_Engineer> {
                         ],
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // --- TAGS SECTION (Blue styled containers) ---
                       Wrap(
                         spacing: 12,
                         runSpacing: 12,
-                        children: [
-                          _buildBlueTag("Company: $company"),
-                          _buildBlueTag("Reg No: $registrationNumber"),
-                        ],
+                        children: [_buildBlueTag("Company: $company")],
                       ),
                       const SizedBox(height: 24),
 
@@ -207,33 +234,44 @@ class _connection_EngineerState extends State<connection_Engineer> {
                       Row(
                         children: [
                           Expanded(
-                            flex: 1, 
-                            child: _buildMetricColumn("Experience", "$experience years"),
+                            flex: 1,
+                            child: _buildMetricColumn(
+                              "Experience",
+                              "$experience years",
+                            ),
                           ),
                           Expanded(
                             flex: 1,
-                            child: _buildMetricColumn("Rate", "LKR $ratePerHour/hr"),
+                            child: _buildMetricColumn(
+                              "Rate",
+                              "LKR $ratePerHour/hr",
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            flex: 2, 
+                            flex: 2,
                             child: _buildMetricColumn("Email Address", email),
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 20),
                       const Divider(thickness: 1, color: Colors.grey),
                       const SizedBox(height: 20),
-                      
+
                       // --- BOTTOM BUTTONS ---
                       Row(
                         children: [
                           Expanded(
                             child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                side: BorderSide(color: Colors.orange.shade300, width: 1.5),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                side: BorderSide(
+                                  color: Colors.orange.shade300,
+                                  width: 1.5,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -263,8 +301,12 @@ class _connection_EngineerState extends State<connection_Engineer> {
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange.shade400, // Matches orange button color
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                backgroundColor: Colors
+                                    .orange
+                                    .shade400, // Matches orange button color
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -313,6 +355,33 @@ class _connection_EngineerState extends State<connection_Engineer> {
     );
   }
 
+  Widget _buildRatingBadge(int rating) {
+    final String ratingText = rating.toString();
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: const [
+            Icon(Icons.star, size: 24, color: Color(0xFFE8DD64)),
+            Icon(Icons.star_border, size: 24, color: Colors.black87),
+          ],
+        ),
+        const SizedBox(width: 6),
+        Text(
+          ratingText,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+            height: 1,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildMetricColumn(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,7 +414,11 @@ class EditProfileScreen extends StatefulWidget {
   final Map<String, dynamic> userData;
   final String uid;
 
-  const EditProfileScreen({super.key, required this.userData, required this.uid});
+  const EditProfileScreen({
+    super.key,
+    required this.userData,
+    required this.uid,
+  });
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -364,12 +437,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.userData['fullName'] ?? '');
-    _specializationController = TextEditingController(text: widget.userData['specialization'] ?? '');
-    _registrationController = TextEditingController(text: widget.userData['registrationNumber'] ?? '');
-    _experienceController = TextEditingController(text: widget.userData['yearsOfExperience'] ?? '');
-    _companyController = TextEditingController(text: widget.userData['company'] ?? '');
-    _rateController = TextEditingController(text: widget.userData['ratePerHour'] ?? '');
+    _nameController = TextEditingController(
+      text: widget.userData['fullName'] ?? '',
+    );
+    _specializationController = TextEditingController(
+      text: widget.userData['specialization'] ?? '',
+    );
+    _registrationController = TextEditingController(
+      text: widget.userData['registrationNumber'] ?? '',
+    );
+    _experienceController = TextEditingController(
+      text: widget.userData['yearsOfExperience'] ?? '',
+    );
+    _companyController = TextEditingController(
+      text: widget.userData['company'] ?? '',
+    );
+    _rateController = TextEditingController(
+      text: widget.userData['ratePerHour'] ?? '',
+    );
   }
 
   @override
@@ -389,14 +474,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
 
     try {
-      await FirebaseFirestore.instance.collection('engineers').doc(widget.uid).update({
-        'fullName': _nameController.text.trim(),
-        'specialization': _specializationController.text.trim(),
-        'registrationNumber': _registrationController.text.trim(),
-        'yearsOfExperience': _experienceController.text.trim(),
-        'company': _companyController.text.trim(),
-        'ratePerHour': _rateController.text.trim(),
-      });
+      await FirebaseFirestore.instance
+          .collection('engineers')
+          .doc(widget.uid)
+          .update({
+            'fullName': _nameController.text.trim(),
+            'specialization': _specializationController.text.trim(),
+            'registrationNumber': _registrationController.text.trim(),
+            'yearsOfExperience': _experienceController.text.trim(),
+            'company': _companyController.text.trim(),
+            'ratePerHour': _rateController.text.trim(),
+          });
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -405,9 +493,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error updating profile: $e")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error updating profile: $e")));
     } finally {
       if (mounted) {
         setState(() {
@@ -422,7 +510,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFEBE4D0),
       appBar: AppBar(
-        title: const Text("Edit Profile Details", style: TextStyle(color: Colors.black)),
+        title: const Text(
+          "Edit Profile Details",
+          style: TextStyle(color: Colors.black),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -435,15 +526,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             children: [
               _buildTextField(label: "Full Name", controller: _nameController),
               const SizedBox(height: 16),
-              _buildTextField(label: "Specialization", controller: _specializationController),
+              _buildTextField(
+                label: "Specialization",
+                controller: _specializationController,
+              ),
               const SizedBox(height: 16),
-              _buildTextField(label: "Registration Number", controller: _registrationController),
-              const SizedBox(height: 16),
-              _buildTextField(label: "Years of Experience", controller: _experienceController, keyboardType: TextInputType.number),
+              _buildTextField(
+                label: "Years of Experience",
+                controller: _experienceController,
+                keyboardType: TextInputType.number,
+              ),
               const SizedBox(height: 16),
               _buildTextField(label: "Company", controller: _companyController),
               const SizedBox(height: 16),
-              _buildTextField(label: "Rate per Hour (LKR)", controller: _rateController, keyboardType: TextInputType.number),
+              _buildTextField(
+                label: "Rate per Hour (LKR)",
+                controller: _rateController,
+                keyboardType: TextInputType.number,
+              ),
               const SizedBox(height: 32),
               SizedBox(
                 height: 50,
@@ -459,7 +559,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
                           "Save Changes",
-                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                 ),
               ),
@@ -478,7 +582,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
@@ -486,10 +596,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             border: OutlineInputBorder(
-               borderRadius: BorderRadius.circular(8),
-               borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
             ),
           ),
         ),
