@@ -11,7 +11,7 @@ class Feature1Part15 extends StatefulWidget {
 }
 
 class _Feature1Part15State extends State<Feature1Part15> {
-  double currentStep = 6;
+  double currentStep = 6;   
   final double totalSteps = 8;
   List<String> selectedRooms = [];
 

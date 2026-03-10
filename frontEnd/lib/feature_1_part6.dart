@@ -159,7 +159,11 @@ class _Feature1Part6State extends State<Feature1Part6> {
                             // When an option is tapped, update the selectedFloor state
                             onTap: () {
                               setState(() {
-                                selectedRooms = style['name'];
+                                if(selectedRooms.contains(style['name'])){
+                                  selectedRooms.remove(style['name']);
+                                }else{
+                                  selectedRooms.add(style['name']);
+                                }
                               });
                             },
                             child: Container(
