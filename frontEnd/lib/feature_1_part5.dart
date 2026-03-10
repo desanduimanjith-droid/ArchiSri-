@@ -1,8 +1,10 @@
+import 'package:archisri_1/feature_1_part7.dart';
 import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part6.dart';
 
 class Feature1Part5 extends StatefulWidget {
-  const Feature1Part5({super.key});
+  final List<String> remainingFlow;
+  const Feature1Part5({super.key,required this.remainingFlow});
 
   @override
   State<Feature1Part5> createState() => _Feature1Part5State();
@@ -11,7 +13,7 @@ class Feature1Part5 extends StatefulWidget {
 class _Feature1Part5State extends State<Feature1Part5> {
   double currentStep = 3;
   final double totalSteps = 8;
-  String? selectedFloor;
+  List<String> selectedRooms = [];
 
   final List<Map<String, dynamic>> floorOptions = [
     {'name': 'Single Room', 'image': Image(image: AssetImage('assets/images/bedroom.png'),  fit: BoxFit.contain)},
@@ -141,7 +143,7 @@ class _Feature1Part5State extends State<Feature1Part5> {
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedFloor == style['name'];
+                        final isSelected = selectedRooms == style['name'];
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -149,7 +151,7 @@ class _Feature1Part5State extends State<Feature1Part5> {
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedFloor = style['name'];
+                              selectedRooms = style['name'];
                             });
                           },
                           child: Container(
@@ -251,14 +253,24 @@ class _Feature1Part5State extends State<Feature1Part5> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: selectedFloor != null
+                        onPressed: selectedRooms.isNotEmpty
                             ? () {
                                 // Handle next action
-                                print('Selected floor: $selectedFloor');
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const Feature1Part6()),
-                                );
+                                if(widget.remainingFlow.isNotEmpty){
+                                  String nextFloor= widget.remainingFlow.first;
+                                  List<String> nextRemaining= widget.remainingFlow.sublist(1);
+
+                                  Widget nextScreen;
+                                  if(nextFloor== 'fourth'){
+                                    nextScreen =Feature1Part6(remainingFlow: nextRemaining);
+                                  } else{
+                                    nextScreen= const Feature1Part7();
+                                  }
+                                  Navigator.push(context,MaterialPageRoute(builder: (context)=>nextScreen));
+
+                                }
+                                Navigator.push(context,MaterialPageRoute(builder: (context)=> const Feature1Part7()));
+                               
                               }
                             : null,
                         style: ElevatedButton.styleFrom(

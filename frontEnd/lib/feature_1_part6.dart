@@ -8,38 +8,33 @@ import 'package:archisri_1/feature_1_part7.dart';
 // `StatefulWidget` below.
 
 class Feature1Part6 extends StatefulWidget {
-  const Feature1Part6({super.key});
+  final List<String> remainingFlow;
+  const Feature1Part6({super.key,
+  required this.remainingFlow
+  });
 
   @override
   State<Feature1Part6> createState() => _Feature1Part6State();
 }
 
 class _Feature1Part6State extends State<Feature1Part6> {
-  // currentStep: the current step index in the multi-step flow
+  
   double currentStep = 3;
 
-  // totalSteps: how many steps exist in the flow (used for the progress bar)
+  
   final double totalSteps = 8;
 
-  // selectedFloor: currently selected floor option name (null if none)
-  String? selectedFloor;
+  
+ List<String> selectedRooms = [];
 
-  // floorOptions: list of selectable room option metadata (name + image widget)
-  final List<Map<String, dynamic>> floorOptions = [
-    {
-      'name': 'Single Room',
-      'image': Image(
-        image: AssetImage('assets/images/bedroom.png'),
-        fit: BoxFit.contain,
-      )
-    },
-    {
-      'name': 'Double Room',
-      'image': Image(
-        image: AssetImage('assets/images/two-beds.png'),
-        fit: BoxFit.contain,
-      )
-    },
+  
+   final List<Map<String, dynamic>> floorOptions = [
+    {'name': 'Single Room', 'image': Image(image: AssetImage('assets/images/bedroom.png'),  fit: BoxFit.contain)},
+    {'name': 'Double Room', 'image': Image(image: AssetImage('assets/images/two-beds.png'), fit: BoxFit.contain)},
+    {'name': 'Triple Room', 'image': Image(image: AssetImage('assets/images/pillows.png'), fit: BoxFit.contain)},
+    {'name': 'Quadruple Room', 'image': Image(image: AssetImage('assets/images/p1.png'), fit: BoxFit.contain)},
+    
+
   ];
 
   @override
@@ -125,7 +120,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
             ),
           ),
 
-          // Content Section: question prompt and list of selectable options
+          // Content Section
           Flexible(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
@@ -156,7 +151,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedFloor == style['name'];
+                        final isSelected = selectedRooms == style['name'];
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
@@ -164,7 +159,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                             // When an option is tapped, update the selectedFloor state
                             onTap: () {
                               setState(() {
-                                selectedFloor = style['name'];
+                                selectedRooms = style['name'];
                               });
                             },
                             child: Container(
@@ -251,13 +246,13 @@ class _Feature1Part6State extends State<Feature1Part6> {
 
                       const SizedBox(height: 8),
 
-                      // Next Button: enabled only when an option is selected
+                      // Next Button
                       ElevatedButton(
-                        onPressed: selectedFloor != null
+                        onPressed: selectedRooms.isNotEmpty
                             ? () {
-                                // Handle next action (stub): in a real flow this
-                                // would navigate forward or save the selection.
-                                print('Selected floor: $selectedFloor');
+                                // Handle next action 
+                               
+                                
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => const Feature1Part7()),

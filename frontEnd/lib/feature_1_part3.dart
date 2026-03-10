@@ -1,9 +1,16 @@
+import 'package:archisri_1/feature_1_part7.dart';
 import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part4.dart';
+import 'package:archisri_1/feature_1_part5.dart';
+import 'package:archisri_1/feature_1_part6.dart';
+
 
 class Feature1Part3 extends StatefulWidget {
+  final List<String> remainingFlow;
   const Feature1Part3({
     super.key, 
+    required this.remainingFlow
+
     
   });
 
@@ -258,13 +265,36 @@ class _Feature1Part3State extends State<Feature1Part3> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: 
+                        onPressed: selectedRooms.isNotEmpty?
                              () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const Feature1Part4()),
-                                );
-                              },
+
+                              // handle next action
+
+                              if(widget.remainingFlow.isNotEmpty){
+                                String nextFloor =widget.remainingFlow.first;
+                                List<String> nextRemaining =widget.remainingFlow.sublist(1);
+
+                                Widget nextScreen;
+                                if(nextFloor =='second'){
+                                  nextScreen=Feature1Part4(remainingFlow :nextRemaining);
+                                } else if(nextFloor =='third'){
+                                  nextScreen=Feature1Part5(remainingFlow :nextRemaining);
+
+                                } else if(nextFloor =='third'){
+                                  nextScreen=Feature1Part6(remainingFlow :nextRemaining);
+
+                                }else{
+                                  nextScreen =const Feature1Part7();
+                                }
+
+                                Navigator.push(context, MaterialPageRoute(builder:(context) => nextScreen));
+
+
+                              }else{
+                                Navigator.push(context, MaterialPageRoute(builder:(context) => const Feature1Part7()));
+                              }
+                               
+                              }:null,
                             
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),

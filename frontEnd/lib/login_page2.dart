@@ -181,7 +181,7 @@ class _EngineerLoginScreenState extends State<login_page2> {
                               }
 
                               // Sign in with Firebase Authentication
-                              final userCredential = await FirebaseAuth.instance
+                              await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
                                     email: email,
                                     password: password,
