@@ -256,7 +256,6 @@ class _Feature1Part6State extends State<Feature1Part6> {
                             ? () {
                                 // Handle next action 
                                
-                                
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => const Feature1Part7()),

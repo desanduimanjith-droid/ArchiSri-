@@ -285,7 +285,7 @@ class _Feature1Part3State extends State<Feature1Part3> {
                                 } else if(nextFloor =='third'){
                                   nextScreen=Feature1Part5(remainingFlow :nextRemaining);
 
-                                } else if(nextFloor =='third'){
+                                } else if(nextFloor =='fourth'){
                                   nextScreen=Feature1Part6(remainingFlow :nextRemaining);
 
                                 }else{
