@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part3.dart';
+import 'package:archisri_1/feature_1_part4.dart';
+import 'package:archisri_1/feature_1_part5.dart';
+import 'package:archisri_1/feature_1_part6.dart';
+
 
 class Feature1Part2 extends StatefulWidget {
   const Feature1Part2({super.key});
@@ -11,16 +15,44 @@ class Feature1Part2 extends StatefulWidget {
 class _Feature1Part2State extends State<Feature1Part2> {
   double currentStep = 2;
   final double totalSteps = 8;
-  String? selectedFloor;
+  List<String> selectedFloors = [];
 
-  final List<Map<String, dynamic>> floorOptions = [
-    {'name': 'Single Floor', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Double Floor', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Triple Floor', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Quadruple Floor', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
+  final List<Map<String, dynamic>> selectOptions = [
+    {'name': 'Single Floor','name1':'Single story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
+    {'name': 'Double Floor','name1':'2-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
+    {'name': 'Triple Floor','name1':'3-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
+    {'name': 'Quadruple Floor','name1':'4-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
     
 
   ];
+  void _navigateNext(BuildContext context, List<String> flow){
+                              if (flow.isEmpty) return;
+                              String nextFloor =flow.first;
+                              List<String> remainingFlow = flow.sublist(1);
+
+
+                              Widget nextScreen;
+                              switch (nextFloor) {
+                              case 'first':
+                                nextScreen = Feature1Part3(remainingFlow: remainingFlow);
+                                break;
+                              case 'second':
+                                nextScreen = Feature1Part4(remainingFlow: remainingFlow);
+                                break;
+                              case 'third':
+                                nextScreen = Feature1Part5(remainingFlow: remainingFlow);
+                                break;
+                              case 'fourth':
+                                nextScreen = Feature1Part6(remainingFlow: remainingFlow);
+                                break;
+                              default:
+                                return;
+                            }
+
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => nextScreen));
+
+
+                            }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +87,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                  
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
-                    
+
                   ),
                   
                 
@@ -97,7 +129,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                           borderRadius: BorderRadius.circular(3),
                           child: LinearProgressIndicator(
                             value: currentStep / totalSteps,
-                            backgroundColor: Colors.white.withOpacity(0.3),
+                            backgroundColor: Colors.white.withValues(alpha: 0.3),
                             valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
@@ -138,33 +170,39 @@ class _Feature1Part2State extends State<Feature1Part2> {
                   Flexible(
                     child: ListView.builder(
                       
-                      itemCount: floorOptions.length,
+                      itemCount: selectOptions.length,
                       itemBuilder: (context, index) {
-                        final style = floorOptions[index];
-                        final isSelected = selectedFloor == style['name'];
+                        final style = selectOptions[index];
+                        final isSelected = selectedFloors.contains(style['name']);
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
+                          
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedFloor = style['name'];
+                              if (isSelected) {
+                                selectedFloors.remove(style['name']);
+                              } else {
+                                selectedFloors.add(style['name']);
+                              }
                             });
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
+                            
                               border: Border.all(
                                 color: isSelected
                                     ? const Color(0xFFE68C46)
-                                    : Colors.grey.shade300,
+                                    : Colors.black87,
                                 width: 3,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
+                                  color: Colors.black.withValues(alpha: 0.10),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),
@@ -187,6 +225,15 @@ class _Feature1Part2State extends State<Feature1Part2> {
                                 const SizedBox(height: 16),
                                 Text(
                                   style['name'],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                Text(
+                                  style['name1'],
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -247,16 +294,25 @@ class _Feature1Part2State extends State<Feature1Part2> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: selectedFloor != null
+                        onPressed: selectOptions.isNotEmpty
                             ? () {
                                 // Handle next action
-                                print('Selected floor: $selectedFloor');
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const Feature1Part3()),
-                                );
+
+                                List<String> flow =[];
+                                if(selectedFloors.contains('Single Floor')) flow.add('first');
+                                if(selectedFloors.contains('Double Floor')) flow.add('second');
+                                if(selectedFloors.contains('Triple Floor')) flow.add('third');
+                                if(selectedFloors.contains('Quadruple Floor')) flow.add('fourth');
+
+
+                               _navigateNext(context, flow);
+
                               }
                             : null,
+
+                            
+
+              
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
@@ -294,6 +350,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
             ),
           ),
         ],
+        
       ),
     );
   }
