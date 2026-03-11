@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../service/whatsapp_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,167 +10,13 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-// After ApI intergration this want to be a Stateful widget to handle the API data
-// class _HomeScreenState extends State<HomeScreen> {
-//   // --- LOGIC VARIABLES ---
-//   final ScrollController _scrollController = ScrollController();
-//   List<Constructor> _constructors = [];
-//   int _currentPage = 1;
-//   bool _isLoading = false;
-//   bool _hasMore = true;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _fetchPage(); // Fetch first 20 constructors
-
-//     // Listen to scrolling to load more items
-//     _scrollController.addListener(() {
-//       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.9) {
-//         _fetchPage();
-//       }
-//     });
-//   }
-
-//   Future<void> _fetchPage() async {
-//     if (_isLoading || !_hasMore) return;
-//     setState(() => _isLoading = true);
-
-//     try {
-//       // Calling the service we created
-//       final newItems = await ApiService().fetchConstructors(page: _currentPage);
-//       setState(() {
-//         _currentPage++;
-//         _isLoading = false;
-//         if (newItems.isEmpty) {
-//           _hasMore = false;
-//         } else {
-//           _constructors.addAll(newItems);
-//         }
-//       });
-//     } catch (e) {
-//       setState(() => _isLoading = false);
-//     }
-//   }
-
-//   @override
-//   void dispose() {
-//     _scrollController.dispose();
-//     super.dispose();
-//   }
-
-//   // Your existing filter pop-up function
-//   void _openFilter() {
-//     showModalBottomSheet(
-//       context: context,
-//       isScrollControlled: true,
-//       backgroundColor: const Color(0xFFFFF3F3),
-//       shape: const RoundedRectangleBorder(
-//         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-//       ),
-//       builder: (context) => const FilterSheet(),
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Column(
-//         children: [
-//           // 1. YOUR HEADER (KEEPING YOUR DESIGN)
-//           Container(
-//             width: double.infinity,
-//             height: 200,
-//             padding: const EdgeInsets.all(20),
-//             decoration: const BoxDecoration(
-//               color: Color(0xFFCABF58),
-//             ),
-//             child: Row(
-//               children: [
-//                 Container(
-//                   padding: const EdgeInsets.all(12),
-//                   height: 120,
-//                   width: 120,
-//                   decoration: BoxDecoration(
-//                     color: const Color(0xFFDD8436),
-//                     borderRadius: BorderRadius.circular(20),
-//                   ),
-//                   child: const Icon(Icons.engineering, size: 90, color: Colors.black),
-//                 ),
-//                 const SizedBox(width: 20),
-//                 const Expanded(
-//                   child: Column(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text("Connect with\nConstructors",
-//                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, height: 1.2)),
-//                       SizedBox(height: 8),
-//                       Text("Find verified construction professionals",
-//                         style: TextStyle(fontSize: 14, color: Colors.black87)),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-
-//           // 2. SEARCH BAR SECTION
-//           Padding(
-//             padding: const EdgeInsets.all(16.0),
-//             child: Row(
-//               children: [
-//                 Expanded(
-//                   child: Container(
-//                     padding: const EdgeInsets.symmetric(horizontal: 16),
-//                     decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(30)),
-//                     child: const TextField(
-//                       decoration: InputDecoration(hintText: "Search constructors", border: InputBorder.none, icon: Icon(Icons.search)),
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(width: 10),
-//                 GestureDetector(
-//                   onTap: _openFilter,
-//                   child: Container(
-//                     padding: const EdgeInsets.all(8),
-//                     decoration: BoxDecoration(color: const Color(0xFFFFF3F3), borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.grey.shade300)),
-//                     child: const Icon(Icons.tune),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-
-//           // 3. THE INFINITE LIST (NEW DYNAMIC LOGIC)
-//           Expanded(
-//             child: _constructors.isEmpty && _isLoading
-//                 ? const Center(child: CircularProgressIndicator())
-//                 : ListView.builder(
-//                     controller: _scrollController,
-//                     itemCount: _constructors.length + (_hasMore ? 1 : 0),
-//                     itemBuilder: (context, index) {
-//                       if (index < _constructors.length) {
-//                         return ConstructorCard(item: _constructors[index]);
-//                       } else {
-//                         return const Padding(
-//                           padding: EdgeInsets.all(16.0),
-//                           child: Center(child: CircularProgressIndicator()),
-//                         );
-//                       }
-//                     },
-//                   ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 class _HomeScreenState extends State<HomeScreen> {
   String _searchQuery = "";
   List<String> _selectedSpecialties = [];
   String _selectedLocation = "";
+
+  String? get _currentUserId => FirebaseAuth.instance.currentUser?.uid;
 
   // Filter constructors based on search and filters
   List<QueryDocumentSnapshot<Map<String, dynamic>>> _filterConstructors(
@@ -198,6 +45,59 @@ class _HomeScreenState extends State<HomeScreen> {
 
       return matchesSearch && matchesSpecialty && matchesLocation;
     }).toList();
+  }
+
+  Widget _buildOwnCompanyFallbackList({Object? error}) {
+    final userId = _currentUserId;
+    if (userId == null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            error == null
+                ? "No constructors found matching your criteria."
+                : "Could not read companies list. Please login with a company account or update Firestore read rules.",
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('companies')
+          .where(FieldPath.documentId, isEqualTo: userId)
+          .snapshots(),
+      builder: (context, ownSnapshot) {
+        if (ownSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFFCABF58)),
+          );
+        }
+
+        final docs = ownSnapshot.data?.docs ?? [];
+        final filtered = _filterConstructors(docs);
+        if (filtered.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                error == null
+                    ? "No constructors found matching your criteria."
+                    : "Company account created, but list access is restricted by Firestore rules. Showing only your account when available.",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: filtered.length,
+          itemBuilder: (context, index) =>
+              ConstructorCard(item: filtered[index].data()),
+        );
+      },
+    );
   }
 
   // Function to open the filter pop-up
@@ -332,18 +232,37 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.centerLeft,
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: FirebaseFirestore.instance
-                    .collection('constructors')
+                    .collection('companies')
                     .snapshots(),
                 builder: (context, snapshot) {
-                  final filtered = _filterConstructors(
-                    snapshot.data?.docs ?? [],
-                  );
-                  return Text(
-                    "${filtered.length} constructors found",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                  final companyDocs = snapshot.data?.docs ?? [];
+                  if (companyDocs.isNotEmpty) {
+                    final filtered = _filterConstructors(companyDocs);
+                    return Text(
+                      "${filtered.length} constructors found",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    );
+                  }
+
+                  return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: FirebaseFirestore.instance
+                        .collection('constructors')
+                        .snapshots(),
+                    builder: (context, legacySnapshot) {
+                      final filtered = _filterConstructors(
+                        legacySnapshot.data?.docs ?? [],
+                      );
+                      return Text(
+                        "${filtered.length} constructors found",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -355,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
-                  .collection('constructors')
+                  .collection('companies')
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -365,40 +284,64 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          size: 60,
-                          color: Colors.red,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text("Error: ${snapshot.error}"),
-                        ),
-                        const Text(
-                          "Please check Firebase connection and constructor documents.",
-                        ),
-                      ],
-                    ),
+                  return _buildOwnCompanyFallbackList(error: snapshot.error);
+                }
+
+                final companyDocs = snapshot.data?.docs ?? [];
+                if (companyDocs.isNotEmpty) {
+                  final filtered = _filterConstructors(companyDocs);
+                  if (filtered.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No constructors found matching your criteria.",
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: filtered.length,
+                    itemBuilder: (context, index) =>
+                        ConstructorCard(item: filtered[index].data()),
                   );
                 }
 
-                final filtered = _filterConstructors(snapshot.data?.docs ?? []);
-                if (filtered.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "No constructors found matching your criteria.",
-                    ),
-                  );
-                }
+                return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: FirebaseFirestore.instance
+                      .collection('constructors')
+                      .snapshots(),
+                  builder: (context, legacySnapshot) {
+                    if (legacySnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFFCABF58),
+                        ),
+                      );
+                    }
 
-                return ListView.builder(
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) =>
-                      ConstructorCard(item: filtered[index].data()),
+                    if (legacySnapshot.hasError) {
+                      return _buildOwnCompanyFallbackList(
+                        error: legacySnapshot.error,
+                      );
+                    }
+
+                    final filtered = _filterConstructors(
+                      legacySnapshot.data?.docs ?? [],
+                    );
+                    if (filtered.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          "No constructors found matching your criteria.",
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: filtered.length,
+                      itemBuilder: (context, index) =>
+                          ConstructorCard(item: filtered[index].data()),
+                    );
+                  },
                 );
               },
             ),
@@ -1220,6 +1163,7 @@ String _constructorName(Map<String, dynamic> data) => _constructorFirstNonEmpty(
 
 String _constructorSpecialty(Map<String, dynamic> data) =>
     _constructorFirstNonEmpty(data, [
+      'constructionType',
       'specialty',
       'specialization',
     ], fallback: 'General Construction');
