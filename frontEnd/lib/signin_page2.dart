@@ -26,6 +26,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _companyController = TextEditingController();
   final TextEditingController _rateController = TextEditingController();
 
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+
   // Dropdown value for Specialization
   String? _selectedSpecialization;
   final List<String> _specializations = [
@@ -49,6 +52,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _experienceController.dispose();
     _companyController.dispose();
     _rateController.dispose();
+    _phoneController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -151,6 +156,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _emailController,
                         hint: "engineer@email.com",
                         keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildInputField(
+                        label: "Phone Number",
+                        controller: _phoneController,
+                        hint: "+94 77 123 4567",
+                        keyboardType: TextInputType.phone,
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildInputField(
+                        label: "Location",
+                        controller: _locationController,
+                        hint: "e.g. Colombo",
                       ),
                       const SizedBox(height: 16),
 
@@ -367,10 +387,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String experience = _experienceController.text.trim();
     String company = _companyController.text.trim();
     String ratePerHour = _rateController.text.trim();
+    
+    // Additional details
+    String phone = _phoneController.text.trim();
+    String location = _locationController.text.trim();
 
     if (name.isEmpty ||
         email.isEmpty ||
         pass.isEmpty ||
+        phone.isEmpty ||
+        location.isEmpty ||
         registrationNo.isEmpty ||
         _selectedSpecialization == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -398,6 +424,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .set({
             'fullName': name,
             'email': email,
+            'phoneNumber': phone,
+            'location': location,
             'role': 'Engineer', // Tagging the role explicitly
             'registrationNumber': registrationNo,
             'specialization': _selectedSpecialization,
