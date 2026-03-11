@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
 
 class Feature1Part17 extends StatefulWidget {
   const Feature1Part17({super.key});
@@ -179,7 +180,14 @@ class _Feature1Part17State extends State<Feature1Part17> {
                   // 4. Generate Button
                   Center(
                     child: ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EngineerHomeScreen(),
+                          ),
+                        );
+                      },
                       icon: const Icon(Icons.auto_awesome, size: 20),
                       label: const Text("Generate", style: TextStyle(fontSize: 18)),
                       style: ElevatedButton.styleFrom(
