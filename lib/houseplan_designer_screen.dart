@@ -22,7 +22,12 @@ class HouseplanDesignerScreen extends StatelessWidget {
                 bottom: 30,
               ),
               decoration: const BoxDecoration(
-                color: Color(0xFFE8DB66), // Yellow top background
+                color: Color.fromARGB(
+                  255,
+                  247,
+                  228,
+                  60,
+                ), // Yellow top background
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
@@ -46,12 +51,16 @@ class HouseplanDesignerScreen extends StatelessWidget {
                         'assets/brain_icon.png',
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.psychology, size: 50, color: Colors.black87),
+                            const Icon(
+                              Icons.psychology,
+                              size: 50,
+                              color: Colors.black87,
+                            ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 20),
-                  
+
                   // Text and Progress Bar
                   Expanded(
                     child: Column(
@@ -68,13 +77,10 @@ class HouseplanDesignerScreen extends StatelessWidget {
                         const SizedBox(height: 4),
                         const Text(
                           "Start designing with AI\nassistant",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.white70,
-                          ),
+                          style: TextStyle(fontSize: 13, color: Colors.white70),
                         ),
                         const SizedBox(height: 15),
-                        
+
                         // Progress Bar
                         const Text(
                           "Step 4 of 4",
@@ -110,7 +116,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // ==================================================
             // 2. GENERATED PLAN SECTION
             // ==================================================
@@ -130,10 +136,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                   const SizedBox(height: 2),
                   const Text(
                     "Foundation recommendation included",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                   const SizedBox(height: 15),
 
@@ -163,9 +166,11 @@ class HouseplanDesignerScreen extends StatelessWidget {
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
                                   const Center(
-                                child: Text('Blueprint Image Here',
-                                    style: TextStyle(color: Colors.grey)),
-                              ),
+                                    child: Text(
+                                      'Blueprint Image Here',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ),
                             ),
                           ),
                         ),
@@ -235,10 +240,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: const Color(0xFFC7E2B4), // Light Green
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.black12,
-                        width: 1,
-                      ),
+                      border: Border.all(color: Colors.black12, width: 1),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -282,7 +284,11 @@ class HouseplanDesignerScreen extends StatelessWidget {
                         // Recommendation Type Row
                         Row(
                           children: [
-                            const Icon(Icons.star, color: Colors.deepOrange, size: 16),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.deepOrange,
+                              size: 16,
+                            ),
                             const SizedBox(width: 8),
                             const Expanded(
                               child: Text(
@@ -318,7 +324,11 @@ class HouseplanDesignerScreen extends StatelessWidget {
                         // Cement Type Row
                         Row(
                           children: [
-                            const Icon(Icons.star, color: Colors.deepOrange, size: 16),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.deepOrange,
+                              size: 16,
+                            ),
                             const SizedBox(width: 8),
                             const Expanded(
                               child: Text(
@@ -357,7 +367,9 @@ class HouseplanDesignerScreen extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE2AE62), // Yellow/Orange
+                              backgroundColor: const Color(
+                                0xFFE2AE62,
+                              ), // Yellow/Orange
                               foregroundColor: Colors.black87,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
@@ -377,7 +389,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // ==================================================
                   // 4. EXPLORE MORE SECTION
                   // ==================================================
@@ -396,7 +408,10 @@ class HouseplanDesignerScreen extends StatelessWidget {
                       // Construction Companies Card
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20,
+                            horizontal: 15,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFE2C4A2), // Light Brown/Tan
                             borderRadius: BorderRadius.circular(20),
@@ -405,7 +420,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                                 color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
-                              )
+                              ),
                             ],
                           ),
                           child: Column(
@@ -414,11 +429,14 @@ class HouseplanDesignerScreen extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFD6AB75), // Darker tan circle
+                                  color: const Color(
+                                    0xFFD6AB75,
+                                  ), // Darker tan circle
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: const Icon(
-                                  Icons.domain_add, // buildings icon closest match
+                                  Icons
+                                      .domain_add, // buildings icon closest match
                                   color: Colors.black87,
                                   size: 35,
                                 ),
@@ -442,7 +460,10 @@ class HouseplanDesignerScreen extends StatelessWidget {
                       // Engineers Card
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20,
+                            horizontal: 15,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFE2C4A2), // Light Brown/Tan
                             borderRadius: BorderRadius.circular(20),
@@ -451,7 +472,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                                 color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
-                              )
+                              ),
                             ],
                           ),
                           child: Column(
@@ -496,7 +517,9 @@ class HouseplanDesignerScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFB5BD55), // Olive Green
+                          backgroundColor: const Color(
+                            0xFFB5BD55,
+                          ), // Olive Green
                           foregroundColor: Colors.black87,
                           elevation: 3,
                           shape: RoundedRectangleBorder(
