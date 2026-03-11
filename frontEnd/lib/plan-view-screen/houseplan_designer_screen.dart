@@ -1,9 +1,107 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
 import 'package:archisri_1/Constructor-connect-feature/screens/constructor_screen.dart';
 
-class HouseplanDesignerScreen extends StatelessWidget {
+class HouseplanDesignerScreen extends StatefulWidget {
   const HouseplanDesignerScreen({super.key});
+
+  @override
+  State<HouseplanDesignerScreen> createState() => _HouseplanDesignerScreenState();
+}
+
+class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
+  // Form Controllers
+  final TextEditingController _landsizeController = TextEditingController(text: '3500');
+  final TextEditingController _floorsController = TextEditingController(text: '2');
+  final TextEditingController _bedroomsController = TextEditingController(text: '4');
+  final TextEditingController _bathroomsController = TextEditingController(text: '3');
+  final TextEditingController _kitchenController = TextEditingController(text: '1');
+  final TextEditingController _livingRoomController = TextEditingController(text: '1');
+  
+  String _selectedStyle = 'Modern';
+  bool _isLoading = false;
+  Uint8List? _generatedBlueprintImage;
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _landsizeController.dispose();
+    _floorsController.dispose();
+    _bedroomsController.dispose();
+    _bathroomsController.dispose();
+    _kitchenController.dispose();
+    _livingRoomController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _generateBlueprint() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final int landsize = int.parse(_landsizeController.text);
+      final int floors = int.parse(_floorsController.text);
+      final int bedrooms = int.parse(_bedroomsController.text);
+      final int bathrooms = int.parse(_bathroomsController.text);
+      final int kitchen = int.parse(_kitchenController.text);
+      final int livingRoom = int.parse(_livingRoomController.text);
+
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:5002/blueprint'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'landsize': landsize,
+          'floors': floors,
+          'bedrooms': bedrooms,
+          'bathrooms': bathrooms,
+          'kitchen': kitchen,
+          'living_room': livingRoom,
+          'style': _selectedStyle,
+        }),
+      ).timeout(
+        const Duration(seconds: 60),
+        onTimeout: () => throw Exception('Request timeout - backend may be unavailable'),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _generatedBlueprintImage = response.bodyBytes;
+          _isLoading = false;
+        });
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Blueprint generated successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } else {
+        final errorBody = jsonDecode(response.body);
+        throw Exception(errorBody['error'] ?? 'Failed to generate blueprint');
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error: ${e.toString()}';
+        _isLoading = false;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_errorMessage!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +218,224 @@ class HouseplanDesignerScreen extends StatelessWidget {
             ),
 
             // ==================================================
-            // 2. GENERATED PLAN SECTION
+            // 2. BLUEPRINT PARAMETERS SECTION
+            // ==================================================
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Blueprint Parameters",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  // Input Fields Grid
+                  Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF4EFE6),
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(color: Colors.black12, width: 1),
+                    ),
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        // Row 1: Land Size and Floors
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _landsizeController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Land Size (sq ft)',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: TextField(
+                                controller: _floorsController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Floors',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Row 2: Bedrooms and Bathrooms
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _bedroomsController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Bedrooms',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: TextField(
+                                controller: _bathroomsController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Bathrooms',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Row 3: Kitchen and Living Room
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _kitchenController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Kitchen',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: TextField(
+                                controller: _livingRoomController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Living Room',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Style Dropdown
+                        DropdownButtonFormField<String>(
+                          value: _selectedStyle,
+                          decoration: InputDecoration(
+                            labelText: 'Architectural Style',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
+                          ),
+                          items: ['Modern', 'Traditional', 'Contemporary', 'Minimalist', 'Colonial']
+                              .map((style) => DropdownMenuItem(
+                                    value: style,
+                                    child: Text(style),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedStyle = value ?? 'Modern';
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 15),
+
+                        // Generate Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _isLoading ? null : _generateBlueprint,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFE2AE62),
+                              disabledBackgroundColor: Colors.grey,
+                              foregroundColor: Colors.white,
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            child: _isLoading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : const Text(
+                                    'Generate Blueprint',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // ==================================================
+            // 3. GENERATED BLUEPRINT DISPLAY SECTION
             // ==================================================
             Padding(
               padding: const EdgeInsets.all(20.0),
@@ -153,27 +468,49 @@ class HouseplanDesignerScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Image Placeholder
+                        // Image Display
                         Container(
                           width: double.infinity,
-                          height: 200,
+                          height: 250,
                           decoration: BoxDecoration(
                             color: const Color(0xFFF4EFE6), // Inner cream
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.asset(
-                              'assets/blueprint_placeholder.png',
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Center(
-                                    child: Text(
-                                      'Blueprint Image Here',
-                                      style: TextStyle(color: Colors.grey),
+                            child: _generatedBlueprintImage != null
+                                ? Image.memory(
+                                    _generatedBlueprintImage!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.image_not_supported,
+                                          size: 50,
+                                          color: Colors.grey[400],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'No blueprint generated yet',
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          'Fill parameters and click Generate',
+                                          style: TextStyle(
+                                            color: Colors.grey[500],
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                            ),
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -184,18 +521,18 @@ class HouseplanDesignerScreen extends StatelessWidget {
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
-                                  "Modern 2-Floor Design",
-                                  style: TextStyle(
+                                  '${_selectedStyle} ${_floorsController.text}-Floor Design',
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
                                   ),
                                 ),
-                                SizedBox(height: 3),
+                                const SizedBox(height: 3),
                                 Text(
-                                  "3700 sq ft",
-                                  style: TextStyle(
+                                  '${_landsizeController.text} sq ft',
+                                  style: const TextStyle(
                                     color: Colors.black54,
                                     fontSize: 12,
                                   ),
@@ -234,7 +571,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                   const SizedBox(height: 25),
 
                   // ==================================================
-                  // 3. FOUNDATION ANALYST SECTION
+                  // 4. FOUNDATION ANALYST SECTION
                   // ==================================================
                   Container(
                     width: double.infinity,
@@ -393,7 +730,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                   ),
 
                   // ==================================================
-                  // 4. EXPLORE MORE SECTION
+                  // 5. EXPLORE MORE SECTION
                   // ==================================================
                   const SizedBox(height: 25),
                   const Text(
@@ -530,7 +867,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                   ),
 
                   // ==================================================
-                  // 5. START NEW DESIGN BUTTON
+                  // 6. START NEW DESIGN BUTTON
                   // ==================================================
                   const SizedBox(height: 40),
                   Center(
