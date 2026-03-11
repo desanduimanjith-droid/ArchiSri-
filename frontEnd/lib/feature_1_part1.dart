@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'feature_1_part2.dart';
+import 'package:archisri_1/feature_1_selections.dart';
 
 class Feature1Part1 extends StatefulWidget {
   const Feature1Part1({super.key});
@@ -210,6 +211,7 @@ class _Feature1Part1State extends State<Feature1Part1> {
                           ? () {
                               // Handle next action
                               print('Selected style: $selectedStyle');
+                              BlueprintSelections.style = selectedStyle ?? 'Traditional';
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => const Feature1Part2()),
