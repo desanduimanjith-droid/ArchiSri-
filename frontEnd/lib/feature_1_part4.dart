@@ -3,6 +3,7 @@ import 'package:archisri_1/feature_1_part6.dart';
 import 'package:archisri_1/feature_1_part7.dart';
 import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part5.dart';
+import 'package:archisri_1/feature_1_selections.dart';
 
 class Feature1Part4 extends StatefulWidget {
   
@@ -269,6 +270,7 @@ class _Feature1Part4State extends State<Feature1Part4> {
 
                              () { 
                                 // Handle next action
+                                BlueprintSelections.bedroomSelectionsByFloor['second'] = List<String>.from(selectedRooms);
 
                                 if(widget.remainingFlow.isNotEmpty){
                                   String nextFloor =widget.remainingFlow.first;
