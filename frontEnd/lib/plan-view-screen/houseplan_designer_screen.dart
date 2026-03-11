@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
+import 'package:archisri_1/Constructor-connect-feature/screens/constructor_screen.dart';
 
 class HouseplanDesignerScreen extends StatelessWidget {
   const HouseplanDesignerScreen({super.key});
@@ -408,51 +409,60 @@ class HouseplanDesignerScreen extends StatelessWidget {
                     children: [
                       // Construction Companies Card
                       Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: 15,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFE2C4A2), // Light Brown/Tan
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
                               ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFFD6AB75,
-                                  ), // Darker tan circle
-                                  borderRadius: BorderRadius.circular(15),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 20,
+                              horizontal: 15,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE2C4A2), // Light Brown/Tan
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
                                 ),
-                                child: const Icon(
-                                  Icons
-                                      .domain_add, // buildings icon closest match
-                                  color: Colors.black87,
-                                  size: 35,
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: const Color(
+                                      0xFFD6AB75,
+                                    ), // Darker tan circle
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: const Icon(
+                                    Icons.domain_add,
+                                    color: Colors.black87,
+                                    size: 35,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 15),
-                              const Text(
-                                "Connect with\nConstruction\nCompanies",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  height: 1.2,
-                                  color: Colors.black87,
+                                const SizedBox(height: 15),
+                                const Text(
+                                  "Connect with\nConstruction\nCompanies",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    height: 1.2,
+                                    color: Colors.black87,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
