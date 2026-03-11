@@ -433,7 +433,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                       errorBuilder: (context, error, stackTrace) =>
                                           const Center(
                                             child: Icon(
-                                              Icons.blueprint,
+                                              Icons.architecture,
                                               size: 80,
                                               color: Colors.grey,
                                             ),
