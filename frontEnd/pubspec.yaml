@@ -19,6 +19,7 @@ dependencies:
   cloud_firestore: ^4.17.5
   url_launcher: ^6.3.1
   http: ^1.1.0
+  file_saver: ^0.2.13
 
 dev_dependencies:
   flutter_test:
