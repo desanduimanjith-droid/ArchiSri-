@@ -3,6 +3,7 @@ import 'package:archisri_1/feature_1_part3.dart';
 import 'package:archisri_1/feature_1_part4.dart';
 import 'package:archisri_1/feature_1_part5.dart';
 import 'package:archisri_1/feature_1_part6.dart';
+import 'package:archisri_1/feature_1_selections.dart';
 
 
 class Feature1Part2 extends StatefulWidget {
@@ -304,6 +305,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                                 if(selectedFloors.contains('Triple Floor')) flow.add('third');
                                 if(selectedFloors.contains('Quadruple Floor')) flow.add('fourth');
 
+                                BlueprintSelections.selectedFloors = List<String>.from(selectedFloors);
 
                                _navigateNext(context, flow);
 
