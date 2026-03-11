@@ -2,11 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:file_saver/file_saver.dart';
 import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
 import 'package:archisri_1/Constructor-connect-feature/screens/constructor_screen.dart';
 
 class HouseplanDesignerScreen extends StatefulWidget {
-  const HouseplanDesignerScreen({super.key});
+  final int landsize;
+  final int floors;
+  final int bedrooms;
+  final int bathrooms;
+  final int kitchen;
+  final int livingRoom;
+  final String style;
+
+  const HouseplanDesignerScreen({
+    super.key,
+    required this.landsize,
+    required this.floors,
+    required this.bedrooms,
+    required this.bathrooms,
+    required this.kitchen,
+    required this.livingRoom,
+    required this.style,
+  });
 
   @override
   State<HouseplanDesignerScreen> createState() => _HouseplanDesignerScreenState();
@@ -16,15 +34,15 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
   bool _isLoading = false;
   Uint8List? _generatedBlueprintImage;
 
-  Future<void> _generateBlueprint(
-    int landsize,
-    int floors,
-    int bedrooms,
-    int bathrooms,
-    int kitchen,
-    int livingRoom,
-    String style,
-  ) async {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _generateBlueprint();
+    });
+  }
+
+  Future<void> _generateBlueprint() async {
     setState(() {
       _isLoading = true;
     });
@@ -34,13 +52,13 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
         Uri.parse('http://127.0.0.1:5002/blueprint'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'landsize': landsize,
-          'floors': floors,
-          'bedrooms': bedrooms,
-          'bathrooms': bathrooms,
-          'kitchen': kitchen,
-          'living_room': livingRoom,
-          'style': style,
+          'landsize': widget.landsize,
+          'floors': widget.floors,
+          'bedrooms': widget.bedrooms,
+          'bathrooms': widget.bathrooms,
+          'kitchen': widget.kitchen,
+          'living_room': widget.livingRoom,
+          'style': widget.style,
         }),
       ).timeout(
         const Duration(seconds: 60),
@@ -54,7 +72,6 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
         });
 
         if (mounted) {
-          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Blueprint generated successfully!'),
@@ -82,184 +99,82 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     }
   }
 
-  void _showBlueprintDialog() {
-    final TextEditingController landsizeController = TextEditingController(text: '3500');
-    final TextEditingController floorsController = TextEditingController(text: '2');
-    final TextEditingController bedroomsController = TextEditingController(text: '4');
-    final TextEditingController bathroomsController = TextEditingController(text: '3');
-    final TextEditingController kitchenController = TextEditingController(text: '1');
-    final TextEditingController livingRoomController = TextEditingController(text: '1');
-    String selectedStyle = 'Modern';
+  Future<void> _downloadBlueprint() async {
+    if (_generatedBlueprintImage == null) return;
+
+    try {
+      await FileSaver.instance.saveFile(
+        name: 'archisri_blueprint_${DateTime.now().millisecondsSinceEpoch}',
+        bytes: _generatedBlueprintImage!,
+        ext: 'png',
+        mimeType: MimeType.png,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Blueprint downloaded successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Download failed: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _openFullImagePreview() {
+    if (_generatedBlueprintImage == null) return;
 
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, dialogSetState) => AlertDialog(
-          title: const Text('Generate Blueprint'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Row 1: Land Size and Floors
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: landsizeController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Land Size (sq ft)',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        ),
-                      ),
+      builder: (context) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(12),
+          backgroundColor: Colors.black,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: InteractiveViewer(
+                  minScale: 0.5,
+                  maxScale: 4,
+                  child: Center(
+                    child: Image.memory(
+                      _generatedBlueprintImage!,
+                      fit: BoxFit.contain,
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        controller: floorsController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Floors',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-
-                // Row 2: Bedrooms and Bathrooms
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: bedroomsController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Bedrooms',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        controller: bathroomsController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Bathrooms',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-
-                // Row 3: Kitchen and Living Room
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: kitchenController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Kitchen',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        controller: livingRoomController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Living Room',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-
-                // Style Dropdown
-                DropdownButtonFormField<String>(
-                  value: selectedStyle,
-                  decoration: InputDecoration(
-                    labelText: 'Architectural Style',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                   ),
-                  items: ['Modern', 'Traditional', 'Contemporary', 'Minimalist', 'Colonial']
-                      .map((style) => DropdownMenuItem(value: style, child: Text(style)))
-                      .toList(),
-                  onChanged: (value) {
-                    dialogSetState(() {
-                      selectedStyle = value ?? 'Modern';
-                    });
-                  },
                 ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: _isLoading
-                  ? null
-                  : () {
-                      _generateBlueprint(
-                        int.parse(landsizeController.text),
-                        int.parse(floorsController.text),
-                        int.parse(bedroomsController.text),
-                        int.parse(bathroomsController.text),
-                        int.parse(kitchenController.text),
-                        int.parse(livingRoomController.text),
-                        selectedStyle,
-                      );
-                    },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE2AE62),
               ),
-              child: _isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : const Text('Generate'),
-            ),
-          ],
-        ),
-      ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _downloadBlueprint();
+                      },
+                      icon: const Icon(Icons.download, color: Colors.white),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -412,7 +327,11 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Image Placeholder or Generated Blueprint
-                        Container(
+                        GestureDetector(
+                          onTap: _generatedBlueprintImage != null
+                              ? _openFullImagePreview
+                              : null,
+                          child: Container(
                           width: double.infinity,
                           height: 250,
                           decoration: BoxDecoration(
@@ -442,64 +361,89 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                   ),
                           ),
                         ),
+                        ),
                         const SizedBox(height: 15),
 
                         // Title and Button
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Modern 2-Floor Design",
-                                  style: TextStyle(
+                                  "${widget.style} ${widget.floors}-Floor Design",
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
                                   ),
                                 ),
-                                SizedBox(height: 3),
+                                const SizedBox(height: 3),
                                 Text(
-                                  "3700 sq ft",
-                                  style: TextStyle(
+                                  "${widget.landsize} sq ft",
+                                  style: const TextStyle(
                                     color: Colors.black54,
                                     fontSize: 12,
                                   ),
                                 ),
                               ],
                             ),
-                            ElevatedButton(
-                              onPressed: _isLoading ? null : _showBlueprintDialog,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFE2AE62),
-                                disabledBackgroundColor: Colors.grey,
-                                foregroundColor: Colors.white,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
-                                ),
-                              ),
-                              child: _isLoading
-                                  ? const SizedBox(
-                                      height: 16,
-                                      width: 16,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                      ),
-                                    )
-                                  : const Text(
-                                      "Generate",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        color: Color(0xFF8B4513), // Brown text
-                                      ),
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: _isLoading ? null : _generateBlueprint,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFE2AE62),
+                                    disabledBackgroundColor: Colors.grey,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 8,
+                                    ),
+                                  ),
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          height: 16,
+                                          width: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          ),
+                                        )
+                                      : const Text(
+                                          "Regenerate",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                            color: Color(0xFF8B4513),
+                                          ),
+                                        ),
+                                ),
+                                const SizedBox(width: 8),
+                                ElevatedButton(
+                                  onPressed: _generatedBlueprintImage == null || _isLoading
+                                      ? null
+                                      : _downloadBlueprint,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFCAA070),
+                                    disabledBackgroundColor: Colors.grey,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                  ),
+                                  child: const Icon(Icons.download, size: 16),
+                                ),
+                              ],
                             ),
                           ],
                         ),
