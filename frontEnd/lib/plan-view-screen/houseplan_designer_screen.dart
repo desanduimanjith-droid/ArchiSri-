@@ -13,44 +13,23 @@ class HouseplanDesignerScreen extends StatefulWidget {
 }
 
 class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
-  // Form Controllers
-  final TextEditingController _landsizeController = TextEditingController(text: '3500');
-  final TextEditingController _floorsController = TextEditingController(text: '2');
-  final TextEditingController _bedroomsController = TextEditingController(text: '4');
-  final TextEditingController _bathroomsController = TextEditingController(text: '3');
-  final TextEditingController _kitchenController = TextEditingController(text: '1');
-  final TextEditingController _livingRoomController = TextEditingController(text: '1');
-  
-  String _selectedStyle = 'Modern';
   bool _isLoading = false;
   Uint8List? _generatedBlueprintImage;
-  String? _errorMessage;
 
-  @override
-  void dispose() {
-    _landsizeController.dispose();
-    _floorsController.dispose();
-    _bedroomsController.dispose();
-    _bathroomsController.dispose();
-    _kitchenController.dispose();
-    _livingRoomController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _generateBlueprint() async {
+  Future<void> _generateBlueprint(
+    int landsize,
+    int floors,
+    int bedrooms,
+    int bathrooms,
+    int kitchen,
+    int livingRoom,
+    String style,
+  ) async {
     setState(() {
       _isLoading = true;
-      _errorMessage = null;
     });
 
     try {
-      final int landsize = int.parse(_landsizeController.text);
-      final int floors = int.parse(_floorsController.text);
-      final int bedrooms = int.parse(_bedroomsController.text);
-      final int bathrooms = int.parse(_bathroomsController.text);
-      final int kitchen = int.parse(_kitchenController.text);
-      final int livingRoom = int.parse(_livingRoomController.text);
-
       final response = await http.post(
         Uri.parse('http://127.0.0.1:5002/blueprint'),
         headers: {'Content-Type': 'application/json'},
@@ -61,7 +40,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
           'bathrooms': bathrooms,
           'kitchen': kitchen,
           'living_room': livingRoom,
-          'style': _selectedStyle,
+          'style': style,
         }),
       ).timeout(
         const Duration(seconds: 60),
@@ -73,8 +52,9 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
           _generatedBlueprintImage = response.bodyBytes;
           _isLoading = false;
         });
-        
+
         if (mounted) {
+          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Blueprint generated successfully!'),
@@ -88,19 +68,199 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Error: ${e.toString()}';
         _isLoading = false;
       });
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_errorMessage!),
+            content: Text('Error: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
       }
     }
+  }
+
+  void _showBlueprintDialog() {
+    final TextEditingController landsizeController = TextEditingController(text: '3500');
+    final TextEditingController floorsController = TextEditingController(text: '2');
+    final TextEditingController bedroomsController = TextEditingController(text: '4');
+    final TextEditingController bathroomsController = TextEditingController(text: '3');
+    final TextEditingController kitchenController = TextEditingController(text: '1');
+    final TextEditingController livingRoomController = TextEditingController(text: '1');
+    String selectedStyle = 'Modern';
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, dialogSetState) => AlertDialog(
+          title: const Text('Generate Blueprint'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Row 1: Land Size and Floors
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: landsizeController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Land Size (sq ft)',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: floorsController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Floors',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // Row 2: Bedrooms and Bathrooms
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: bedroomsController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Bedrooms',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: bathroomsController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Bathrooms',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // Row 3: Kitchen and Living Room
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: kitchenController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Kitchen',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: livingRoomController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Living Room',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // Style Dropdown
+                DropdownButtonFormField<String>(
+                  value: selectedStyle,
+                  decoration: InputDecoration(
+                    labelText: 'Architectural Style',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  ),
+                  items: ['Modern', 'Traditional', 'Contemporary', 'Minimalist', 'Colonial']
+                      .map((style) => DropdownMenuItem(value: style, child: Text(style)))
+                      .toList(),
+                  onChanged: (value) {
+                    dialogSetState(() {
+                      selectedStyle = value ?? 'Modern';
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: _isLoading
+                  ? null
+                  : () {
+                      _generateBlueprint(
+                        int.parse(landsizeController.text),
+                        int.parse(floorsController.text),
+                        int.parse(bedroomsController.text),
+                        int.parse(bathroomsController.text),
+                        int.parse(kitchenController.text),
+                        int.parse(livingRoomController.text),
+                        selectedStyle,
+                      );
+                    },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFE2AE62),
+              ),
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : const Text('Generate'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -218,224 +378,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
             ),
 
             // ==================================================
-            // 2. BLUEPRINT PARAMETERS SECTION
-            // ==================================================
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Blueprint Parameters",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Input Fields Grid
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF4EFE6),
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.black12, width: 1),
-                    ),
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        // Row 1: Land Size and Floors
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _landsizeController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'Land Size (sq ft)',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: TextField(
-                                controller: _floorsController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'Floors',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Row 2: Bedrooms and Bathrooms
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _bedroomsController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'Bedrooms',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: TextField(
-                                controller: _bathroomsController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'Bathrooms',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Row 3: Kitchen and Living Room
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _kitchenController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'Kitchen',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: TextField(
-                                controller: _livingRoomController,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'Living Room',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Style Dropdown
-                        DropdownButtonFormField<String>(
-                          value: _selectedStyle,
-                          decoration: InputDecoration(
-                            labelText: 'Architectural Style',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
-                          ),
-                          items: ['Modern', 'Traditional', 'Contemporary', 'Minimalist', 'Colonial']
-                              .map((style) => DropdownMenuItem(
-                                    value: style,
-                                    child: Text(style),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedStyle = value ?? 'Modern';
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 15),
-
-                        // Generate Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _generateBlueprint,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE2AE62),
-                              disabledBackgroundColor: Colors.grey,
-                              foregroundColor: Colors.white,
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                            ),
-                            child: _isLoading
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
-                                      ),
-                                    ),
-                                  )
-                                : const Text(
-                                    'Generate Blueprint',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // ==================================================
-            // 3. GENERATED BLUEPRINT DISPLAY SECTION
+            // 2. GENERATED PLAN SECTION
             // ==================================================
             Padding(
               padding: const EdgeInsets.all(20.0),
@@ -468,7 +411,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Image Display
+                        // Image Placeholder or Generated Blueprint
                         Container(
                           width: double.infinity,
                           height: 250,
@@ -484,31 +427,17 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                     fit: BoxFit.cover,
                                   )
                                 : Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.image_not_supported,
-                                          size: 50,
-                                          color: Colors.grey[400],
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                          'No blueprint generated yet',
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 13,
+                                    child: Image.asset(
+                                      'assets/blueprint_placeholder.png',
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) =>
+                                          const Center(
+                                            child: Icon(
+                                              Icons.blueprint,
+                                              size: 80,
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          'Fill parameters and click Generate',
-                                          style: TextStyle(
-                                            color: Colors.grey[500],
-                                            fontSize: 11,
-                                          ),
-                                        ),
-                                      ],
                                     ),
                                   ),
                           ),
@@ -519,20 +448,20 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${_selectedStyle} ${_floorsController.text}-Floor Design',
-                                  style: const TextStyle(
+                                  "Modern 2-Floor Design",
+                                  style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
                                   ),
                                 ),
-                                const SizedBox(height: 3),
+                                SizedBox(height: 3),
                                 Text(
-                                  '${_landsizeController.text} sq ft',
-                                  style: const TextStyle(
+                                  "3700 sq ft",
+                                  style: TextStyle(
                                     color: Colors.black54,
                                     fontSize: 12,
                                   ),
@@ -540,9 +469,10 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                               ],
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: _isLoading ? null : _showBlueprintDialog,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFCAA070),
+                                backgroundColor: const Color(0xFFE2AE62),
+                                disabledBackgroundColor: Colors.grey,
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
@@ -553,14 +483,23 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                   vertical: 8,
                                 ),
                               ),
-                              child: const Text(
-                                "3D View",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: Color(0xFF8B4513), // Brown text
-                                ),
-                              ),
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      height: 16,
+                                      width: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      ),
+                                    )
+                                  : const Text(
+                                      "Generate",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                        color: Color(0xFF8B4513), // Brown text
+                                      ),
+                                    ),
                             ),
                           ],
                         ),
@@ -571,7 +510,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                   const SizedBox(height: 25),
 
                   // ==================================================
-                  // 4. FOUNDATION ANALYST SECTION
+                  // 3. FOUNDATION ANALYST SECTION
                   // ==================================================
                   Container(
                     width: double.infinity,
@@ -730,7 +669,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                   ),
 
                   // ==================================================
-                  // 5. EXPLORE MORE SECTION
+                  // 4. EXPLORE MORE SECTION
                   // ==================================================
                   const SizedBox(height: 25),
                   const Text(
@@ -867,7 +806,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                   ),
 
                   // ==================================================
-                  // 6. START NEW DESIGN BUTTON
+                  // 5. START NEW DESIGN BUTTON
                   // ==================================================
                   const SizedBox(height: 40),
                   Center(
