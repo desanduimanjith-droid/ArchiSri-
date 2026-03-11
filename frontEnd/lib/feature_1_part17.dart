@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
+import 'package:archisri_1/plan-view-screen/houseplan_designer_screen.dart';
 
 class Feature1Part17 extends StatefulWidget {
   const Feature1Part17({super.key});
@@ -17,13 +17,18 @@ class _Feature1Part17State extends State<Feature1Part17> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     backgroundColor: const Color(0xFFF5E6D3),
+      backgroundColor: const Color(0xFFF5E6D3),
       body: Column(
         children: [
           // Header Section
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(left: 40,top: 60, right: 40, bottom: 40),
+            padding: const EdgeInsets.only(
+              left: 40,
+              top: 60,
+              right: 40,
+              bottom: 40,
+            ),
             decoration: const BoxDecoration(
               color: Color(0xFFD4C55A),
               borderRadius: BorderRadius.only(
@@ -33,7 +38,7 @@ class _Feature1Part17State extends State<Feature1Part17> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              
+
               children: [
                 Container(
                   height: 100,
@@ -44,13 +49,12 @@ class _Feature1Part17State extends State<Feature1Part17> {
                     border: Border.all(color: Colors.white, width: 3),
                   ),
                   padding: const EdgeInsets.all(10),
-                 
+
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
-                    
                   ),
                 ),
-                  
+
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -58,7 +62,11 @@ class _Feature1Part17State extends State<Feature1Part17> {
                     children: [
                       const Text(
                         "AI House Plan Designer",
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       const Text(
@@ -66,8 +74,13 @@ class _Feature1Part17State extends State<Feature1Part17> {
                         style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                       const SizedBox(height: 17),
-                      Text("Step ${currentStep.toInt()} of ${totalSteps.toInt()}",
-                          style: const TextStyle(color: Colors.white70, fontSize: 14)),
+                      Text(
+                        "Step ${currentStep.toInt()} of ${totalSteps.toInt()}",
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
 
                       const SizedBox(height: 8),
 
@@ -75,15 +88,17 @@ class _Feature1Part17State extends State<Feature1Part17> {
                         height: 6,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(3),
-                        child: LinearProgressIndicator(
-                          value: currentStep / totalSteps,
-                          backgroundColor: Colors.white24.withValues(alpha: 0.3 ),
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                          child: LinearProgressIndicator(
+                            value: currentStep / totalSteps,
+                            backgroundColor: Colors.white24.withValues(
+                              alpha: 0.3,
+                            ),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
                         ),
-                        ),
-
                       ),
-                      
                     ],
                   ),
                 ),
@@ -100,20 +115,17 @@ class _Feature1Part17State extends State<Feature1Part17> {
                 children: [
                   const Text(
                     "Land Size",
-                     style: TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
-                       fontWeight: FontWeight.bold,
-                       color: Colors.black87
-                       )
-                      ),
-                      const SizedBox(height: 4),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
                   const Text(
                     "Enter Your Plot Dimensions",
-                     style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 14,
-                      )
-                      ),
+                    style: TextStyle(color: Colors.black54, fontSize: 14),
+                  ),
                   const SizedBox(height: 20),
 
                   // 2. Land Size Slider Card
@@ -125,7 +137,13 @@ class _Feature1Part17State extends State<Feature1Part17> {
                     ),
                     child: Column(
                       children: [
-                        Text("Land Size (sq ft)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text(
+                          "Land Size (sq ft)",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                         Slider(
                           value: _landSize,
                           min: 500,
@@ -137,7 +155,11 @@ class _Feature1Part17State extends State<Feature1Part17> {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [Text("500"), Text("1000 sq ft"), Text("5000")],
+                          children: const [
+                            Text("500"),
+                            Text("1000 sq ft"),
+                            Text("5000"),
+                          ],
                         ),
                         const SizedBox(height: 20),
                         // Quick selection buttons
@@ -148,7 +170,7 @@ class _Feature1Part17State extends State<Feature1Part17> {
                             _sizeButton(2000),
                             _sizeButton(3000),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -166,7 +188,13 @@ class _Feature1Part17State extends State<Feature1Part17> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Your Section", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        const Text(
+                          "Your Section",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
                         const SizedBox(height: 10),
                         _summaryRow("Floors", "2"),
                         _summaryRow("Style", "Traditional"),
@@ -174,7 +202,7 @@ class _Feature1Part17State extends State<Feature1Part17> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 30),
 
                   // 4. Generate Button
@@ -184,17 +212,26 @@ class _Feature1Part17State extends State<Feature1Part17> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const EngineerHomeScreen(),
+                            builder: (context) =>
+                                const HouseplanDesignerScreen(),
                           ),
                         );
                       },
                       icon: const Icon(Icons.auto_awesome, size: 20),
-                      label: const Text("Generate", style: TextStyle(fontSize: 18)),
+                      label: const Text(
+                        "Generate",
+                        style: TextStyle(fontSize: 18),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFE68C46),
                         foregroundColor: Colors.black87,
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 15,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                         elevation: 5,
                       ),
                     ),
@@ -228,8 +265,14 @@ class _Feature1Part17State extends State<Feature1Part17> {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Text("$title - ", style: const TextStyle(color: Colors.grey, fontSize: 16)),
-          Text(value, style: const TextStyle(color: Colors.black54, fontSize: 16)),
+          Text(
+            "$title - ",
+            style: const TextStyle(color: Colors.grey, fontSize: 16),
+          ),
+          Text(
+            value,
+            style: const TextStyle(color: Colors.black54, fontSize: 16),
+          ),
         ],
       ),
     );
