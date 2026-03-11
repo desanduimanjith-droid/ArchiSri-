@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part7.dart';
+import 'package:archisri_1/feature_1_selections.dart';
 
 
 
@@ -263,6 +264,7 @@ class _Feature1Part6State extends State<Feature1Part6> {
                         onPressed: selectedRooms.isNotEmpty
                             ? () {
                                 // Handle next action
+                              BlueprintSelections.bedroomSelectionsByFloor['fourth'] = List<String>.from(selectedRooms);
 
                                 Navigator.push(
                                   context,
