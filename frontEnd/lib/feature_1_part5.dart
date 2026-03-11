@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part7.dart';
 import 'package:archisri_1/feature_1_part6.dart';
+import 'package:archisri_1/feature_1_selections.dart';
 
 // 3rd floor room type selection screen
 
@@ -262,6 +263,7 @@ class _Feature1Part5State extends State<Feature1Part5> {
                         onPressed: selectedRooms.isNotEmpty
                             ? () {
                                 // Handle next action
+                               BlueprintSelections.bedroomSelectionsByFloor['third'] = List<String>.from(selectedRooms);
                                  if (widget.remainingFlow.isNotEmpty) {
                                     String nextFloor = widget.remainingFlow.first;
                                     List<String> nextRemaining = widget.remainingFlow.sublist(1);
