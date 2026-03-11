@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part12.dart';
+import 'package:archisri_1/feature_1_selections.dart';
 
 //bathroom type selection screen
 
@@ -260,6 +261,7 @@ class _Feature1Part11State extends State<Feature1Part11> {
                             ? () {
                                 // Handle next action
                                 print('Selected rooms: $selectedRooms');
+                                BlueprintSelections.bathroomSelectionsByFloor['fourth'] = List<String>.from(selectedRooms);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => const Feature1Part12()),
