@@ -1,4 +1,16 @@
-  #include <Arduino.h>
+#include <Arduino.h>
+#include <WiFi.h>
+#include <FirebaseESP32.h>
+
+// 1. Your WiFi Credentials
+const char* ssid = "AOT";
+const char* password = "12345678";
+
+// 2. Your Firebase URL (From Step 1)
+#define FIREBASE_HOST "archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app/" 
+// 3. Your Database Secret (Found in Project Settings > Service Accounts > Database Secrets)
+#define FIREBASE_AUTH "O5GRHpKCN5clsbSj5OZpkcm6g8jY8ksH0npQWbXc"
+
 
 // 1. Identify the Pin
 const int sensorPin = 34; // Yellow wire connected to D34
