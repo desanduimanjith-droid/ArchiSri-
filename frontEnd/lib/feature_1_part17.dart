@@ -10,7 +10,7 @@ class Feature1Part17 extends StatefulWidget {
 }
 
 class _Feature1Part17State extends State<Feature1Part17> {
-  // 1. State Variables
+  // State Variables
   double currentStep = 7;
   final double totalSteps = 8;
   double _landSize = 1000; // Initial value for the slider
@@ -107,7 +107,7 @@ class _Feature1Part17State extends State<Feature1Part17> {
             ),
           ),
 
-          // --- Body Content ---
+          
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -129,7 +129,7 @@ class _Feature1Part17State extends State<Feature1Part17> {
                   ),
                   const SizedBox(height: 20),
 
-                  // 2. Land Size Slider Card
+                  // land side slider card deatils
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -178,7 +178,7 @@ class _Feature1Part17State extends State<Feature1Part17> {
 
                   const SizedBox(height: 20),
 
-                  // 3. Selection Summary Card
+                  // summerr card
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
@@ -206,7 +206,7 @@ class _Feature1Part17State extends State<Feature1Part17> {
 
                   const SizedBox(height: 30),
 
-                  // 4. Generate Button
+                  // genarate button
                   Center(
                     child: ElevatedButton.icon(
                       onPressed: () {
