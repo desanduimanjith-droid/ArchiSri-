@@ -15,7 +15,7 @@ class _MainPage5State extends State<MainPage5> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEBE4D0),
+      backgroundColor: const Color(0xFFEBE4D0), 
       body: SafeArea(
         child: AnimationLimiter(
           child: Column(
@@ -42,7 +42,7 @@ class _MainPage5State extends State<MainPage5> {
                   fontSize: 26,
                   fontWeight: FontWeight.w800,
                   fontFamily: 'Serif',
-                  color: Colors.black87,
+                  color: Color(0xFF2D2D2D),
                 ),
               ),
 
@@ -53,24 +53,16 @@ class _MainPage5State extends State<MainPage5> {
 
               const SizedBox(height: 30),
 
-              //  Action creation
               Expanded(
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(top: 35, left: 25, right: 25),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.white.withOpacity(0.9), 
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40),
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 15,
-                        offset: const Offset(0, -5),
-                      ),
-                    ],
                   ),
                   child: SingleChildScrollView(
                     child: Column(
@@ -81,7 +73,7 @@ class _MainPage5State extends State<MainPage5> {
                           child: FadeInAnimation(child: widget),
                         ),
                         children: [
-                        
+                          
                           roleButton(context, "User", Icons.person_outline, () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
                           }),
@@ -96,21 +88,19 @@ class _MainPage5State extends State<MainPage5> {
 
                           const SizedBox(height: 40),
 
-                          // status selction
+                         //status 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              _buildStatItem("500+", "Projects"),
+                              _buildStatItem("500+", "Projects", const Color(0xFF8D7B68)), 
+                              _buildStatItem("150+", "Engineers", const Color(0xFF678983)), 
                               _buildStatDivider(),
-                              _buildStatItem("150+", "Engineers"),
-                              _buildStatDivider(),
-                              _buildStatItem("4.9/5", "Rating"),
+                              _buildStatItem("4.9/5", "Rating", const Color(0xFF706233)), 
                             ],
                           ),
 
                           const SizedBox(height: 40),
 
-                          // 
                           const Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -119,22 +109,24 @@ class _MainPage5State extends State<MainPage5> {
                             ),
                           ),
                           const SizedBox(height: 15),
+                          
+                          
                           SizedBox(
                             height: 100,
                             child: ListView(
                               scrollDirection: Axis.horizontal,
                               children: [
-                                projectCard("Residential", Icons.home_filled),
-                                projectCard("Commercial", Icons.business_rounded),
-                                projectCard("Industrial", Icons.factory_outlined),
-                                projectCard("Interior", Icons.chair_outlined),
+                                projectCard("Residential", Icons.home_filled, const Color(0xFFF2EAD3)),
+                                projectCard("Commercial", Icons.business_rounded, const Color(0xFFDFD7BF)),
+                                projectCard("Industrial", Icons.factory_outlined, const Color(0xFFEBE4D0)),
+                                projectCard("Interior", Icons.chair_outlined, const Color(0xFFF2EAD3)),
                               ],
                             ),
                           ),
 
                           const SizedBox(height: 40),
 
-                          //footer
+                          // Footer
                           const Divider(thickness: 0.5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -142,7 +134,10 @@ class _MainPage5State extends State<MainPage5> {
                               Text("Need help?", style: TextStyle(color: Colors.grey[600], fontSize: 13)),
                               TextButton(
                                 onPressed: () {}, 
-                                child: const Text("Contact Support", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2D2D2D))),
+                                child: const Text(
+                                  "Contact Support", 
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF8D7B68))
+                                ),
                               )
                             ],
                           ),
@@ -160,36 +155,33 @@ class _MainPage5State extends State<MainPage5> {
     );
   }
 
-  // Widget for Stats 
-  Widget _buildStatItem(String value, String label) {
+  Widget _buildStatItem(String value, String label, Color valueColor) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF2D2D2D))),
+        Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: valueColor)),
         Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }
 
   Widget _buildStatDivider() {
-    return Container(height: 30, width: 1, color: Colors.grey.withValues(alpha: 3.0));
+    return Container(height: 30, width: 1, color: Colors.grey.withOpacity(0.2));
   }
 
-  // Widget for decorative project cards
-  Widget projectCard(String title, IconData icon) {
+  Widget projectCard(String title, IconData icon, Color bgColor) {
     return Container(
       width: 110,
       margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF9F9F9),
+        color: bgColor, 
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 24, color: const Color(0xFF2D2D2D)),
+          Icon(icon, size: 24, color: const Color(0xFF434242)),
           const SizedBox(height: 5),
-          Text(title, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black54)),
+          Text(title, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF434242))),
         ],
       ),
     );
@@ -202,7 +194,7 @@ class _MainPage5State extends State<MainPage5> {
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF2D2D2D),
+          backgroundColor: const Color(0xFF2D2D2D), 
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         ),
