@@ -96,9 +96,7 @@ class _MainContentPartState extends State<MainContentPart> {
   bool startBuildClicked = false;
   bool isModified = false;
 
-  // value for optional slider in the drawer
-  double _drawerSliderValue = 0.5;
-
+  
   // reset the state
   void reset() {
     setState(() {
@@ -107,10 +105,10 @@ class _MainContentPartState extends State<MainContentPart> {
     });
   }
 
-  // slide menu builder (was referenced as _buildSlideMenu)
+  // slide menu builder 
   Widget _buildSlideMenu() {
     return Drawer(
-      backgroundColor: const Color(0xFF1E1E2E), // Dark theme for contrast
+      backgroundColor: const Color(0xFF1E1E2E), 
       child: Column(
         children: [
           DrawerHeader(
@@ -131,7 +129,7 @@ class _MainContentPartState extends State<MainContentPart> {
             "Home",
             onTap: () {
               Navigator.pop(context);
-              // TODO: handle home navigation
+              
             },
           ),
           _drawerTile(
@@ -139,7 +137,7 @@ class _MainContentPartState extends State<MainContentPart> {
             "Dashboard",
             onTap: () {
               Navigator.pop(context);
-              // TODO: navigate to dashboard screen
+              
             },
           ),
           _drawerTile(
@@ -147,7 +145,7 @@ class _MainContentPartState extends State<MainContentPart> {
             "My Blueprints",
             onTap: () {
               Navigator.pop(context);
-              // TODO: open blueprints
+              
             },
           ),
           _drawerTile(
@@ -155,36 +153,28 @@ class _MainContentPartState extends State<MainContentPart> {
             "Marketplace",
             onTap: () {
               Navigator.pop(context);
-              // TODO: open marketplace
+              
             },
           ),
 
-          // sliding bar section
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Adjust setting',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-                Slider(
-                  value: _drawerSliderValue,
-                  min: 0,
-                  max: 1,
-                  activeColor: const Color(0xFFF5A623),
-                  inactiveColor: Colors.white24,
-                  onChanged: (v) => setState(() => _drawerSliderValue = v),
-                ),
-              ],
-            ),
-          ),
 
-          _drawerTile(Icons.settings, "Settings"),
-          _drawerTile(Icons.help_outline, "Help"),
+          _drawerTile(
+          Icons.help_outline,
+           "Help",
+
+           onTap: (){
+            Navigator.pop(context);
+
+           },
+          ),
           const Spacer(),
-          _drawerTile(Icons.logout, "Logout", color: Colors.redAccent),
+          _drawerTile(Icons.logout, 
+          "Logout", 
+          onTap: (){
+
+          },
+          color: Colors.redAccent
+          ),
           const SizedBox(height: 20),
         ],
       ),
@@ -325,7 +315,7 @@ class _MainContentPartState extends State<MainContentPart> {
                             SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                'AI House Plan Designer started! Your plan will be ready in less than 2 minutes and requires further modifications to customize your home plan.',
+                                'AI House Plan Designer started! Your plan will be ready in less than 5 minutes and requires further modifications to customize your home plan.',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: Color(0xFF166534),
