@@ -27,7 +27,21 @@ void setup() {
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
 }
+void loop() {
+  int moisture = analogRead(34);
+  int ec = analogRead(35);
 
+  // Send to Firebase path "/SensorData"
+  if (Firebase.setInt(firebaseData, "/SensorData/moisture", moisture)) {
+    Serial.println("Sent to Firebase!");
+  } else {
+    Serial.println(firebaseData.errorReason());
+  }
+
+  Firebase.setInt(firebaseData, "/SensorData/ec", ec);
+  
+  delay(10000); // Send every 10 seconds
+}
 
 // // 1. Identify the Pin
 // const int sensorPin = 34; // Yellow wire connected to D34
