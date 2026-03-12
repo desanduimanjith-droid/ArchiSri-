@@ -27,7 +27,8 @@ class HouseplanDesignerScreen extends StatefulWidget {
   });
 
   @override
-  State<HouseplanDesignerScreen> createState() => _HouseplanDesignerScreenState();
+  State<HouseplanDesignerScreen> createState() =>
+      _HouseplanDesignerScreenState();
 }
 
 class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
@@ -48,22 +49,25 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     });
 
     try {
-      final response = await http.post(
-        Uri.parse('http://127.0.0.1:5002/blueprint'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'landsize': widget.landsize,
-          'floors': widget.floors,
-          'bedrooms': widget.bedrooms,
-          'bathrooms': widget.bathrooms,
-          'kitchen': widget.kitchen,
-          'living_room': widget.livingRoom,
-          'style': widget.style,
-        }),
-      ).timeout(
-        const Duration(seconds: 60),
-        onTimeout: () => throw Exception('Request timeout - backend may be unavailable'),
-      );
+      final response = await http
+          .post(
+            Uri.parse('http://127.0.0.1:5002/blueprint'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'landsize': widget.landsize,
+              'floors': widget.floors,
+              'bedrooms': widget.bedrooms,
+              'bathrooms': widget.bathrooms,
+              'kitchen': widget.kitchen,
+              'living_room': widget.livingRoom,
+              'style': widget.style,
+            }),
+          )
+          .timeout(
+            const Duration(seconds: 60),
+            onTimeout: () =>
+                throw Exception('Request timeout - backend may be unavailable'),
+          );
 
       if (response.statusCode == 200) {
         setState(() {
@@ -104,9 +108,8 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
 
     try {
       await FileSaver.instance.saveFile(
-        name: 'archisri_blueprint_${DateTime.now().millisecondsSinceEpoch}',
+        name: 'archisri_blueprint_${DateTime.now().millisecondsSinceEpoch}.png',
         bytes: _generatedBlueprintImage!,
-        ext: 'png',
         mimeType: MimeType.png,
       );
 
@@ -332,35 +335,36 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                               ? _openFullImagePreview
                               : null,
                           child: Container(
-                          width: double.infinity,
-                          height: 250,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF4EFE6), // Inner cream
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: _generatedBlueprintImage != null
-                                ? Image.memory(
-                                    _generatedBlueprintImage!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Center(
-                                    child: Image.asset(
-                                      'assets/blueprint_placeholder.png',
+                            width: double.infinity,
+                            height: 250,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF4EFE6), // Inner cream
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: _generatedBlueprintImage != null
+                                  ? Image.memory(
+                                      _generatedBlueprintImage!,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) =>
-                                          const Center(
-                                            child: Icon(
-                                              Icons.architecture,
-                                              size: 80,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
+                                    )
+                                  : Center(
+                                      child: Image.asset(
+                                        'assets/blueprint_placeholder.png',
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                const Center(
+                                                  child: Icon(
+                                                    Icons.architecture,
+                                                    size: 80,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                      ),
                                     ),
-                                  ),
+                            ),
                           ),
-                        ),
                         ),
                         const SizedBox(height: 15),
 
@@ -391,7 +395,9 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                             Row(
                               children: [
                                 ElevatedButton(
-                                  onPressed: _isLoading ? null : _generateBlueprint,
+                                  onPressed: _isLoading
+                                      ? null
+                                      : _generateBlueprint,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFE2AE62),
                                     disabledBackgroundColor: Colors.grey,
@@ -411,7 +417,10 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                           width: 16,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
-                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  Colors.white,
+                                                ),
                                           ),
                                         )
                                       : const Text(
@@ -425,7 +434,9 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 ElevatedButton(
-                                  onPressed: _generatedBlueprintImage == null || _isLoading
+                                  onPressed:
+                                      _generatedBlueprintImage == null ||
+                                          _isLoading
                                       ? null
                                       : _downloadBlueprint,
                                   style: ElevatedButton.styleFrom(
