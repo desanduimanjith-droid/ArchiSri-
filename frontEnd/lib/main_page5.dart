@@ -1,168 +1,220 @@
+import 'package:archisri_1/signin_page.dart';
+import 'package:archisri_1/signin_page3.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:archisri_1/login_page.dart';
-import 'package:archisri_1/login_page2.dart';
-import 'package:archisri_1/login_page3.dart';
 
-class MainPage5 extends StatelessWidget {
+class MainPage5 extends StatefulWidget {
   const MainPage5({super.key});
 
   @override
+  State<MainPage5> createState() => _MainPage5State();
+}
+
+class _MainPage5State extends State<MainPage5> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFEBE4D0,
-      ), // Matching login/signup background
+      backgroundColor: const Color(0xFFEBE4D0),
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-
-            // Adding the app logo for a more premium feel
-            Image.asset(
-              'assets/images/ARCHISHI.png',
-              height: 120.0,
-              width: 120.0,
-            ),
-
-            const SizedBox(height: 24),
-
-            const Text(
-              "Select Your Role",
-              style: TextStyle(
-                fontSize: 28, // Slightly larger for elegance
-                fontWeight: FontWeight.w800, // Bolder
-                fontFamily: 'Serif', // Matching the app's typography
-                letterSpacing: 0.5, // Just a tiny bit of breathing room
-                color: Colors.black87,
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            const Text(
-              "Choose your account type to continue",
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black54,
-                fontFamily: 'Serif',
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-
-            const SizedBox(height: 40),
-
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 40,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
+        child: AnimationLimiter(
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              
+              // Logo Section
+              AnimationConfiguration.synchronized(
+                duration: const Duration(milliseconds: 800),
+                child: const FadeInAnimation(
+                  child: Image(
+                    image: AssetImage('assets/images/ARCHISHI.png'),
+                    height: 100.0,
+                    width: 100.0,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, -5),
-                    ),
-                  ],
-                ),
-
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    // USER BUTTON
-                    roleButton(context, "User", Icons.person_outline, () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
-                    }),
-
-                    const SizedBox(height: 20),
-
-                    // ENGINEER BUTTON
-                    roleButton(
-                      context,
-                      "Engineer",
-                      Icons.engineering_outlined,
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const login_page2(),
-                          ),
-                        );
-                      },
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // CONSTRUCTION COMPANY BUTTON
-                    roleButton(
-                      context,
-                      "Construction Company",
-                      Icons.apartment_outlined,
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const login_page3(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 15),
+
+              const Text(
+                "Select Your Role",
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'Serif',
+                  color: Colors.black87,
+                ),
+              ),
+
+              const Text(
+                "Your journey in architecture starts here",
+                style: TextStyle(fontSize: 14, color: Colors.black54),
+              ),
+
+              const SizedBox(height: 30),
+
+              //  Decorative Action Container
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(top: 35, left: 25, right: 25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 15,
+                        offset: const Offset(0, -5),
+                      ),
+                    ],
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: AnimationConfiguration.toStaggeredList(
+                        duration: const Duration(milliseconds: 600),
+                        childAnimationBuilder: (widget) => SlideAnimation(
+                          verticalOffset: 50.0,
+                          child: FadeInAnimation(child: widget),
+                        ),
+                        children: [
+                        
+                          roleButton(context, "User", Icons.person_outline, () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                          }),
+                          const SizedBox(height: 15),
+                          roleButton(context, "Engineer", Icons.engineering_outlined, () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpScreen()));
+                          }),
+                          const SizedBox(height: 15),
+                          roleButton(context, "Construction Company", Icons.apartment_outlined, () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const signin_page3()));
+                          }),
+
+                          const SizedBox(height: 40),
+
+                          // status selction
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              _buildStatItem("500+", "Projects"),
+                              _buildStatDivider(),
+                              _buildStatItem("150+", "Engineers"),
+                              _buildStatDivider(),
+                              _buildStatItem("4.9/5", "Rating"),
+                            ],
+                          ),
+
+                          const SizedBox(height: 40),
+
+                          // 
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Featured Excellence",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          SizedBox(
+                            height: 100,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                projectCard("Residential", Icons.home_filled),
+                                projectCard("Commercial", Icons.business_rounded),
+                                projectCard("Industrial", Icons.factory_outlined),
+                                projectCard("Interior", Icons.chair_outlined),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 40),
+
+                          //footer
+                          const Divider(thickness: 0.5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Need help?", style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+                              TextButton(
+                                onPressed: () {}, 
+                                child: const Text("Contact Support", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2D2D2D))),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget roleButton(
-    BuildContext context,
-    String text,
-    IconData icon,
-    VoidCallback onTap,
-  ) {
+  // Widget for Stats items
+  Widget _buildStatItem(String value, String label) {
+    return Column(
+      children: [
+        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF2D2D2D))),
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
+
+  Widget _buildStatDivider() {
+    return Container(height: 30, width: 1, color: Colors.grey.withOpacity(0.3));
+  }
+
+  // Widget for decorative project cards
+  Widget projectCard(String title, IconData icon) {
+    return Container(
+      width: 110,
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9F9F9),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 24, color: const Color(0xFF2D2D2D)),
+          const SizedBox(height: 5),
+          Text(title, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black54)),
+        ],
+      ),
+    );
+  }
+
+  Widget roleButton(BuildContext context, String text, IconData icon, VoidCallback onTap) {
     return SizedBox(
       width: double.infinity,
-      height: 65,
+      height: 60,
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF2D2D2D), // Dark charcoal match
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
+          backgroundColor: const Color(0xFF2D2D2D),
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white, size: 26),
-            const SizedBox(width: 14),
-            Text(
-              text,
-              style: const TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Serif', // Added serif to button text
-                letterSpacing: 0.5,
-              ),
-            ),
+            const SizedBox(width: 15),
+            Icon(icon, color: Colors.white, size: 22),
+            const SizedBox(width: 15),
+            Text(text, style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500)),
+            const Spacer(),
+            const Icon(Icons.chevron_right, color: Colors.white54, size: 20),
+            const SizedBox(width: 10),
           ],
         ),
       ),
