@@ -20,7 +20,6 @@ class _SignInScreenState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-   
     Color backgroundColor = const Color(0xFFEBE4D0);
 
     return Scaffold(
@@ -53,7 +52,6 @@ class _SignInScreenState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 40),
 
-                
                 Container(
                   height: 150,
                   width: 200,
@@ -61,15 +59,14 @@ class _SignInScreenState extends State<LoginPage> {
                   child: Column(
                     children: [
                       Image.asset(
-                      'assets/images/ARCHISHI.png',
-                      height: 140.0,
-                      width: 140.0,
-
+                        'assets/images/ARCHISHI.png',
+                        height: 140.0,
+                        width: 140.0,
                       ),
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
 
                 // title and subtitle
@@ -78,7 +75,7 @@ class _SignInScreenState extends State<LoginPage> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'Serif', 
+                    fontFamily: 'Serif',
                     color: Colors.black,
                   ),
                 ),
@@ -113,14 +110,20 @@ class _SignInScreenState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Email Field
-                      const Text("Email", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        "Email",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
                           hintText: "example@email.com",
                           hintStyle: TextStyle(color: Colors.grey[400]),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: Colors.grey.shade300),
@@ -135,7 +138,10 @@ class _SignInScreenState extends State<LoginPage> {
                       const SizedBox(height: 16),
 
                       // Password Field
-                      const Text("Password", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        "Password",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _passwordController,
@@ -143,7 +149,10 @@ class _SignInScreenState extends State<LoginPage> {
                         decoration: InputDecoration(
                           hintText: "password",
                           hintStyle: TextStyle(color: Colors.grey[400]),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: Colors.grey.shade300),
@@ -163,7 +172,9 @@ class _SignInScreenState extends State<LoginPage> {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2D2D2D), // Dark charcoal color
+                            backgroundColor: const Color(
+                              0xFF2D2D2D,
+                            ), // Dark charcoal color
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -173,26 +184,31 @@ class _SignInScreenState extends State<LoginPage> {
                             try {
                               final email = _emailController.text.trim();
                               final password = _passwordController.text.trim();
-                              
+
                               if (email.isEmpty || password.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Please enter email and password')),
+                                  const SnackBar(
+                                    content: Text(
+                                      'Please enter email and password',
+                                    ),
+                                  ),
                                 );
                                 return;
                               }
-                              
+
                               // Sign in with Firebase Authentication
-                              final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-                                email: email,
-                                password: password,
-                              );
+                              final userCredential = await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                    email: email,
+                                    password: password,
+                                  );
 
                               // Navigate to home page on successful login
                               if (userCredential.user != null && mounted) {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => MainContentPart(), 
+                                    builder: (context) => MainContentPart(),
                                   ),
                                 );
                               }
@@ -200,16 +216,23 @@ class _SignInScreenState extends State<LoginPage> {
                               if (mounted) {
                                 String errorMessage = 'Authentication failed';
                                 if (e.code == 'user-not-found') {
-                                  errorMessage = 'No user found for that email.';
-                                } else if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
+                                  errorMessage =
+                                      'No user found for that email.';
+                                } else if (e.code == 'wrong-password' ||
+                                    e.code == 'invalid-credential') {
                                   errorMessage = 'Wrong email or password.';
                                 } else if (e.message != null) {
                                   errorMessage = e.message!;
                                 }
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(errorMessage, style: const TextStyle(color: Colors.white)), 
-                                    backgroundColor: Colors.red
+                                    content: Text(
+                                      errorMessage,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    backgroundColor: Colors.red,
                                   ),
                                 );
                               }
@@ -256,9 +279,24 @@ class _SignInScreenState extends State<LoginPage> {
                 // --- 4. "OR CONTINUE WITH" DIVIDER ---
                 Row(
                   children: const [
-                    Expanded(child: Divider(color: Colors.black, thickness: 1.5, endIndent: 10)),
-                    Text("Or continue with", style: TextStyle(fontWeight: FontWeight.w500)),
-                    Expanded(child: Divider(color: Colors.black, thickness: 1.5, indent: 10)),
+                    Expanded(
+                      child: Divider(
+                        color: Colors.black,
+                        thickness: 1.5,
+                        endIndent: 10,
+                      ),
+                    ),
+                    Text(
+                      "Or continue with",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: Colors.black,
+                        thickness: 1.5,
+                        indent: 10,
+                      ),
+                    ),
                   ],
                 ),
 
@@ -272,35 +310,37 @@ class _SignInScreenState extends State<LoginPage> {
                     _socialButton(
                       label: "Google",
                       //google  icon
-                      icon:Image.asset(
+                      icon: Image.asset(
                         "assets/images/google.webp",
                         height: 28,
                         width: 28,
-                        
-                        ),
+                      ),
                       onTap: () async {
                         // Changed to match your defined method name
-                        final user = await _googleSignInGoogle(); 
+                        final user = await _googleSignInGoogle();
 
-                        if(user != null){
+                        if (user != null) {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MainContentPart(), 
+                              builder: (context) => MainContentPart(),
                             ),
                           );
                         }
                         print("Google Login Clicked");
                       },
                     ),
-                    
-                    const SizedBox(width: 16), // Spacing between buttons
 
+                    const SizedBox(width: 16), // Spacing between buttons
                     // Facebook Button
                     _socialButton(
                       label: "Facebook",
                       // facebook icon
-                      icon: const Icon(Icons.facebook, color: Colors.blue, size: 28), 
+                      icon: const Icon(
+                        Icons.facebook,
+                        color: Colors.blue,
+                        size: 28,
+                      ),
                       onTap: () {
                         print("Facebook Login Clicked");
                       },
@@ -322,25 +362,25 @@ class _SignInScreenState extends State<LoginPage> {
                       onTap: () {
                         print("Sign Up Clicked");
                         // Navigate to Sign Up Screen
-                         Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        
-                        builder: (context) => const SignUpScreen(), 
-                      ),
-                    );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignUpScreen(),
+                          ),
+                        );
                       },
                       child: const Text(
                         "Sign Up",
                         style: TextStyle(
-                          color: Colors.pinkAccent, // Matching the pink color in image
+                          color: Colors
+                              .pinkAccent, // Matching the pink color in image
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
               ],
             ),
@@ -349,8 +389,9 @@ class _SignInScreenState extends State<LoginPage> {
       ),
     );
   }
+
   // Added a '?' after UserCredential
-  Future<UserCredential?> _googleSignInGoogle() async { 
+  Future<UserCredential?> _googleSignInGoogle() async {
     try {
       if (kIsWeb) {
         // Correct implementation for Flutter Web
@@ -358,11 +399,13 @@ class _SignInScreenState extends State<LoginPage> {
         return await FirebaseAuth.instance.signInWithPopup(authProvider);
       } else {
         // Native Implementation (Android/iOS)
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-        if(googleUser == null){
+        final GoogleSignIn googleSignIn = GoogleSignIn();
+        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+        if (googleUser == null) {
           return null;
         }
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
@@ -374,8 +417,13 @@ class _SignInScreenState extends State<LoginPage> {
       return null;
     }
   }
+
   // Helper widget to create the Social Buttons (Google/Facebook)
-  Widget _socialButton({required String label, required Widget icon, required VoidCallback onTap}) {
+  Widget _socialButton({
+    required String label,
+    required Widget icon,
+    required VoidCallback onTap,
+  }) {
     return Expanded(
       child: InkWell(
         onTap: onTap,
@@ -400,7 +448,10 @@ class _SignInScreenState extends State<LoginPage> {
               const SizedBox(width: 8),
               Text(
                 label,
-                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
             ],
           ),
