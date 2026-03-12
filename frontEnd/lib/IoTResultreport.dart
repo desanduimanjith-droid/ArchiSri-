@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-void main() {
-  runApp(const ArchisriIoTReportApp());
-}
 
-class ArchisriIoTReportApp extends StatelessWidget {
-  const ArchisriIoTReportApp({super.key});
+
+class SoilTestingScreen extends StatefulWidget {
+  const SoilTestingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SoilTestingScreen(),
-    );
-  }
+  State<SoilTestingScreen> createState() => _SoilTestingScreenState();
 }
 
-class SoilTestingScreen extends StatelessWidget {
-  const SoilTestingScreen({super.key});
+class _SoilTestingScreenState extends State<SoilTestingScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +41,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // HEADER part
+  
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(24.0),
@@ -99,7 +91,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  //  CONNECTION BAR 
+  //  connection bar
   Widget _buildConnectionBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -132,7 +124,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // MOISTURE CARD 
+  // Moisure bar 
   Widget _buildMoistureCard() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -190,7 +182,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  // SMALL CARDS 
+  // Small cards
   Widget _buildSmallCards() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -249,7 +241,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  //  MOISTURE CHART 
+
   Widget _buildMoistureChart() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -271,7 +263,7 @@ class SoilTestingScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            /// BARS
+            
             SizedBox(
               height: 120,
               child: Row(
@@ -289,8 +281,8 @@ class SoilTestingScreen extends StatelessWidget {
                     height: height,
                     decoration: BoxDecoration(
                       color: index.isEven
-                          ? const Color(0xFF3B82F6) // blue
-                          : const Color(0xFFB4C34C), // green
+                          ? const Color(0xFF3B82F6) 
+                          : const Color(0xFFB4C34C), 
                       borderRadius: BorderRadius.circular(10),
                     ),
                   );
@@ -300,7 +292,7 @@ class SoilTestingScreen extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            /// TIME LABELS
+            
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -324,7 +316,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  //  DETAILED ANALYSIS 
+ 
   Widget _buildDetailedAnalysis() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -355,7 +347,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  //  SCAN BUTTON 
+  //  Scan button
   Widget _buildScanButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
