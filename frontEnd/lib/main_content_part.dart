@@ -1,5 +1,7 @@
 import 'package:archisri_1/feature_1_part1.dart';
+import 'package:archisri_1/feature_1_selections.dart';
 import 'package:flutter/material.dart';
+import 'package:archisri_1/plan-view-screen/houseplan_designer_screen.dart';
 
 // project model
 class Project {
@@ -112,7 +114,7 @@ class _MainContentPartState extends State<MainContentPart> {
       child: Column(
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(color: Color(0xFFF5A623)),
+            decoration: const BoxDecoration(color: Color(0xFFD4A574)),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -191,9 +193,9 @@ class _MainContentPartState extends State<MainContentPart> {
     );
   }
 
-  // floating quick action placeholder (bottomNavigationBar)
+  // floating quick action placeholder
   Widget _buildFloatingQuickAction() {
-    // return an empty bar for now; customize as needed
+    // return an empty bar for now
     return const SizedBox.shrink();
   }
 
@@ -412,6 +414,20 @@ class _MainContentPartState extends State<MainContentPart> {
                       
                     ),
                   );
+                       Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HouseplanDesignerScreen(
+                               landsize: BlueprintSelections.landsize,
+                              floors: BlueprintSelections.floors,
+                              style: BlueprintSelections.style,
+                              bedrooms: BlueprintSelections.bedrooms,
+                              bathrooms: BlueprintSelections.bathrooms,
+                              kitchen: BlueprintSelections.kitchens,
+                              livingRoom: BlueprintSelections.livingRooms,
+                            ),
+                      ),
+                      );
 
 
                 },
@@ -442,48 +458,6 @@ class _MainContentPartState extends State<MainContentPart> {
                 ),
               ),
 
-              const SizedBox(height: 16),
-
-              //reset button
-              GestureDetector(
-                onTap: () {
-                 reset();
-                  
-                
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: const Color(0xFFE5E7EB),
-                      width: 1.5,
-                    ),
-                  ),
-                  
-                  
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.refresh_rounded,
-                          color: Color(0xFF9CA3AF), size: 18),
-                      SizedBox(width: 8),
-                      
-                      Text(
-                        'Reset',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF6B7280),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                    
-                  ),
-                ),
-              ),
 
               const SizedBox(height: 40),
             ],
@@ -666,7 +640,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                         ),
                         const SizedBox(height: 6),
                         const Text(
-                          'Takes less than 2 minutes',
+                          'Takes less than 5 minutes',
                           style: TextStyle(
                             fontSize: 11,
                             color: Colors.white,
