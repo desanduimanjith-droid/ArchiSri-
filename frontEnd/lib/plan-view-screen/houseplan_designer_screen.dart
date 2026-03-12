@@ -297,7 +297,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFD6CDBF), // Beige background
+                      color: const Color(0xFFD6CDBF), 
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: const EdgeInsets.all(15),
@@ -313,7 +313,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                           width: double.infinity,
                           height: blueprintHeight,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF4EFE6), // Inner cream
+                            color: const Color(0xFFF4EFE6), 
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: ClipRRect(
