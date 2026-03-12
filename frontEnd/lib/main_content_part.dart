@@ -89,9 +89,15 @@ class MainContentPart extends StatefulWidget {
 }
 
 class _MainContentPartState extends State<MainContentPart> {
+
+  // control the menu drawer
+  final GlobalKey<ScaffoldState>_scaffoldKey = GlobalKey<ScaffoldState>();
   bool showAll = false;
   bool startBuildClicked = false;
   bool isModified = false;
+
+  // value for optional slider in the drawer
+  double _drawerSliderValue = 0.5;
 
   // reset the state
   void reset() {
@@ -101,8 +107,105 @@ class _MainContentPartState extends State<MainContentPart> {
     });
   }
 
+  // slide menu builder (was referenced as _buildSlideMenu)
+  Widget _buildSlideMenu() {
+    return Drawer(
+      backgroundColor: const Color(0xFF1E1E2E), // Dark theme for contrast
+      child: Column(
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(color: Color(0xFFF5A623)),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  CircleAvatar(radius: 30, backgroundColor: Colors.white, child: Icon(Icons.person, size: 35)),
+                  SizedBox(height: 10),
+                  Text("ArchiSri User", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+          ),
+          _drawerTile(
+            Icons.home,
+            "Home",
+            onTap: () {
+              Navigator.pop(context);
+              // TODO: handle home navigation
+            },
+          ),
+          _drawerTile(
+            Icons.dashboard,
+            "Dashboard",
+            onTap: () {
+              Navigator.pop(context);
+              // TODO: navigate to dashboard screen
+            },
+          ),
+          _drawerTile(
+            Icons.architecture,
+            "My Blueprints",
+            onTap: () {
+              Navigator.pop(context);
+              // TODO: open blueprints
+            },
+          ),
+          _drawerTile(
+            Icons.shopping_cart,
+            "Marketplace",
+            onTap: () {
+              Navigator.pop(context);
+              // TODO: open marketplace
+            },
+          ),
 
+          // sliding bar section
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Adjust setting',
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+                Slider(
+                  value: _drawerSliderValue,
+                  min: 0,
+                  max: 1,
+                  activeColor: const Color(0xFFF5A623),
+                  inactiveColor: Colors.white24,
+                  onChanged: (v) => setState(() => _drawerSliderValue = v),
+                ),
+              ],
+            ),
+          ),
 
+          _drawerTile(Icons.settings, "Settings"),
+          _drawerTile(Icons.help_outline, "Help"),
+          const Spacer(),
+          _drawerTile(Icons.logout, "Logout", color: Colors.redAccent),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  // helper for individual drawer rows
+  Widget _drawerTile(IconData icon, String title,
+      {Color color = Colors.white, VoidCallback? onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(title, style: TextStyle(color: color)),
+      onTap: onTap ?? () => Navigator.pop(context),
+    );
+  }
+
+  // floating quick action placeholder (bottomNavigationBar)
+  Widget _buildFloatingQuickAction() {
+    // return an empty bar for now; customize as needed
+    return const SizedBox.shrink();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +215,10 @@ class _MainContentPartState extends State<MainContentPart> {
     Color backgroundColor = const Color(0xFFEBE4D0);
 
     return Scaffold(
+      key:_scaffoldKey,
       backgroundColor: backgroundColor,
+
+      drawer: _buildSlideMenu(),
       appBar: AppBar(
         backgroundColor: backgroundColor,
         elevation: 0,
@@ -127,7 +233,9 @@ class _MainContentPartState extends State<MainContentPart> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.menu, color: Colors.black87),
-          onPressed: () {},
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+
+          
         ),
         actions: [
           // nitification bell with red dot
@@ -144,6 +252,7 @@ class _MainContentPartState extends State<MainContentPart> {
             
             ],
           ),
+          
           // Avatar
           Padding(
             padding: const EdgeInsets.only(right: 12),
@@ -170,6 +279,8 @@ class _MainContentPartState extends State<MainContentPart> {
 
         ],
       ),
+
+      bottomNavigationBar: _buildFloatingQuickAction(),
       // body part starts here
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -309,9 +420,10 @@ class _MainContentPartState extends State<MainContentPart> {
                       duration: const Duration(seconds: 2),
                       padding: const EdgeInsets.all(16),
                       
-                      
                     ),
                   );
+
+
                 },
                 child: Container(
                   width: double.infinity,
