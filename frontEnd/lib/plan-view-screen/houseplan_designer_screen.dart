@@ -184,7 +184,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    // Calculate dynamic blueprint container height (50% of screen or min 250)
+    // Calculate dynamic blueprint container height
     final blueprintHeight = (screenHeight * 0.5).clamp(250.0, 600.0);
     
     return Scaffold(
@@ -432,7 +432,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                   const SizedBox(height: 25),
 
                   
-                  //funnadation recomdation
+                  //funnadation recomendation part
                   
                   Container(
                     width: double.infinity,
