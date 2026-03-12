@@ -17,6 +17,12 @@ class _Feature1Part17State extends State<Feature1Part17> {
 
   @override
   Widget build(BuildContext context) {
+    // compute display values for summary using static selections
+    final String floorsText = BlueprintSelections.selectedFloors.isEmpty
+        ? '1'
+        : BlueprintSelections.selectedFloors.join(', ');
+    final String styleText = BlueprintSelections.style;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5E6D3),
       body: Column(
@@ -197,9 +203,9 @@ class _Feature1Part17State extends State<Feature1Part17> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        _summaryRow("Floors", "2"),
-                        _summaryRow("Style", "Traditional"),
-                        _summaryRow("Size", "${_landSize.toInt()}sq ft"),
+                        _summaryRow("Floors", floorsText),
+                        _summaryRow("Style", styleText),
+                        _summaryRow("Size", "${_landSize.toInt()} sq ft"),
                       ],
                     ),
                   ),
@@ -270,17 +276,24 @@ class _Feature1Part17State extends State<Feature1Part17> {
 
   // Helper widget for the text rows in the summary section
   Widget _summaryRow(String title, String value) {
+    // Wrap the value text in a Flexible/Expanded widget so that long
+    // selections  will wrap instead of overflowing.
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             "$title - ",
             style: const TextStyle(color: Colors.grey, fontSize: 16),
           ),
-          Text(
-            value,
-            style: const TextStyle(color: Colors.black54, fontSize: 16),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(color: Colors.black54, fontSize: 16),
+              softWrap: true,
+              
+            ),
           ),
         ],
       ),
