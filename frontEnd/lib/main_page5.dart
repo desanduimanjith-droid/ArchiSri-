@@ -53,7 +53,7 @@ class _MainPage5State extends State<MainPage5> {
 
               const SizedBox(height: 30),
 
-              //  Decorative Action Container
+              //  Action creation
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -160,7 +160,7 @@ class _MainPage5State extends State<MainPage5> {
     );
   }
 
-  // Widget for Stats items
+  // Widget for Stats 
   Widget _buildStatItem(String value, String label) {
     return Column(
       children: [
@@ -171,7 +171,7 @@ class _MainPage5State extends State<MainPage5> {
   }
 
   Widget _buildStatDivider() {
-    return Container(height: 30, width: 1, color: Colors.grey.withOpacity(0.3));
+    return Container(height: 30, width: 1, color: Colors.grey.withValues(alpha: 3.0));
   }
 
   // Widget for decorative project cards
@@ -182,7 +182,7 @@ class _MainPage5State extends State<MainPage5> {
       decoration: BoxDecoration(
         color: const Color(0xFFF9F9F9),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
