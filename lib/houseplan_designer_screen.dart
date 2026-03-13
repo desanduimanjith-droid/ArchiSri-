@@ -1,7 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
-class HouseplanDesignerScreen extends StatelessWidget {
+class HouseplanDesignerScreen extends StatefulWidget {
   const HouseplanDesignerScreen({super.key});
+
+  @override
+  State<HouseplanDesignerScreen> createState() =>
+      _HouseplanDesignerScreenState();
+}
+
+class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
+  bool isLoading = false;
+  String? generatedImagePath;
+  String? errorMessage;
+
+  Future<void> generatePlan() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
+    try {
+      // Create backend URL - typically http://10.0.2.2:5000 for Android emulator accessing local Flask server
+      // Alternatively, you can use localhost or your machine's local IP network address.
+      final url = Uri.parse('http://10.0.2.2:5000/api/blueprint/generate');
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "rooms": 3,
+          "style": "modern",
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Save the image bytes to a temporary file to display it
+        final tempDir = await getTemporaryDirectory();
+        final file = File('${tempDir.path}/generated_blueprint_${DateTime.now().millisecondsSinceEpoch}.png');
+        await file.writeAsBytes(response.bodyBytes);
+
+        setState(() {
+          generatedImagePath = file.path;
+        });
+      } else {
+        setState(() {
+          errorMessage = 'Server error: ${response.statusCode} - ${response.body}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Failed to connect to backend: $e';
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +210,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Image Placeholder
+                        // Image Placeholder / Generated Image
                         Container(
                           width: double.infinity,
                           height: 200,
@@ -161,17 +220,40 @@ class HouseplanDesignerScreen extends StatelessWidget {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.asset(
-                              'assets/blueprint_placeholder.png',
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Center(
-                                    child: Text(
-                                      'Blueprint Image Here',
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                  ),
-                            ),
+                            child: isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : errorMessage != null
+                                    ? Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            errorMessage!,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      )
+                                    : generatedImagePath != null
+                                        ? Image.file(
+                                            File(generatedImagePath!),
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) =>
+                                                const Center(
+                                              child: Text('Failed to load image',
+                                                  style: TextStyle(color: Colors.red)),
+                                            ),
+                                          )
+                                        : Image.asset(
+                                            'assets/blueprint_placeholder.png',
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) =>
+                                                const Center(
+                                              child: Text('Blueprint Image Here',
+                                                  style: TextStyle(color: Colors.grey)),
+                                            ),
+                                          ),
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -515,7 +597,7 @@ class HouseplanDesignerScreen extends StatelessWidget {
                     child: SizedBox(
                       width: 250,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: isLoading ? null : generatePlan,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(
                             0xFFB5BD55,
