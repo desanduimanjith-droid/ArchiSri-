@@ -24,8 +24,9 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     });
 
     try {
-      // Using the local IP address found in the Flask server output
-      final url = Uri.parse('http://192.168.1.186:5000/api/blueprint/generate');
+      // Using 127.0.0.1 which works well for Flutter Web and Desktop, or 10.0.2.2 for Android Emulator.
+      // Also fixed the exact path defined in our Python blueprint.
+      final url = Uri.parse('http://127.0.0.1:5000/generate-blueprint');
 
       final response = await http.post(
         url,

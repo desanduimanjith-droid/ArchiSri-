@@ -5,8 +5,10 @@ from PIL import ImageDraw, ImageFont
 
 blueprint_api = Blueprint("blueprint_api", __name__)
 
+import os
+
 # Get token from environment variable (SAFE way)
-HF_TOKEN = "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"
+HF_TOKEN = os.getenv("HF_TOKEN") or ""
 
 client = InferenceClient(token=HF_TOKEN)
 
