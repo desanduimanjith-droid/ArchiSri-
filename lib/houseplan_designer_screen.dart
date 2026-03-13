@@ -24,9 +24,8 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     });
 
     try {
-      // Create backend URL - typically http://10.0.2.2:5000 for Android emulator accessing local Flask server
-      // Alternatively, you can use localhost or your machine's local IP network address.
-      final url = Uri.parse('http://10.0.2.2:5000/api/blueprint/generate');
+      // Using the local IP address found in the Flask server output
+      final url = Uri.parse('http://192.168.1.186:5000/api/blueprint/generate');
 
       final response = await http.post(
         url,

@@ -2,7 +2,6 @@ import os
 from flask import Blueprint, request, send_file, jsonify
 from huggingface_hub import InferenceClient
 from PIL import ImageDraw, ImageFont
-from routes import auth_routes
 
 blueprint_api = Blueprint("blueprint_api", __name__)
 
