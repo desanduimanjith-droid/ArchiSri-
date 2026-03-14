@@ -1,17 +1,17 @@
-// // ArduinoJson - https://arduinojson.org
-// // Copyright © 2014-2026, Benoit BLANCHON
-// // MIT License
+// ArduinoJson - https://arduinojson.org
+// Copyright © 2014-2026, Benoit BLANCHON
+// MIT License
 
-// #pragma once
+#pragma once
 
-// #ifdef __cplusplus
+#ifdef __cplusplus
 
-// #  include "ArduinoJson.hpp"
+#  include "ArduinoJson.hpp"
 
-// using namespace ArduinoJson;
+using namespace ArduinoJson;
 
-// #else
+#else
 
-// #error ArduinoJson requires a C++ compiler, please change file extension to .cc or .cpp
+#error ArduinoJson requires a C++ compiler, please change file extension to .cc or .cpp
 
-// #endif
+#endif
