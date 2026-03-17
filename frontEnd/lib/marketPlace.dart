@@ -8,13 +8,13 @@ class IoTMarketplace extends StatefulWidget {
 class _IoTMarketplaceState extends State<IoTMarketplace> {
   int _cartCount = 0;
   bool _isDescriptionExpanded = false;
-  int _totalStars = 0; // Starts at 0, accumulates user clicks
+  int _totalStars = 0;
   int _userRating = 0;
 
   void _handleRating(int rating) {
     setState(() {
-      _totalStars += rating; // Accumulate the clicked stars
-      _userRating = rating; // Show what the user just clicked interactively
+      _totalStars += rating;
+      _userRating = rating;
     });
   }
 
