@@ -1,172 +1,105 @@
+# routes/blueprint.py
 import os
 import base64
-from io import BytesIO
-from pathlib import Path
 from flask import Blueprint, request, send_file, jsonify
 from openai import OpenAI
-from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / ".env")
+print("routes/blueprint.py loaded")
 
+# ===== Blueprint instance =====
 blueprint_api = Blueprint("blueprint_api", __name__)
 
-def _resolve_openai_api_key() -> str | None:
-    return os.getenv("OPENAI_API_KEY") or os.getenv("BLUEPRINT_OPENAI_API_KEY")
+# ===== OpenAI client =====
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise RuntimeError("Please set the OPENAI_API_KEY environment variable!")
 
+client = OpenAI(api_key=OPENAI_API_KEY)
 
-def _get_openai_client() -> OpenAI | None:
-    api_key = _resolve_openai_api_key()
-    if not api_key:
-        return None
-    return OpenAI(api_key=api_key)
-
-
-def build_prompt(floors, style, landsize, bedrooms, bathrooms, kitchen, living_room):
-
-    floor_labels = ""
-    for i in range(1, floors + 1):
-        floor_labels += f"FLOOR {i}\n"
-
+# ===== Helper: build prompt =====
+def build_prompt(floor_number, num_floors, style, landsize, bedrooms=None, bathrooms=None, kitchen=None, living_room=None):
     return f"""
-Create a PROFESSIONAL ARCHITECTURAL FLOOR PLAN PRESENTATION SHEET.
+    PROFESSIONAL ARCHITECTURAL BLUEPRINT
+    Top-down 2D CAD floor plan.
+    Black and white line drawing.
+    Clean layout, labeled rooms, realistic proportions.
 
-IMPORTANT: The page design must remain identical every generation.
+    Style: {style}
+    Land size: {landsize} sq ft
+    Floor: {floor_number} of {num_floors}
+    Bedrooms: {bedrooms or 'N/A'}
+    Bathrooms: {bathrooms or 'N/A'}
+    Kitchen: {kitchen or 'N/A'}
+    Living Room: {living_room or 'N/A'}
+    """
 
-PAGE FRAME
-- white paper background
-- thin black architectural border around the page
-- large margins
-- nothing cropped
-
-TITLE AT TOP CENTER
-ARCHITECTURAL FLOOR PLAN
-
-DRAWING AREA
-Floors stacked vertically and labeled:
-
-{floor_labels}
-
-Each floor inside its own rectangular drawing area.
-
-DRAWING STYLE
-- black CAD architectural line drawing
-- thin precise lines
-- consistent wall thickness
-- door swing arcs
-- window symbols
-- stair arrows
-- dimension text in feet
-
-GROUND FLOOR CONTENT
-garage with top-view car
-entrance foyer
-living room
-kitchen
-dining
-stairs
-hallway circulation
-
-UPPER FLOORS CONTENT
-bedrooms
-bathrooms
-corridor
-stair landing
-
-ROOM SIZE GUIDELINES
-bedrooms 10–14 ft
-bathrooms 5–8 ft
-corridors 3–4 ft
-garage fits 1 car
-
-CLIENT REQUIREMENTS
-
-Style: {style}
-Land size: {landsize} square feet
-Bedrooms: {bedrooms}
-Bathrooms: {bathrooms}
-Kitchen: {kitchen}
-Living room: {living_room}
-
-BOTTOM RIGHT INFO BOX
-
-Style: {style}
-Land size: {landsize} square feet
-Bedrooms: {bedrooms}
-Bathrooms: {bathrooms}
-Kitchen: {kitchen}
-Living room: {living_room}
-
-BOTTOM LEFT SCALE BAR
-
-1/4" = 1'-0"
-
-IMPORTANT RULES
-
-- identical sheet layout every time
-- only the room arrangement changes
-- floors vertically aligned
-- professional architectural blueprint sheet
-- entire drawing fits inside border
-
-Generate {floors} floors according to the client requirements.
-"""
-
-
+# ===== Route =====
 @blueprint_api.route("/blueprint", methods=["POST"])
 def generate_blueprint():
     try:
-        client = _get_openai_client()
-        if client is None:
-            return jsonify({
-                "success": False,
-                "error": "Missing API key. Set OPENAI_API_KEY or BLUEPRINT_OPENAI_API_KEY in environment."
-            }), 500
-
         data = request.json or {}
 
+        # ===== Required fields =====
         landsize = data.get("landsize")
-        floors = int(data.get("floors", 2))
+        floors = data.get("floors")
         style = data.get("style")
 
-        bedrooms = data.get("bedrooms", 3)
-        bathrooms = data.get("bathrooms", 2)
-        kitchen = data.get("kitchen", 1)
-        living_room = data.get("living_room", 1)
-
-        if not landsize or not style:
+        if not landsize or not floors or not style:
             return jsonify({
                 "success": False,
-                "error": "landsize and style required"
+                "error": "landsize, floors, and style are required"
             }), 400
 
-        prompt = build_prompt(
-            floors,
-            style,
-            landsize,
-            bedrooms,
-            bathrooms,
-            kitchen,
-            living_room
-        )
+        # Optional fields
+        bedrooms = data.get("bedrooms")
+        bathrooms = data.get("bathrooms")
+        kitchen = data.get("kitchen")
+        living_room = data.get("living_room")
 
-        result = client.images.generate(
-            model="gpt-image-1",
-            prompt=prompt,
-            size="1024x1536"
-        )
+        # Validate floors
+        try:
+            num_floors = int(floors)
+            if num_floors <= 0:
+                return jsonify({"success": False, "error": "floors must be positive"}), 400
+        except:
+            return jsonify({"success": False, "error": "invalid floors value"}), 400
 
-        image_base64 = result.data[0].b64_json
-        image_bytes = base64.b64decode(image_base64)
+        generated_files = []
 
-        return send_file(
-            BytesIO(image_bytes),
-            mimetype="image/png",
-            as_attachment=True,
-            download_name="architectural_blueprint.png"
-        )
+        # ===== Generate images =====
+        for floor_number in range(1, num_floors + 1):
+            prompt = build_prompt(floor_number, num_floors, style, landsize, bedrooms, bathrooms, kitchen, living_room)
+
+            result = client.images.generate(
+                model="gpt-image-1",
+                prompt=prompt,
+                size="1024x1024"
+            )
+
+            image_base64 = result.data[0].b64_json
+            image_bytes = base64.b64decode(image_base64)
+            file_path = f"floor_{floor_number}.png"
+
+            with open(file_path, "wb") as f:
+                f.write(image_bytes)
+
+            generated_files.append(file_path)
+
+        # ===== Return result =====
+        if num_floors == 1:
+            return send_file(generated_files[0], mimetype="image/png")
+
+        # Multiple floors: return Base64 JSON
+        images_base64 = []
+        for f in generated_files:
+            with open(f, "rb") as img_file:
+                images_base64.append(base64.b64encode(img_file.read()).decode("utf-8"))
+
+        return jsonify({
+            "success": True,
+            "floors_generated": num_floors,
+            "images_base64": images_base64
+        })
 
     except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": str(e)
-        }), 500
+        return jsonify({"success": False, "error": str(e)}), 500
