@@ -134,7 +134,6 @@ class _connection_EngineerState extends State<connection_Engineer> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // --- TOP SECTION ---
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -222,7 +221,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
                       ),
                       const SizedBox(height: 24),
 
-                      // --- TAGS SECTION (Blue styled containers) ---
+                      // tages section
                       Wrap(
                         spacing: 12,
                         runSpacing: 12,
@@ -230,7 +229,6 @@ class _connection_EngineerState extends State<connection_Engineer> {
                       ),
                       const SizedBox(height: 24),
 
-                      // --- METRICS SECTION ---
                       Row(
                         children: [
                           Expanded(

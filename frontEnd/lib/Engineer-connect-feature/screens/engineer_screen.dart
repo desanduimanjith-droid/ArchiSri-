@@ -29,24 +29,30 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
       final registration = _engineerRegistration(data).toLowerCase();
       final location = _engineerLocation(data).toLowerCase();
 
-      final matchesSearch = _searchQuery.isEmpty ||
+      final matchesSearch =
+          _searchQuery.isEmpty ||
           name.contains(_searchQuery.toLowerCase()) ||
           specialty.contains(_searchQuery.toLowerCase()) ||
           company.contains(_searchQuery.toLowerCase()) ||
           email.contains(_searchQuery.toLowerCase()) ||
           registration.contains(_searchQuery.toLowerCase());
 
-      final matchesSpecialty = _selectedSpecialties.isEmpty ||
+      final matchesSpecialty =
+          _selectedSpecialties.isEmpty ||
           _selectedSpecialties.any(
             (selected) => specialty.contains(selected.toLowerCase()),
           );
 
-      final matchesLocation = _selectedLocation.isEmpty ||
+      final matchesLocation =
+          _selectedLocation.isEmpty ||
           location.contains(_selectedLocation.toLowerCase());
 
       final matchesVerified = !_verifiedOnly || _engineerIsVerified(data);
 
-      return matchesSearch && matchesSpecialty && matchesLocation && matchesVerified;
+      return matchesSearch &&
+          matchesSpecialty &&
+          matchesLocation &&
+          matchesVerified;
     }).toList();
   }
 
@@ -75,54 +81,62 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5E6D3),
       body: Column(
         children: [
-          // The header banner
-          Container(
-            width: double.infinity,
-            height: 200,
-            padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              color: Color(0xFFCABF58), // The light green background
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  height: 120,
-                  width: 120,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFDD8436), // The icon box color
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Icon(
-                    Icons.architecture, // Changed to architecture for Engineers
-                    size: 90,
-                    color: Colors.black,
+          // Header Section
+          Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.only(
+                  left: 40,
+                  top: 60,
+                  right: 40,
+                  bottom: 40,
+                ),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD4C55A),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
                   ),
                 ),
-                const SizedBox(width: 20),
-                const Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE68C46),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.black, width: 3),
+                  ),
+                  padding: const EdgeInsets.all(10),
+
+                  child: Icon(Icons.engineering, size: 60, color: Colors.black),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Connect with\nEngineers",
+                      const Text(
+                        "Connect with enginners",
                         style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          height: 1.2,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Text(
+                      const SizedBox(height: 4),
+                      const Text(
                         "Find verified engineering professionals",
                         style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                          color: Colors.white70,
+                          height: 1.3,
                         ),
                       ),
                     ],
@@ -131,8 +145,19 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
               ],
             ),
           ),
-
-          // --- SEARCH BAR & FILTER BUTTON ---
+          Positioned(
+            top: 70, // Adjust this as needed for vertical alignment
+            left: 0, // Replaces the left adjustment
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 24),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+        ],
+      ),
+          // Search bar and filter button
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -182,12 +207,17 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: FirebaseFirestore.instance.collection('engineers').snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection('engineers')
+                    .snapshots(),
                 builder: (context, snapshot) {
                   final filtered = _filterEngineers(snapshot.data?.docs ?? []);
                   return Text(
                     "${filtered.length} engineers found",
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   );
                 },
               ),
@@ -198,10 +228,14 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
           // Fetch engineers from Firestore
           Expanded(
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: FirebaseFirestore.instance.collection('engineers').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('engineers')
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color: Color(0xFFCABF58)));
+                  return const Center(
+                    child: CircularProgressIndicator(color: Color(0xFFCABF58)),
+                  );
                 }
 
                 if (snapshot.hasError) {
@@ -209,12 +243,18 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                        const Icon(
+                          Icons.error_outline,
+                          size: 60,
+                          color: Colors.red,
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Text("Error: ${snapshot.error}"),
                         ),
-                        const Text("Please check Firebase connection and engineer documents."),
+                        const Text(
+                          "Please check Firebase connection and engineer documents.",
+                        ),
                       ],
                     ),
                   );
@@ -222,26 +262,22 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
 
                 final filtered = _filterEngineers(snapshot.data?.docs ?? []);
                 if (filtered.isEmpty) {
-                  return const Center(child: Text("No engineers found matching your criteria."));
+                  return const Center(
+                    child: Text("No engineers found matching your criteria."),
+                  );
                 }
 
                 return ListView.builder(
                   itemCount: filtered.length,
-                  itemBuilder: (context, index) => EngineerCard(item: filtered[index].data()),
+                  itemBuilder: (context, index) =>
+                      EngineerCard(item: filtered[index].data()),
                 );
               },
             ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ""),
-        ],
-      ),
+      // bottom nav removed
     );
   }
 }
@@ -290,7 +326,8 @@ class EngineerCard extends StatelessWidget {
                       width: 80,
                       height: 80,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => _buildAvatar(item, size: 80),
+                      errorBuilder: (context, error, stackTrace) =>
+                          _buildAvatar(item, size: 80),
                     ),
                   )
                 : _buildAvatar(item, size: 80),
@@ -333,17 +370,28 @@ class EngineerCard extends StatelessWidget {
                     Wrap(
                       spacing: 4,
                       runSpacing: 4,
-                      children: tags.take(2).map((tag) => Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFC5E1EB),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          tag,
-                          style: const TextStyle(fontSize: 10, color: Colors.indigo),
-                        ),
-                      )).toList(),
+                      children: tags
+                          .take(2)
+                          .map(
+                            (tag) => Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFC5E1EB),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                tag,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.indigo,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
                     ),
                   const SizedBox(height: 6),
                   Row(
@@ -358,13 +406,19 @@ class EngineerCard extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(Icons.location_on_outlined, size: 16),
-                          Text(" ${_engineerLocation(item)}", style: const TextStyle(fontSize: 12)),
+                          Text(
+                            " ${_engineerLocation(item)}",
+                            style: const TextStyle(fontSize: 12),
+                          ),
                         ],
                       ),
                       Row(
                         children: [
                           const Icon(Icons.business_center_outlined, size: 16),
-                          Text(" ${_engineerProjects(item)}", style: const TextStyle(fontSize: 12)),
+                          Text(
+                            " ${_engineerProjects(item)}",
+                            style: const TextStyle(fontSize: 12),
+                          ),
                         ],
                       ),
                     ],
@@ -384,14 +438,17 @@ Widget _buildTag(String label) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     decoration: BoxDecoration(
-      color: const Color(0xFFC5E1EB), // Light blue from your screenshot
+      color: const Color(0xFFC5E1EB),
       borderRadius: BorderRadius.circular(10),
       border: Border.all(color: Colors.indigo.shade200),
     ),
     child: Text(
       label,
       style: const TextStyle(
-          color: Colors.indigo, fontSize: 12, fontWeight: FontWeight.w500),
+        color: Colors.indigo,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+      ),
     ),
   );
 }
@@ -410,7 +467,9 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
     final phone = _engineerPhone(widget.item);
     if (phone.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('This engineer has not added a phone number yet.')),
+        const SnackBar(
+          content: Text('This engineer has not added a phone number yet.'),
+        ),
       );
       return;
     }
@@ -421,12 +480,17 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
     final success = await WhatsAppHelper.contactEngineer(
       engineerName: _engineerName(widget.item),
       engineerPhone: phone,
-      projectDetails: 'Hi, I found your profile on Engineer Connect and would like to discuss a project.',
+      projectDetails:
+          'Hi, I found your profile on Engineer Connect and would like to discuss a project.',
     );
 
     if (!success) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('Could not open WhatsApp. Please make sure WhatsApp is installed.')),
+        const SnackBar(
+          content: Text(
+            'Could not open WhatsApp. Please make sure WhatsApp is installed.',
+          ),
+        ),
       );
     }
   }
@@ -447,9 +511,18 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Center(child: Container(width: 80, height: 6, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
+            Center(
+              child: Container(
+                width: 80,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
-            
+
             // Content
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -458,140 +531,199 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
                 // 1. Header with "Available" status
                 Row(
                   children: [
-                      imageUrl.isNotEmpty
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.network(
-                                imageUrl,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => _buildAvatar(widget.item, size: 100),
-                              ),
-                            )
-                          : _buildAvatar(widget.item, size: 100),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(_engineerName(widget.item), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                ),
-                                const SizedBox(width: 8),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(20)),
-                                  child: Text(
-                                    _engineerIsVerified(widget.item) ? "Verified" : "Registered",
-                                    style: const TextStyle(color: Colors.black, fontSize: 11, fontWeight: FontWeight.bold),
+                    imageUrl.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.network(
+                              imageUrl,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  _buildAvatar(widget.item, size: 100),
+                            ),
+                          )
+                        : _buildAvatar(widget.item, size: 100),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  _engineerName(widget.item),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(_engineerSpecialty(widget.item), style: const TextStyle(color: Color(0xFFDD8436), fontWeight: FontWeight.w600, fontSize: 13)),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                const Icon(Icons.star_outline, color: Colors.black, size: 18),
-                                Text(" ${_engineerRating(widget.item)}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                                const SizedBox(width: 12),
-                                const Icon(Icons.location_on_outlined, color: Colors.black, size: 18),
-                                Expanded(
-                                  child: Text(" ${_engineerLocation(widget.item)}", style: const TextStyle(fontSize: 13)),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
                                 ),
-                              ],
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  _engineerIsVerified(widget.item)
+                                      ? "Verified"
+                                      : "Registered",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _engineerSpecialty(widget.item),
+                            style: const TextStyle(
+                              color: Color(0xFFDD8436),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
                             ),
-                          ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star_outline,
+                                color: Colors.black,
+                                size: 18,
+                              ),
+                              Text(
+                                " ${_engineerRating(widget.item)}",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              const Icon(
+                                Icons.location_on_outlined,
+                                color: Colors.black,
+                                size: 18,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  " ${_engineerLocation(widget.item)}",
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 10),
+
+                // 2. TAGS SECTION
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: tags.map((tag) => _buildTag(tag)).toList(),
+                ),
+
+                const SizedBox(height: 10),
+                const Divider(height: 1),
+                const SizedBox(height: 10),
+
+                // 3. STATS ROW
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildStatColumn(
+                        "Experience",
+                        _engineerExperience(widget.item),
+                      ),
+                      _buildStatColumn(
+                        "Projects",
+                        _engineerProjects(widget.item),
+                      ),
+                      _buildStatColumn("Rate", _engineerRate(widget.item)),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+                const Divider(height: 1),
+                const SizedBox(height: 10),
+
+                // 3.5 CONTACT INFORMATION SECTION
+                const Text(
+                  "Contact Information",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 15),
+                _buildContactCard(
+                  Icons.email_outlined,
+                  "Email",
+                  _engineerEmail(widget.item),
+                  const Color(0xFFE5D7F5),
+                  context,
+                ),
+                if (phone.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  _buildContactCard(
+                    Icons.phone_outlined,
+                    "Phone",
+                    phone,
+                    const Color(0xFFF3E7D5),
+                    context,
+                  ),
+                ],
+                const SizedBox(height: 10),
+                const Divider(height: 1),
+                const SizedBox(height: 16),
+
+                // 4. TIP NOTICE
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0F8FF),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: const Color(0xFF4DA6FF).withOpacity(0.3),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.info_outline,
+                        color: Color(0xFF1E88E5),
+                        size: 24,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'You can attach your plan files and add project details directly in the WhatsApp chat.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[800],
+                            height: 1.4,
+                          ),
                         ),
                       ),
                     ],
                   ),
+                ),
 
-                  const SizedBox(height: 10),
-
-                  // 2. TAGS SECTION
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: tags.map((tag) => _buildTag(tag)).toList(),
-                  ),
-
-                  const SizedBox(height: 10),
-                  const Divider(height: 1),
-                  const SizedBox(height: 10),
-
-                  // 3. STATS ROW
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildStatColumn("Experience", _engineerExperience(widget.item)),
-                        _buildStatColumn("Projects", _engineerProjects(widget.item)),
-                        _buildStatColumn("Rate", _engineerRate(widget.item)),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-                  const Divider(height: 1),
-                  const SizedBox(height: 10),
-
-                  // 3.5 CONTACT INFORMATION SECTION
-                  const Text(
-                    "Contact Information",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 15),
-                  _buildContactCard(
-                    Icons.email_outlined,
-                    "Email",
-                    _engineerEmail(widget.item),
-                    const Color(0xFFE5D7F5),
-                     context,
-                  ),
-                  if (phone.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    _buildContactCard(
-                      Icons.phone_outlined,
-                      "Phone",
-                      phone,
-                      const Color(0xFFF3E7D5),
-                       context,
-                    ),
-                  ],
-                  const SizedBox(height: 10),
-                  const Divider(height: 1),
-                  const SizedBox(height: 16),
-
-                  // 4. TIP NOTICE
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF0F8FF),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFF4DA6FF).withOpacity(0.3)),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.info_outline, color: Color(0xFF1E88E5), size: 24),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'You can attach your plan files and add project details directly in the WhatsApp chat.',
-                            style: TextStyle(fontSize: 13, color: Colors.grey[800], height: 1.4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             ),
 
@@ -601,20 +733,31 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
             ElevatedButton.icon(
               onPressed: phone.isNotEmpty ? _connectWhatsApp : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: phone.isNotEmpty ? const Color(0xFF25D366) : Colors.grey,
+                backgroundColor: phone.isNotEmpty
+                    ? const Color(0xFF25D366)
+                    : Colors.grey,
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
                 minimumSize: const Size(double.infinity, 48),
               ),
               icon: Image.asset(
                 'assets/whatsapp_icon.png',
                 width: 24,
                 height: 24,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.chat, color: Colors.white),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.chat, color: Colors.white),
               ),
               label: Text(
-                phone.isNotEmpty ? "Connect via WhatsApp" : "Phone number not available",
-                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                phone.isNotEmpty
+                    ? "Connect via WhatsApp"
+                    : "Phone number not available",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -630,7 +773,10 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
       children: [
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
         const SizedBox(height: 8),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
       ],
     );
   }
@@ -646,28 +792,22 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
     return GestureDetector(
       onTap: () async {
         if (label == "Email") {
-          final Uri emailLaunchUri = Uri(
-            scheme: 'mailto',
-            path: value,
-          );
+          final Uri emailLaunchUri = Uri(scheme: 'mailto', path: value);
           try {
             await launchUrl(emailLaunchUri);
           } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Could not open email: $e")),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Could not open email: $e")));
           }
         } else if (label == "Phone") {
-          final Uri phoneLaunchUri = Uri(
-            scheme: 'tel',
-            path: value,
-          );
+          final Uri phoneLaunchUri = Uri(scheme: 'tel', path: value);
           try {
             await launchUrl(phoneLaunchUri);
           } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Could not open phone: $e")),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text("Could not open phone: $e")));
           }
         }
       },
@@ -691,7 +831,10 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
                 const SizedBox(height: 4),
                 Text(
                   value,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -717,16 +860,36 @@ class _FilterSheetState extends State<FilterSheet> {
   bool isElectrical = false;
   bool isMechanical = false;
   bool isEnvironmental = false;
-  
+
   final List<String> _districts = [
-    "Colombo", "Gampaha", "Kalutara", "Kandy", "Matale", "Nuwara Eliya",
-    "Galle", "Matara", "Hambantota", "Jaffna", "Kilinochchi", "Mannar",
-    "Vavuniya", "Mullaitivu", "Batticaloa", "Ampara", "Trincomalee",
-    "Kurunegala", "Puttalam", "Anuradhapura", "Polonnaruwa", "Badulla",
-    "Moneragala", "Ratnapura", "Kegalle",
+    "Colombo",
+    "Gampaha",
+    "Kalutara",
+    "Kandy",
+    "Matale",
+    "Nuwara Eliya",
+    "Galle",
+    "Matara",
+    "Hambantota",
+    "Jaffna",
+    "Kilinochchi",
+    "Mannar",
+    "Vavuniya",
+    "Mullaitivu",
+    "Batticaloa",
+    "Ampara",
+    "Trincomalee",
+    "Kurunegala",
+    "Puttalam",
+    "Anuradhapura",
+    "Polonnaruwa",
+    "Badulla",
+    "Moneragala",
+    "Ratnapura",
+    "Kegalle",
   ];
-  
-  String? selectedDistrict; 
+
+  String? selectedDistrict;
   double _currentRating = 4.0;
 
   @override
@@ -755,7 +918,7 @@ class _FilterSheetState extends State<FilterSheet> {
           const Divider(),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, 
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 "Verified Engineers Only",
@@ -911,10 +1074,13 @@ class _FilterSheetState extends State<FilterSheet> {
       ],
     );
   }
-
 }
 
-String _firstNonEmpty(Map<String, dynamic> data, List<String> keys, {String fallback = ''}) {
+String _firstNonEmpty(
+  Map<String, dynamic> data,
+  List<String> keys, {
+  String fallback = '',
+}) {
   for (final key in keys) {
     final value = data[key];
     if (value is String && value.trim().isNotEmpty) {
@@ -927,34 +1093,53 @@ String _firstNonEmpty(Map<String, dynamic> data, List<String> keys, {String fall
 String _engineerName(Map<String, dynamic> data) =>
     _firstNonEmpty(data, ['fullName', 'name'], fallback: 'Unnamed Engineer');
 
-String _engineerSpecialty(Map<String, dynamic> data) =>
-    _firstNonEmpty(data, ['specialization', 'specialty'], fallback: 'General Engineering');
+String _engineerSpecialty(Map<String, dynamic> data) => _firstNonEmpty(data, [
+  'specialization',
+  'specialty',
+], fallback: 'General Engineering');
 
-String _engineerDescription(Map<String, dynamic> data) =>
-    _firstNonEmpty(data, ['description', 'bio', 'about'], fallback: 'Registered engineer on ArchiSri.');
+String _engineerDescription(Map<String, dynamic> data) => _firstNonEmpty(data, [
+  'description',
+  'bio',
+  'about',
+], fallback: 'Registered engineer on ArchiSri.');
 
 String _engineerCompany(Map<String, dynamic> data) =>
     _firstNonEmpty(data, ['company', 'organization'], fallback: 'Independent');
 
-String _engineerExperience(Map<String, dynamic> data) =>
-    _firstNonEmpty(data, ['yearsOfExperience', 'experience'], fallback: 'Not specified');
+String _engineerExperience(Map<String, dynamic> data) => _firstNonEmpty(data, [
+  'yearsOfExperience',
+  'experience',
+], fallback: 'Not specified');
 
 String _engineerEmail(Map<String, dynamic> data) =>
     _firstNonEmpty(data, ['email'], fallback: 'Not provided');
 
-String _engineerPhone(Map<String, dynamic> data) =>
-    _firstNonEmpty(data, ['phoneNumber', 'phone', 'mobile', 'contactNumber', 'whatsapp']);
+String _engineerPhone(Map<String, dynamic> data) => _firstNonEmpty(data, [
+  'phoneNumber',
+  'phone',
+  'mobile',
+  'contactNumber',
+  'whatsapp',
+]);
 
-String _engineerRegistration(Map<String, dynamic> data) =>
-    _firstNonEmpty(data, ['registrationNumber', 'registrationNo'], fallback: 'Not provided');
+String _engineerRegistration(Map<String, dynamic> data) => _firstNonEmpty(
+  data,
+  ['registrationNumber', 'registrationNo'],
+  fallback: 'Not provided',
+);
 
-String _engineerLocation(Map<String, dynamic> data) =>
-    _firstNonEmpty(data, ['location', 'district', 'address'], fallback: 'Not specified');
+String _engineerLocation(Map<String, dynamic> data) => _firstNonEmpty(data, [
+  'location',
+  'district',
+  'address',
+], fallback: 'Not specified');
 
 String _engineerImageUrl(Map<String, dynamic> data) =>
     _firstNonEmpty(data, ['imageUrl', 'image_url', 'photoUrl', 'profileImage']);
 
-bool _engineerIsVerified(Map<String, dynamic> data) => data['isVerified'] == true;
+bool _engineerIsVerified(Map<String, dynamic> data) =>
+    data['isVerified'] == true;
 
 String _engineerRate(Map<String, dynamic> data) {
   final rate = _firstNonEmpty(data, ['ratePerHour', 'hourlyRate']);
@@ -983,17 +1168,24 @@ List<String> _engineerTags(Map<String, dynamic> data) {
   final company = _engineerCompany(data);
   final registration = _engineerRegistration(data);
 
-  if (specialty.isNotEmpty && specialty != 'General Engineering') tags.add(specialty);
+  if (specialty.isNotEmpty && specialty != 'General Engineering')
+    tags.add(specialty);
   if (company.isNotEmpty && company != 'Independent') tags.add(company);
-  if (registration.isNotEmpty && registration != 'Not provided') tags.add('Reg: $registration');
+  if (registration.isNotEmpty && registration != 'Not provided')
+    tags.add('Reg: $registration');
 
   return tags;
 }
 
 Widget _buildAvatar(Map<String, dynamic> item, {double size = 80}) {
   final name = _engineerName(item);
-  final parts = name.split(' ').where((part) => part.trim().isNotEmpty).toList();
-  final initials = parts.isEmpty ? 'E' : parts.take(2).map((part) => part[0].toUpperCase()).join();
+  final parts = name
+      .split(' ')
+      .where((part) => part.trim().isNotEmpty)
+      .toList();
+  final initials = parts.isEmpty
+      ? 'E'
+      : parts.take(2).map((part) => part[0].toUpperCase()).join();
 
   return Container(
     width: size,
