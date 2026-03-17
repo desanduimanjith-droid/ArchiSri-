@@ -195,7 +195,7 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                             borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                         ),
-                        value: _selectedConstructionType,
+                        initialValue: _selectedConstructionType,
                         hint: const Text('Select Construction Type'),
                         items: _constructionTypes.map((String value) {
                           return DropdownMenuItem<String>(

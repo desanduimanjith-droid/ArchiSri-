@@ -330,22 +330,17 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                     child: Image.asset(
                                       'assets/blueprint_placeholder.png',
                                       fit: BoxFit.cover,
-                                    )
-                                  : Center(
-                                      child: Image.asset(
-                                        'assets/blueprint_placeholder.png',
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                const Center(
-                                                  child: Icon(
-                                                    Icons.architecture,
-                                                    size: 80,
-                                                    color: Colors.grey,
-                                                  ),
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              const Center(
+                                                child: Icon(
+                                                  Icons.architecture,
+                                                  size: 80,
+                                                  color: Colors.grey,
                                                 ),
-                                      ),
+                                              ),
                                     ),
+                                  ),
                             ),
                           ),
                         ),
