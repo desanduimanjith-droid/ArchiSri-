@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:file_saver/file_saver.dart';
 import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
 import 'package:archisri_1/Constructor-connect-feature/screens/constructor_screen.dart';
+import 'package:archisri_1/marketplace.dart';
 
 class HouseplanDesignerScreen extends StatefulWidget {
   final int landsize;
@@ -189,93 +190,97 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     final screenHeight = MediaQuery.of(context).size.height;
     // Calculate dynamic blueprint container height
     final blueprintHeight = (screenHeight * 0.5).clamp(250.0, 600.0);
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5E6D3),
       body: SingleChildScrollView(
         child: Column(
-        children: [
-          // Header Section
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(left: 40,top: 60, right: 40, bottom: 40),
-            decoration: const BoxDecoration(
-              color: Color(0xFFD4C55A),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
+          children: [
+            // Header Section
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(
+                left: 40,
+                top: 60,
+                right: 40,
+                bottom: 40,
               ),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              
-              children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE68C46),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white, width: 3),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                 
-                  child: Image.asset(
-                    'assets/images/artificial-intelligence.png',
-                    
-                  ),
-                  
-                
+              decoration: const BoxDecoration(
+                color: Color(0xFFD4C55A),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
                 ),
-                const SizedBox(width: 16), 
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "AI House Plan Designer",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        "Start designing with AI assistance",
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.white70,
-                          height: 1.3,
-                        ),
-                      ),
-                      const SizedBox(height: 17),
-                      Text(
-                        "Step ${currentStep.toInt()} of ${totalSteps.toInt()}",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white70,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        height: 6,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(3),
-                          child: LinearProgressIndicator(
-                            value: currentStep / totalSteps,
-                            backgroundColor: Colors.white.withOpacity(0.3),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+
+                children: [
+                  Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE68C46),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white, width: 3),
+                    ),
+                    padding: const EdgeInsets.all(10),
+
+                    child: Image.asset(
+                      'assets/images/artificial-intelligence.png',
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "AI House Plan Designer",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        const Text(
+                          "Start designing with AI assistance",
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.white70,
+                            height: 1.3,
+                          ),
+                        ),
+                        const SizedBox(height: 17),
+                        Text(
+                          "Step ${currentStep.toInt()} of ${totalSteps.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          height: 6,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(3),
+                            child: LinearProgressIndicator(
+                              value: currentStep / totalSteps,
+                              backgroundColor: Colors.white.withOpacity(0.3),
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-           
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -300,7 +305,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFD6CDBF), 
+                      color: const Color(0xFFD6CDBF),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: const EdgeInsets.all(15),
@@ -313,34 +318,34 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                               ? _openFullImagePreview
                               : null,
                           child: Container(
-                          width: double.infinity,
-                          height: blueprintHeight,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF4EFE6), 
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: _generatedBlueprintImage != null
-                                ? Image.memory(
-                                    _generatedBlueprintImage!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Center(
-                                    child: Image.asset(
-                                      'assets/blueprint_placeholder.png',
+                            width: double.infinity,
+                            height: blueprintHeight,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF4EFE6),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: _generatedBlueprintImage != null
+                                  ? Image.memory(
+                                      _generatedBlueprintImage!,
                                       fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              const Center(
-                                                child: Icon(
-                                                  Icons.architecture,
-                                                  size: 80,
-                                                  color: Colors.grey,
+                                    )
+                                  : Center(
+                                      child: Image.asset(
+                                        'assets/blueprint_placeholder.png',
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                const Center(
+                                                  child: Icon(
+                                                    Icons.architecture,
+                                                    size: 80,
+                                                    color: Colors.grey,
+                                                  ),
                                                 ),
-                                              ),
+                                      ),
                                     ),
-                                  ),
                             ),
                           ),
                         ),
@@ -442,14 +447,12 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
 
                   const SizedBox(height: 25),
 
-                  
                   //funnadation recomendation part
-                  
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFC7E2B4), 
+                      color: const Color(0xFFC7E2B4),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: Colors.black12, width: 1),
                     ),
@@ -516,7 +519,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFD3A278), 
+                                color: const Color(0xFFD3A278),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: const Text(
@@ -556,7 +559,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFD3A278), 
+                                color: const Color(0xFFD3A278),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: const Text(
@@ -576,11 +579,16 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => IoTMarketplace(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(
-                                0xFFE2AE62,
-                              ), 
+                              backgroundColor: const Color(0xFFE2AE62),
                               foregroundColor: Colors.black87,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
@@ -631,7 +639,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                               horizontal: 15,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE2C4A2), 
+                              color: const Color(0xFFE2C4A2),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
@@ -647,9 +655,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: const Color(
-                                      0xFFD6AB75,
-                                    ), 
+                                    color: const Color(0xFFD6AB75),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: const Icon(
@@ -693,7 +699,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                               horizontal: 15,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE2C4A2), 
+                              color: const Color(0xFFE2C4A2),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
@@ -720,7 +726,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 ),
                                 const SizedBox(height: 15),
                                 const Text(
-                                  "Engineers\nGet feedback\n", 
+                                  "Engineers\nGet feedback\n",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
@@ -743,21 +749,16 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                       width: 250,
                       child: ElevatedButton(
                         onPressed: () {
-
                           Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MainContentPart(),
-                          
-                            
-                      ),
-                      );
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainContentPart(),
+                            ),
+                          );
                         },
-                              
+
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(
-                            0xFFB5BD55,
-                          ), 
+                          backgroundColor: const Color(0xFFB5BD55),
                           foregroundColor: Colors.black87,
                           elevation: 3,
                           shape: RoundedRectangleBorder(
