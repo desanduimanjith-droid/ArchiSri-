@@ -107,56 +107,64 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
                   children: [
                     Container(
                       height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE68C46),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.black, width: 3),
-                  ),
-                  padding: const EdgeInsets.all(10),
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE68C46),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.black, width: 3),
+                      ),
+                      padding: const EdgeInsets.all(10),
 
-                  child: Icon(Icons.engineering, size: 60, color: Colors.black),
+                      child: Icon(
+                        Icons.engineering,
+                        size: 60,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Connect with enginners",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            "Find verified engineering professionals",
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white70,
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Connect with enginners",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        "Find verified engineering professionals",
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.white70,
-                          height: 1.3,
-                        ),
-                      ),
-                    ],
+              ),
+              Positioned(
+                top: 70,
+                
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                    size: 24,
                   ),
+                  onPressed: () => Navigator.pop(context),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Positioned(
-            top: 70, // Adjust this as needed for vertical alignment
-            left: 0, // Replaces the left adjustment
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 24),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ),
-        ],
-      ),
           // Search bar and filter button
           Padding(
             padding: const EdgeInsets.all(16.0),
