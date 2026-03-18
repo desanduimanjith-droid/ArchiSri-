@@ -124,64 +124,91 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5E6D3),
       body: Column(
         children: [
-          // The header banner
-          Container(
-            width: double.infinity,
-            height: 200,
-            padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              color: Color(0xFFCABF58), // The light green background
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  height: 120,
-                  width: 120,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFDD8436), // The icon box color
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Icon(
-                    Icons.engineering,
-                    size: 90,
-                    color: Colors.black,
+          // Header Section
+          Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.only(
+                  left: 40,
+                  top: 60,
+                  right: 40,
+                  bottom: 40,
+                ),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD4C55A),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
                   ),
                 ),
-                const SizedBox(width: 20),
-                const Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Connect with\nConstructors",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          height: 1.2,
-                        ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE68C46),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.black, width: 3),
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        "Find verified construction professionals",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      padding: const EdgeInsets.all(10),
+                      child: const Icon(
+                        Icons.architecture,
+                        size: 60,
+                        color: Colors.black,
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Connect with Constructors",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            "Find verified construction professionals",
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white70,
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Positioned(
+                top: 70,
+                left: 0,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+            ],
           ),
 
-          // --- SEARCH BAR & FILTER BUTTON ---
+          // Search bar and filter button
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -348,18 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: "",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ""),
-        ],
-      ),
+      // bottom nav removed
     );
   }
 }
