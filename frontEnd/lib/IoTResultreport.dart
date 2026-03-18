@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'iot_service.dart';
 
 void main() {
   runApp(const ArchisriIoTReportApp());
@@ -19,71 +17,33 @@ class ArchisriIoTReportApp extends StatelessWidget {
   }
 }
 
-class SoilTestingScreen extends StatefulWidget {
+class SoilTestingScreen extends StatelessWidget {
   const SoilTestingScreen({super.key});
-
-  @override
-  State<SoilTestingScreen> createState() => _SoilTestingScreenState();
-}
-
-class _SoilTestingScreenState extends State<SoilTestingScreen> {
-  final FirebaseService _firebaseService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F0E1),
       body: SafeArea(
-        child: StreamBuilder<DatabaseEvent>(
-          stream: _firebaseService.getSensorDataStream(),
-          builder: (context, snapshot) {
-            Map<dynamic, dynamic> data = {};
-            if (snapshot.hasData && snapshot.data!.snapshot.value != null) {
-              data = snapshot.data!.snapshot.value as Map<dynamic, dynamic>;
-            }
-
-            // Fallback to hardcoded values if data is missing
-            final double moisture = (data['moisture'] ?? 73.4).toDouble();
-            final String temperature =
-                data['temperature']?.toString() ?? "22.9";
-            final String density = data['density']?.toString() ?? "1.43";
-            final String ph = data['ph']?.toString() ?? "6.8";
-            final String phStatus = data['phStatus']?.toString() ?? "Neutral";
-            final String conductivity =
-                data['conductivity']?.toString() ?? "2.4";
-            final String soilType = data['soilType']?.toString() ?? "Clay Loam";
-            final String compaction =
-                data['compaction']?.toString() ?? "Medium (Good)";
-            final String deviceId = data['deviceId']?.toString() ?? "4521";
-            final bool isOnline = data['isOnline'] ?? true;
-
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 20),
-                  _buildConnectionBar(isOnline, deviceId),
-                  const SizedBox(height: 20),
-                  _buildMoistureCard(moisture),
-                  const SizedBox(height: 20),
-                  _buildSmallCards(temperature, density),
-                  const SizedBox(height: 20),
-                  _buildMoistureChart(),
-                  const SizedBox(height: 20),
-                  _buildDetailedAnalysis(
-                    ph,
-                    phStatus,
-                    conductivity,
-                    soilType,
-                    compaction,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildScanButton(),
-                  const SizedBox(height: 30),
-                ],
-              ),
-            );
-          },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 20),
+              _buildConnectionBar(),
+              const SizedBox(height: 20),
+              _buildMoistureCard(),
+              const SizedBox(height: 20),
+              _buildSmallCards(),
+              const SizedBox(height: 20),
+              _buildMoistureChart(),
+              const SizedBox(height: 20),
+              _buildDetailedAnalysis(),
+              const SizedBox(height: 20),
+              _buildScanButton(),
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );
@@ -140,7 +100,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
   }
 
   //  CONNECTION BAR
-  Widget _buildConnectionBar(bool isOnline, String deviceId) {
+  Widget _buildConnectionBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -152,27 +112,20 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8),
           ],
         ),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.circle,
-                  color: isOnline ? Colors.green : Colors.red,
-                  size: 12,
-                ),
-                const SizedBox(width: 8),
+                Icon(Icons.circle, color: Colors.green, size: 12),
+                SizedBox(width: 8),
                 Text(
-                  isOnline ? "Live Connection Active" : "Device Offline",
-                  style: const TextStyle(fontWeight: FontWeight.w500),
+                  "Live Connection Active",
+                  style: TextStyle(fontWeight: FontWeight.w500),
                 ),
               ],
             ),
-            Text(
-              "Device #$deviceId",
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text("Device #4521", style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -180,7 +133,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
   }
 
   // MOISTURE CARD
-  Widget _buildMoistureCard(double moisturePercent) {
+  Widget _buildMoistureCard() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -205,15 +158,15 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             CircularPercentIndicator(
               radius: 70,
               lineWidth: 12,
-              percent: (moisturePercent / 100).clamp(0.0, 1.0),
+              percent: 0.734,
               animation: true,
               circularStrokeCap: CircularStrokeCap.round,
               backgroundColor: Colors.grey.shade200,
               progressColor: Colors.purple,
-              center: Text(
-                "${moisturePercent.toStringAsFixed(1)}%\nMoisture",
+              center: const Text(
+                "73.4%\nMoisture",
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 20),
@@ -238,7 +191,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
   }
 
   // SMALL CARDS
-  Widget _buildSmallCards(String temperature, String density) {
+  Widget _buildSmallCards() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -247,7 +200,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             child: _smallCard(
               icon: Icons.thermostat,
               title: "Temperature",
-              value: "$temperature°C",
+              value: "22.9°C",
               color: Colors.orange,
             ),
           ),
@@ -256,7 +209,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             child: _smallCard(
               icon: Icons.show_chart,
               title: "Soil Density",
-              value: "$density g/cm³",
+              value: "1.43 g/cm³",
               color: Colors.blue,
             ),
           ),
@@ -372,13 +325,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
   }
 
   //  DETAILED ANALYSIS
-  Widget _buildDetailedAnalysis(
-    String ph,
-    String phStatus,
-    String conductivity,
-    String soilType,
-    String compaction,
-  ) {
+  Widget _buildDetailedAnalysis() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -387,21 +334,21 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
         ),
-        child: Column(
+        child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Detailed Analysis",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 15),
-            Text("pH Level: $ph ($phStatus)"),
-            const SizedBox(height: 8),
-            Text("Conductivity: $conductivity mS/cm (Normal)"),
-            const SizedBox(height: 8),
-            Text("Soil Type: $soilType"),
-            const SizedBox(height: 8),
-            Text("Compaction: $compaction"),
+            SizedBox(height: 15),
+            Text("pH Level: 6.8 (Neutral)"),
+            SizedBox(height: 8),
+            Text("Conductivity: 2.4 mS/cm (Normal)"),
+            SizedBox(height: 8),
+            Text("Soil Type: Clay Loam"),
+            SizedBox(height: 8),
+            Text("Compaction: Medium (Good)"),
           ],
         ),
       ),
