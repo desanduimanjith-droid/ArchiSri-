@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'iot_service.dart';
 
 
 
@@ -14,30 +15,72 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F0E1),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 20),
-              _buildConnectionBar(),
-              const SizedBox(height: 20),
-              _buildMoistureCard(),
-              const SizedBox(height: 20),
-              _buildSmallCards(),
-              const SizedBox(height: 20),
-              _buildMoistureChart(),
-              const SizedBox(height: 20),
-              _buildDetailedAnalysis(),
-              const SizedBox(height: 20),
-              _buildScanButton(),
-              const SizedBox(height: 30),
-            ],
+    return StreamBuilder<Map<String, dynamic>>(
+      stream: service.getSensorData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF5F0E1),
+            body: Center(
+              child: Text(
+                "Firebase Error: ${snapshot.error}",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }
+
+        final data =
+            snapshot.data ??
+            {
+              "moisture": 0.0,
+              "temperature": 0.0,
+              "ec": 0.0,
+              "soilDensity": 1.43,
+              "ph": 6.8,
+              "conductivity": 0.0,
+            };
+
+        final double moisture = (data["moisture"] as num).toDouble();
+        final double ec = (data["ec"] as num).toDouble();
+        final double soilDensity = (data["soilDensity"] as num).toDouble();
+        final double ph = (data["ph"] as num).toDouble();
+        final double conductivity = (data["conductivity"] as num).toDouble();
+
+        final String moistureStatus = _getMoistureStatus(moisture);
+
+        return Scaffold(
+          backgroundColor: const Color(0xFFF5F0E1),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  const SizedBox(height: 20),
+                  _buildConnectionBar(),
+                  const SizedBox(height: 20),
+                  _buildMoistureCard(moisture, moistureStatus),
+                  const SizedBox(height: 20),
+                  _buildSmallCards(ec, soilDensity),
+                  const SizedBox(height: 20),
+                  _buildMoistureChart(moisture),
+                  const SizedBox(height: 20),
+                  _buildDetailedAnalysis(ph, conductivity),
+                  const SizedBox(height: 20),
+                  _buildScanButton(),
+                  const SizedBox(height: 30),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -124,8 +167,9 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  // Moisure bar 
-  Widget _buildMoistureCard() {
+  Widget _buildMoistureCard(double moisture, String moistureStatus) {
+    final double percentValue = (moisture / 100).clamp(0.0, 1.0);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -150,15 +194,15 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             CircularPercentIndicator(
               radius: 70,
               lineWidth: 12,
-              percent: 0.734,
+              percent: percentValue,
               animation: true,
               circularStrokeCap: CircularStrokeCap.round,
               backgroundColor: Colors.grey.shade200,
               progressColor: Colors.purple,
-              center: const Text(
-                "73.4%\nMoisture",
+              center: Text(
+                "${moisture.toStringAsFixed(1)}%\nMoisture",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 20),
@@ -168,9 +212,9 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                 color: const Color(0xFFE9D8FD),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Text(
-                "Optimal",
-                style: TextStyle(
+              child: Text(
+                moistureStatus,
+                style: const TextStyle(
                   color: Colors.deepPurple,
                   fontWeight: FontWeight.bold,
                 ),
@@ -182,17 +226,16 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  // Small cards
-  Widget _buildSmallCards() {
+  Widget _buildSmallCards(double ec, double soilDensity) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
           Expanded(
             child: _smallCard(
-              icon: Icons.thermostat,
-              title: "Temperature",
-              value: "22.9°C",
+              icon: Icons.electrical_services,
+              title: "EC Value",
+              value: ec.toStringAsFixed(0),
               color: Colors.orange,
             ),
           ),
@@ -201,7 +244,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             child: _smallCard(
               icon: Icons.show_chart,
               title: "Soil Density",
-              value: "1.43 g/cm³",
+              value: "${soilDensity.toStringAsFixed(2)} g/cm³",
               color: Colors.blue,
             ),
           ),
@@ -241,8 +284,18 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
+  Widget _buildMoistureChart(double moisture) {
+    final values = [
+      (moisture * 0.80).clamp(0, 100),
+      (moisture * 0.65).clamp(0, 100),
+      (moisture * 0.90).clamp(0, 100),
+      (moisture * 0.70).clamp(0, 100),
+      (moisture * 0.95).clamp(0, 100),
+      (moisture * 0.60).clamp(0, 100),
+      (moisture * 1.00).clamp(0, 100),
+      (moisture * 0.75).clamp(0, 100),
+    ];
 
-  Widget _buildMoistureChart() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -269,15 +322,10 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: List.generate(18, (index) {
-                  double height = (index % 3 == 0)
-                      ? 110
-                      : (index % 3 == 1)
-                      ? 70
-                      : 40;
-
+                children: values.map((value) {
+                  final double height = (value / 100) * 110;
                   return Container(
-                    width: 6,
+                    width: 12,
                     height: height,
                     decoration: BoxDecoration(
                       color: index.isEven
@@ -286,28 +334,18 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   );
-                }),
+                }).toList(),
               ),
             ),
-
             const SizedBox(height: 15),
 
             
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "00:00",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  "12:00",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  "23:59",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                ),
+                Text("00:00", style: TextStyle(fontSize: 12)),
+                Text("12:00", style: TextStyle(fontSize: 12)),
+                Text("23:59", style: TextStyle(fontSize: 12)),
               ],
             ),
           ],
@@ -316,8 +354,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
- 
-  Widget _buildDetailedAnalysis() {
+  Widget _buildDetailedAnalysis(double ph, double conductivity) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -326,21 +363,21 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
         ),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Detailed Analysis",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 15),
-            Text("pH Level: 6.8 (Neutral)"),
-            SizedBox(height: 8),
-            Text("Conductivity: 2.4 mS/cm (Normal)"),
-            SizedBox(height: 8),
-            Text("Soil Type: Clay Loam"),
-            SizedBox(height: 8),
-            Text("Compaction: Medium (Good)"),
+            const SizedBox(height: 15),
+            Text("pH Level: ${ph.toStringAsFixed(1)}"),
+            const SizedBox(height: 8),
+            Text("Conductivity: ${conductivity.toStringAsFixed(2)}"),
+            const SizedBox(height: 8),
+            const Text("Soil Type: Clay Loam"),
+            const SizedBox(height: 8),
+            const Text("Compaction: Medium"),
           ],
         ),
       ),
@@ -373,13 +410,6 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
               fontWeight: FontWeight.bold,
               letterSpacing: 1.2,
               color: Colors.white,
-              shadows: [
-                Shadow(
-                  blurRadius: 4,
-                  color: Colors.black26,
-                  offset: Offset(0, 2),
-                ),
-              ],
             ),
           ),
         ),
