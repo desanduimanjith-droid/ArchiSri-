@@ -116,13 +116,13 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
                         const SizedBox(height: 35),
 
                         // role selction buttons
-                        _roleButton(context, "User", "Find projects & hire experts", Icons.person_outline, 
+                        _roleButton(context, "User", "Find your home plan and explor more", Icons.person_outline, 
                           () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()))),
                         const SizedBox(height: 16),
-                        _roleButton(context, "Engineer", "Manage technical designs", Icons.engineering_outlined, 
+                        _roleButton(context, "Engineer", "Manage technical designs and feedbacks", Icons.engineering_outlined, 
                           () => Navigator.push(context, MaterialPageRoute(builder: (context) => const login_page2()))),
                         const SizedBox(height: 16),
-                        _roleButton(context, "Construction Co.", "Handle large scale builds", Icons.apartment_outlined, 
+                        _roleButton(context, "Construction Co.", "Handle large scale builds and feedbacks", Icons.apartment_outlined, 
                           () => Navigator.push(context, MaterialPageRoute(builder: (context) => const login_page3()))),
 
                         const SizedBox(height: 40),

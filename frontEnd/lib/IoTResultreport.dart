@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'iot_service.dart';
 
-class SoilTestingScreen extends StatelessWidget {
-  SoilTestingScreen({super.key});
 
-  final IoTService service = IoTService();
 
-  String _getMoistureStatus(double moisture) {
-    if (moisture < 30) return "Dry";
-    if (moisture < 70) return "Moderate";
-    return "Optimal";
-  }
+class SoilTestingScreen extends StatefulWidget {
+  const SoilTestingScreen({super.key});
+
+  @override
+  State<SoilTestingScreen> createState() => _SoilTestingScreenState();
+}
+
+class _SoilTestingScreenState extends State<SoilTestingScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +84,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
+  
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(24.0),
@@ -133,6 +134,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
+  //  connection bar
   Widget _buildConnectionBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -313,6 +315,8 @@ class SoilTestingScreen extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
             const SizedBox(height: 20),
+
+            
             SizedBox(
               height: 120,
               child: Row(
@@ -324,7 +328,9 @@ class SoilTestingScreen extends StatelessWidget {
                     width: 12,
                     height: height,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF3B82F6),
+                      color: index.isEven
+                          ? const Color(0xFF3B82F6) 
+                          : const Color(0xFFB4C34C), 
                       borderRadius: BorderRadius.circular(10),
                     ),
                   );
@@ -332,6 +338,8 @@ class SoilTestingScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
+
+            
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -376,6 +384,7 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
+  //  Scan button
   Widget _buildScanButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),

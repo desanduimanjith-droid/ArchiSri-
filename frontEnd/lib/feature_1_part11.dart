@@ -16,13 +16,22 @@ class _Feature1Part11State extends State<Feature1Part11> {
   final double totalSteps = 8;
   List<String> selectedRooms = [];
 
-  final List<Map<String, dynamic>> floorOptions = [
-    {'name': 'One single bedroom', 'icon': Icons.bathroom_rounded}, 
-    {'name': '2nd bedroom', 'icon': Icons.bathroom_rounded},
-    {'name': '3rd bedroom', 'icon': Icons.bathroom_rounded},
-    {'name': '4th bedroom', 'icon': Icons.bathroom_rounded}
-  
-  ];
+  late List<Map<String, dynamic>> floorOptions;
+
+  @override
+  void initState() {
+    super.initState();
+    int maxRooms = BlueprintSelections.bedroomSelectionsByFloor['fourth'] != null
+        ? BlueprintSelections.maxRoomSelectionValue(BlueprintSelections.bedroomSelectionsByFloor['fourth']!)
+        : 1;
+
+    floorOptions = [];
+    floorOptions.add({'name': 'Not needed', 'icon': Icons.do_not_disturb_alt});
+    if (maxRooms >= 1) floorOptions.add({'name': '1st bedroom', 'icon': Icons.bathroom_rounded});
+    if (maxRooms >= 2) floorOptions.add({'name': '2nd bedroom', 'icon': Icons.bathroom_rounded});
+    if (maxRooms >= 3) floorOptions.add({'name': '3rd bedroom', 'icon': Icons.bathroom_rounded});
+    if (maxRooms >= 4) floorOptions.add({'name': '4th bedroom', 'icon': Icons.bathroom_rounded});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -310,3 +319,4 @@ class _Feature1Part11State extends State<Feature1Part11> {
     );
   }
 }
+
