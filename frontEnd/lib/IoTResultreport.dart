@@ -41,13 +41,14 @@ class SoilTestingScreen extends StatelessWidget {
             {
               "moisture": 0.0,
               "temperature": 0.0,
+              "ec": 0.0,
               "soilDensity": 1.43,
               "ph": 6.8,
               "conductivity": 0.0,
             };
 
         final double moisture = (data["moisture"] as num).toDouble();
-        final double temperature = (data["temperature"] as num).toDouble();
+        final double ec = (data["ec"] as num).toDouble();
         final double soilDensity = (data["soilDensity"] as num).toDouble();
         final double ph = (data["ph"] as num).toDouble();
         final double conductivity = (data["conductivity"] as num).toDouble();
@@ -66,7 +67,7 @@ class SoilTestingScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   _buildMoistureCard(moisture, moistureStatus),
                   const SizedBox(height: 20),
-                  _buildSmallCards(temperature, soilDensity),
+                  _buildSmallCards(ec, soilDensity),
                   const SizedBox(height: 20),
                   _buildMoistureChart(moisture),
                   const SizedBox(height: 20),
@@ -223,16 +224,16 @@ class SoilTestingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSmallCards(double temperature, double soilDensity) {
+  Widget _buildSmallCards(double ec, double soilDensity) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
           Expanded(
             child: _smallCard(
-              icon: Icons.thermostat,
-              title: "Temperature",
-              value: temperature.toStringAsFixed(1),
+              icon: Icons.electrical_services,
+              title: "EC Value",
+              value: ec.toStringAsFixed(0),
               color: Colors.orange,
             ),
           ),
