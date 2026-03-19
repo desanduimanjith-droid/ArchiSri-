@@ -2,6 +2,8 @@ import 'package:archisri_1/main_content_part.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:typed_data';
 import 'package:file_saver/file_saver.dart';
 import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
@@ -47,6 +49,19 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     });
   }
 
+  String _getBackendUrl() {
+    if (kIsWeb) {
+      return 'http://127.0.0.1:5002/blueprint';
+    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      return 'http://127.0.0.1:5002/blueprint';
+    } else if (Platform.isAndroid) {
+      // Uses the network IP so both physical device and emulator can connect gracefully.
+      // (10.0.2.2 is usually for just the emulator, but LAN IP handles both)
+      return 'http://10.31.17.178:5002/blueprint';
+    }
+    return 'http://127.0.0.1:5002/blueprint';
+  }
+
   Future<void> _generateBlueprint() async {
     setState(() {
       _isLoading = true;
@@ -55,7 +70,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     try {
       final response = await http
           .post(
-            Uri.parse('http://127.0.0.1:5002/blueprint'),
+            Uri.parse(_getBackendUrl()),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
               'landsize': widget.landsize,
@@ -793,3 +808,4 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     );
   }
 }
+

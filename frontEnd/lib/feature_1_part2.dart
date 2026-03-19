@@ -185,6 +185,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                               if (isSelected) {
                                 selectedFloors.remove(style['name']);
                               } else {
+                                selectedFloors.clear();
                                 selectedFloors.add(style['name']);
                               }
                             });
@@ -300,10 +301,10 @@ class _Feature1Part2State extends State<Feature1Part2> {
                                 // Handle next action
 
                                 List<String> flow =[];
-                                if(selectedFloors.contains('Single Floor')) flow.add('first');
-                                if(selectedFloors.contains('Double Floor')) flow.add('second');
-                                if(selectedFloors.contains('Triple Floor')) flow.add('third');
-                                if(selectedFloors.contains('Quadruple Floor')) flow.add('fourth');
+                                if(selectedFloors.contains('Single Floor')) flow = ['first'];
+                                if(selectedFloors.contains('Double Floor')) flow = ['first', 'second'];
+                                if(selectedFloors.contains('Triple Floor')) flow = ['first', 'second', 'third'];
+                                if(selectedFloors.contains('Quadruple Floor')) flow = ['first', 'second', 'third', 'fourth'];
 
                                 BlueprintSelections.selectedFloors = List<String>.from(selectedFloors);
 
