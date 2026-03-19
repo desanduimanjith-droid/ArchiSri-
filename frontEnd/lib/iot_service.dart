@@ -32,10 +32,8 @@ class IoTService {
 
       return {
         "moisture": moisturePercent.clamp(0.0, 100.0),
-
-        // you asked to show EC as temperature
-        "temperature": ecValue,
-
+        "temperature": 25.0, // Default temperature value
+        "ec": ecValue, // EC value as separate field
         "soilDensity": 1.43,
         "ph": 6.8,
         "conductivity": ecValue,
