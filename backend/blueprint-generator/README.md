@@ -68,6 +68,11 @@ curl -X POST http://127.0.0.1:5002/blueprint \
 - Validates landsize and room counts before API calls.
 - Handles OpenAI API quota or connectivity errors.
 
+## Future Enhancements
+- Integration with GPT-4o for more detailed architectural descriptions.
+- Support for multiple blueprint styles (Minimalist, Traditional, Industrial).
+- Caching generated images to reduce OpenAI API costs and latency.
+- Direct export to PDF format for architectural documentation.
 
 ## Notes
 
