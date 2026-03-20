@@ -29,10 +29,15 @@ class BlueprintSelections {
   }
 
   static int get bathrooms {
-    final attachedTotal = bathroomSelectionsByFloor.values.fold<int>(
-      0,
-      (sum, selections) => sum + selections.length,
-    );
+    final attachedTotal = bathroomSelectionsByFloor.values.fold<int>(0, (
+      sum,
+      selections,
+    ) {
+      final count = selections
+          .where((s) => !s.toLowerCase().contains('not needed'))
+          .length;
+      return sum + count;
+    });
 
     if (attachedTotal > 0) return attachedTotal;
     if (bathroomTypeSelections.isNotEmpty) return 1;
@@ -41,12 +46,18 @@ class BlueprintSelections {
 
   static int get kitchens {
     if (kitchenFloorSelections.isEmpty) return 1;
-    return kitchenFloorSelections.length;
+    final count = kitchenFloorSelections
+        .where((s) => !s.toLowerCase().contains('not needed'))
+        .length;
+    return count > 0 ? count : 1;
   }
 
   static int get livingRooms {
-    // Fixed to 1 living room as per requirements
-    return 1;
+    final total = livingRoomSelectionsByFloor.values.fold<int>(
+      0,
+      (sum, selections) => sum + maxRoomSelectionValue(selections),
+    );
+    return total > 0 ? total : 1;
   }
 
   static int maxRoomSelectionValue(List<String> selections) {

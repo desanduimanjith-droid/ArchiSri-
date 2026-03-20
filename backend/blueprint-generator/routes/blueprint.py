@@ -1,27 +1,53 @@
 import os
 import base64
 from io import BytesIO
-from pathlib import Path
 from flask import Blueprint, request, send_file, jsonify
 from openai import OpenAI
 from dotenv import load_dotenv
 
-load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / ".env")
-
 blueprint_api = Blueprint("blueprint_api", __name__)
 
-def _resolve_openai_api_key() -> str | None:
-    return os.getenv("OPENAI_API_KEY") or os.getenv("BLUEPRINT_OPENAI_API_KEY")
+load_dotenv()
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    raise RuntimeError("OPENAI_API_KEY not set")
+
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 
-def _get_openai_client() -> OpenAI | None:
-    api_key = _resolve_openai_api_key()
-    if not api_key:
-        return None
-    return OpenAI(api_key=api_key)
+def _format_list(values):
+    if not values:
+        return "None"
+    return ", ".join(str(v) for v in values)
 
 
-def build_prompt(floors, style, landsize, bedrooms, bathrooms, kitchen, living_room):
+def _format_map(values):
+    if not values:
+        return "None"
+
+    parts = []
+    for key, entries in values.items():
+        parts.append(f"- {key}: {_format_list(entries)}")
+    return "\n".join(parts)
+
+
+def build_prompt(
+    floors,
+    style,
+    landsize,
+    bedrooms,
+    bathrooms,
+    kitchen,
+    living_room,
+    selected_floors=None,
+    bathroom_type_selections=None,
+    kitchen_floor_selections=None,
+    bedroom_selections_by_floor=None,
+    bathroom_selections_by_floor=None,
+    living_room_selections_by_floor=None,
+):
 
     floor_labels = ""
     for i in range(1, floors + 1):
@@ -30,7 +56,7 @@ def build_prompt(floors, style, landsize, bedrooms, bathrooms, kitchen, living_r
     return f"""
 Create a PROFESSIONAL ARCHITECTURAL FLOOR PLAN PRESENTATION SHEET.
 
-IMPORTANT: The page design must remain identical every generation.
+IMPORTANT: The page frame and title style must remain consistent every generation.
 
 PAGE FRAME
 - white paper background
@@ -57,20 +83,8 @@ DRAWING STYLE
 - stair arrows
 - dimension text in feet
 
-GROUND FLOOR CONTENT
-garage with top-view car
-entrance foyer
-living room
-kitchen
-dining
-stairs
-hallway circulation
-
-UPPER FLOORS CONTENT
-bedrooms
-bathrooms
-corridor
-stair landing
+MANDATORY DEFAULT CONTENT
+- FLOOR 1 must include one garage with a top-view car symbol.
 
 ROOM SIZE GUIDELINES
 bedrooms 10–14 ft
@@ -87,6 +101,29 @@ Bathrooms: {bathrooms}
 Kitchen: {kitchen}
 Living room: {living_room}
 
+DETAILED USER INPUTS
+
+Selected floor option(s): {_format_list(selected_floors)}
+Bathroom type preference(s): {_format_list(bathroom_type_selections)}
+Kitchen floor preference(s): {_format_list(kitchen_floor_selections)}
+
+Bedrooms selected by floor:
+{_format_map(bedroom_selections_by_floor)}
+
+Bathrooms selected by floor:
+{_format_map(bathroom_selections_by_floor)}
+
+Living rooms selected by floor:
+{_format_map(living_room_selections_by_floor)}
+
+PROGRAM RULES (STRICT)
+
+- Use user requirements as the source of truth for room program and distribution.
+- Do NOT add extra room types or default spaces unless required by user inputs.
+- Keep only the mandatory default: first-floor garage with top-view car.
+- Floor count, room counts, and per-floor placement must follow user-provided values.
+- If a floor has no user-selected room for a category, do not invent one.
+
 BOTTOM RIGHT INFO BOX
 
 Style: {style}
@@ -102,11 +139,11 @@ BOTTOM LEFT SCALE BAR
 
 IMPORTANT RULES
 
-- identical sheet layout every time
-- only the room arrangement changes
+- keep sheet layout, frame, and title consistent
 - floors vertically aligned
 - professional architectural blueprint sheet
 - entire drawing fits inside border
+- room program must reflect user requirements, not default layout assumptions
 
 Generate {floors} floors according to the client requirements.
 """
@@ -115,12 +152,6 @@ Generate {floors} floors according to the client requirements.
 @blueprint_api.route("/blueprint", methods=["POST"])
 def generate_blueprint():
     try:
-        client = _get_openai_client()
-        if client is None:
-            return jsonify({
-                "success": False,
-                "error": "Missing API key. Set OPENAI_API_KEY or BLUEPRINT_OPENAI_API_KEY in environment."
-            }), 500
 
         data = request.json or {}
 
@@ -132,6 +163,12 @@ def generate_blueprint():
         bathrooms = data.get("bathrooms", 2)
         kitchen = data.get("kitchen", 1)
         living_room = data.get("living_room", 1)
+        selected_floors = data.get("selected_floors", [])
+        bathroom_type_selections = data.get("bathroom_type_selections", [])
+        kitchen_floor_selections = data.get("kitchen_floor_selections", [])
+        bedroom_selections_by_floor = data.get("bedroom_selections_by_floor", {})
+        bathroom_selections_by_floor = data.get("bathroom_selections_by_floor", {})
+        living_room_selections_by_floor = data.get("living_room_selections_by_floor", {})
 
         if not landsize or not style:
             return jsonify({
@@ -146,7 +183,13 @@ def generate_blueprint():
             bedrooms,
             bathrooms,
             kitchen,
-            living_room
+            living_room,
+            selected_floors,
+            bathroom_type_selections,
+            kitchen_floor_selections,
+            bedroom_selections_by_floor,
+            bathroom_selections_by_floor,
+            living_room_selections_by_floor,
         )
 
         result = client.images.generate(

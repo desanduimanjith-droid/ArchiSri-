@@ -10,6 +10,7 @@ import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart
 import 'package:archisri_1/Constructor-connect-feature/screens/constructor_screen.dart';
 import 'package:archisri_1/marketPlace.dart';
 import 'package:archisri_1/IoTResultreport.dart';
+import 'package:archisri_1/feature_1_selections.dart';
 
 class HouseplanDesignerScreen extends StatefulWidget {
   final int landsize;
@@ -81,6 +82,17 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
               'kitchen': widget.kitchen,
               'living_room': widget.livingRoom,
               'style': widget.style,
+              'selected_floors': BlueprintSelections.selectedFloors,
+              'bathroom_type_selections':
+                BlueprintSelections.bathroomTypeSelections,
+              'kitchen_floor_selections':
+                BlueprintSelections.kitchenFloorSelections,
+              'bedroom_selections_by_floor':
+                BlueprintSelections.bedroomSelectionsByFloor,
+              'bathroom_selections_by_floor':
+                BlueprintSelections.bathroomSelectionsByFloor,
+              'living_room_selections_by_floor':
+                BlueprintSelections.livingRoomSelectionsByFloor,
             }),
           )
           .timeout(
