@@ -345,47 +345,28 @@ class _SignInScreenState extends State<LoginPage> {
                 const SizedBox(height: 20),
 
                 // --- 5. SOCIAL BUTTONS ---
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Google Button
-                    _socialButton(
-                      label: "Google",
-                      //google  icon
-                      icon: Image.asset(
-                        "assets/images/google.webp",
-                        height: 28,
-                        width: 28,
-                      ),
-                      onTap: () async {
-                        // Changed to match your defined method name
-                        final user = await _googleSignInGoogle();
+                // Google Button
+                _socialButton(
+                  label: "Continue with Google",
+                  //google  icon
+                  icon: Image.asset(
+                    "assets/images/google.webp",
+                    height: 24,
+                    width: 24,
+                  ),
+                  onTap: () async {
+                    // Changed to match your defined method name
+                    final user = await _googleSignInGoogle();
 
-                        if (user != null && context.mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MainContentPart(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-
-                    const SizedBox(width: 16), // Spacing between buttons
-                    // Facebook Button
-                    _socialButton(
-                      label: "Facebook",
-                      // facebook icon
-                      icon: const Icon(
-                        Icons.facebook,
-                        color: Colors.blue,
-                        size: 28,
-                      ),
-                      onTap: () {
-                      },
-                    ),
-                  ],
+                    if (user != null && context.mounted) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MainContentPart(),
+                        ),
+                      );
+                    }
+                  },
                 ),
 
                 const SizedBox(height: 30),
@@ -456,43 +437,39 @@ class _SignInScreenState extends State<LoginPage> {
     }
   }
 
-  // Helper widget to create the Social Buttons (Google/Facebook)
+  // Helper widget to create the Social Button (Google)
   Widget _socialButton({
     required String label,
     required Widget icon,
     required VoidCallback onTap,
   }) {
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(30),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200, // Light grey background
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black87,
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(color: Colors.grey.shade300),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+        ),
+        onPressed: onTap,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
