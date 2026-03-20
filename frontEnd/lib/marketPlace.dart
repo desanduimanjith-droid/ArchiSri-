@@ -209,7 +209,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Product Image Placeholder
+                    // UI Placeholder for displaying Architectural Product Image
                     Container(
                       height: 150,
                       width: double.infinity,
@@ -219,6 +219,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
 
                         color: Colors.grey.shade100,
                       ),
+                      //Loading the local image asset for architectural product
                       child: Image.asset(
                         'assets/images/iot.png',
                         fit: BoxFit.fill,
