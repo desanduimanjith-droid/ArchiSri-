@@ -41,32 +41,28 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyARO4fXj8YWl0JEzloemp88kz2QCGWaAmM',
-    appId: '1:925136969917:web:de6017e3cc0ec1309957d4',
-    messagingSenderId: '925136969917',
-    projectId: 'archisri-system',
-    authDomain: 'archisri-system.firebaseapp.com',
-    storageBucket: 'archisri-system.firebasestorage.app',
-    databaseURL: 'https://archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app',
-    measurementId: 'G-L9TQ0VE5NV',
+    apiKey: 'AIzaSyB07msx9D6tNXS9RIOcVUER35hG03reFn0',
+    appId: '1:286258998209:web:a1aff1bfdcf2261eeb5d40',
+    messagingSenderId: '286258998209',
+    projectId: 'archi-sri-sign-in',
+    authDomain: 'archi-sri-sign-in.firebaseapp.com',
+    storageBucket: 'archi-sri-sign-in.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB07msx9D6tNXS9RIOcVUER35hG03reFn0',
     appId: '1:286258998209:android:7532263c704f86d4eb5d40',
     messagingSenderId: '286258998209',
-    projectId: 'archisri-system',
-    storageBucket: 'archisri-system.firebasestorage.app',
-    databaseURL: 'https://archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app',
+    projectId: 'archi-sri-sign-in',
+    storageBucket: 'archi-sri-sign-in.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBs0k-YYYpaT8RYeskh86ccX2uNONJra0Y',
     appId: '1:286258998209:ios:28dcfd7c4a571f1aeb5d40',
     messagingSenderId: '286258998209',
-    projectId: 'archisri-system',
-    storageBucket: 'archisri-system.firebasestorage.app',
-    databaseURL: 'https://archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app',
+    projectId: 'archi-sri-sign-in',
+    storageBucket: 'archi-sri-sign-in.firebasestorage.app',
     androidClientId: '286258998209-191atsp9auc0a1k96pg7kfvnk2bqma6p.apps.googleusercontent.com',
     iosClientId: '286258998209-pn15s9kp0d0pk9ombbjd8urpdbm5e6k6.apps.googleusercontent.com',
     iosBundleId: 'com.example.archisri1',
@@ -76,22 +72,19 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyBs0k-YYYpaT8RYeskh86ccX2uNONJra0Y',
     appId: '1:286258998209:ios:28dcfd7c4a571f1aeb5d40',
     messagingSenderId: '286258998209',
-    projectId: 'archisri-system',
-    storageBucket: 'archisri-system.firebasestorage.app',
-    databaseURL: 'https://archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app',
+    projectId: 'archi-sri-sign-in',
+    storageBucket: 'archi-sri-sign-in.firebasestorage.app',
     androidClientId: '286258998209-191atsp9auc0a1k96pg7kfvnk2bqma6p.apps.googleusercontent.com',
     iosClientId: '286258998209-pn15s9kp0d0pk9ombbjd8urpdbm5e6k6.apps.googleusercontent.com',
     iosBundleId: 'com.example.archisri1',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCMIfKaXW9mt9VmuBVHuwXzmyiwmeEB0Ws',
+    apiKey: 'AIzaSyB07msx9D6tNXS9RIOcVUER35hG03reFn0',
     appId: '1:286258998209:web:f3fc60e7a0f89419eb5d40',
     messagingSenderId: '286258998209',
-    projectId: 'archisri-system',
-    authDomain: 'archisri-system.firebaseapp.com',
-    storageBucket: 'archisri-system.firebasestorage.app',
-    databaseURL: 'https://archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app',
-    measurementId: 'G-DMW7ZLT2QF',
+    projectId: 'archi-sri-sign-in',
+    authDomain: 'archi-sri-sign-in.firebaseapp.com',
+    storageBucket: 'archi-sri-sign-in.firebasestorage.app',
   );
 }
