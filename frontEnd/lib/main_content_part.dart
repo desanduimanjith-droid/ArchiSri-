@@ -1,5 +1,7 @@
 import 'package:archisri_1/feature_1_part1.dart';
+import 'package:archisri_1/feature_1_selections.dart';
 import 'package:flutter/material.dart';
+import 'package:archisri_1/plan-view-screen/houseplan_designer_screen.dart';
 
 // project model
 class Project {
@@ -89,10 +91,14 @@ class MainContentPart extends StatefulWidget {
 }
 
 class _MainContentPartState extends State<MainContentPart> {
+
+  // control the menu drawer
+  final GlobalKey<ScaffoldState>_scaffoldKey = GlobalKey<ScaffoldState>();
   bool showAll = false;
   bool startBuildClicked = false;
   bool isModified = false;
 
+  
   // reset the state
   void reset() {
     setState(() {
@@ -101,8 +107,97 @@ class _MainContentPartState extends State<MainContentPart> {
     });
   }
 
+  // slide menu builder 
+  Widget _buildSlideMenu() {
+    return Drawer(
+      backgroundColor: const Color(0xFF1E1E2E), 
+      child: Column(
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(color: Color(0xFFD4A574)),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  CircleAvatar(radius: 30, backgroundColor: Colors.white, child: Icon(Icons.person, size: 35)),
+                  SizedBox(height: 10),
+                  Text("ArchiSri User", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+          ),
+          _drawerTile(
+            Icons.home,
+            "Home",
+            onTap: () {
+              Navigator.pop(context);
+              
+            },
+          ),
+          _drawerTile(
+            Icons.dashboard,
+            "Dashboard",
+            onTap: () {
+              Navigator.pop(context);
+              
+            },
+          ),
+          _drawerTile(
+            Icons.architecture,
+            "My Blueprints",
+            onTap: () {
+              Navigator.pop(context);
+              
+            },
+          ),
+          _drawerTile(
+            Icons.shopping_cart,
+            "Marketplace",
+            onTap: () {
+              Navigator.pop(context);
+              
+            },
+          ),
 
 
+          _drawerTile(
+          Icons.help_outline,
+           "Help",
+
+           onTap: (){
+            Navigator.pop(context);
+
+           },
+          ),
+          const Spacer(),
+          _drawerTile(Icons.logout, 
+          "Logout", 
+          onTap: (){
+
+          },
+          color: Colors.redAccent
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  // helper for individual drawer rows
+  Widget _drawerTile(IconData icon, String title,
+      {Color color = Colors.white, VoidCallback? onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(title, style: TextStyle(color: color)),
+      onTap: onTap ?? () => Navigator.pop(context),
+    );
+  }
+
+  // floating quick action placeholder
+  Widget _buildFloatingQuickAction() {
+    // return an empty bar for now
+    return const SizedBox.shrink();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +207,10 @@ class _MainContentPartState extends State<MainContentPart> {
     Color backgroundColor = const Color(0xFFEBE4D0);
 
     return Scaffold(
+      key:_scaffoldKey,
       backgroundColor: backgroundColor,
+
+      drawer: _buildSlideMenu(),
       appBar: AppBar(
         backgroundColor: backgroundColor,
         elevation: 0,
@@ -127,7 +225,9 @@ class _MainContentPartState extends State<MainContentPart> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.menu, color: Colors.black87),
-          onPressed: () {},
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+
+          
         ),
         actions: [
           // nitification bell with red dot
@@ -144,6 +244,7 @@ class _MainContentPartState extends State<MainContentPart> {
             
             ],
           ),
+          
           // Avatar
           Padding(
             padding: const EdgeInsets.only(right: 12),
@@ -170,6 +271,8 @@ class _MainContentPartState extends State<MainContentPart> {
 
         ],
       ),
+
+      bottomNavigationBar: _buildFloatingQuickAction(),
       // body part starts here
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -214,7 +317,7 @@ class _MainContentPartState extends State<MainContentPart> {
                             SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                'AI House Plan Designer started! Your plan will be ready in less than 2 minutes and requires further modifications to customize your home plan.',
+                                'AI House Plan Designer started! Your plan will be ready in less than 5 minutes and requires further modifications to customize your home plan.',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: Color(0xFF166534),
@@ -309,9 +412,24 @@ class _MainContentPartState extends State<MainContentPart> {
                       duration: const Duration(seconds: 2),
                       padding: const EdgeInsets.all(16),
                       
-                      
                     ),
                   );
+                       Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HouseplanDesignerScreen(
+                               landsize: BlueprintSelections.landsize,
+                              floors: BlueprintSelections.floors,
+                              style: BlueprintSelections.style,
+                              bedrooms: BlueprintSelections.bedrooms,
+                              bathrooms: BlueprintSelections.bathrooms,
+                              kitchen: BlueprintSelections.kitchens,
+                              livingRoom: BlueprintSelections.livingRooms,
+                            ),
+                      ),
+                      );
+
+
                 },
                 child: Container(
                   width: double.infinity,
@@ -340,48 +458,6 @@ class _MainContentPartState extends State<MainContentPart> {
                 ),
               ),
 
-              const SizedBox(height: 16),
-
-              //reset button
-              GestureDetector(
-                onTap: () {
-                 reset();
-                  
-                
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: const Color(0xFFE5E7EB),
-                      width: 1.5,
-                    ),
-                  ),
-                  
-                  
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.refresh_rounded,
-                          color: Color(0xFF9CA3AF), size: 18),
-                      SizedBox(width: 8),
-                      
-                      Text(
-                        'Reset',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF6B7280),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                    
-                  ),
-                ),
-              ),
 
               const SizedBox(height: 40),
             ],
@@ -564,7 +640,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                         ),
                         const SizedBox(height: 6),
                         const Text(
-                          'Takes less than 2 minutes',
+                          'Takes less than 5 minutes',
                           style: TextStyle(
                             fontSize: 11,
                             color: Colors.white,

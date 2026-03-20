@@ -47,3 +47,4 @@ app.*.map.json
 # Extra user ignores
 frontEnd/logcat.txt
 frontEnd/build/
+backend/engineer&constructor_connect_backend/constructor_connect.db

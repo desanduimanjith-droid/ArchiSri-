@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:archisri_1/feature_1_part8.dart';
+import 'package:archisri_1/feature_1_part12.dart';
 import 'package:archisri_1/feature_1_selections.dart';
 
 //bathroom type selection screen
@@ -17,11 +18,8 @@ class _Feature1Part7State extends State<Feature1Part7> {
   List<String> selectedRooms = [];
 
   final List<Map<String, dynamic>> floorOptions = [
-    {'name': 'Separate bathroom', 'icon': Icons.bathroom_rounded}, 
-    {'name': 'Attached bathroom', 'icon': Icons.bedroom_baby_rounded}, 
-    
-    
- 
+    {'name': 'Separate bathroom', 'icon': Icons.bathroom_rounded},
+    {'name': 'Attached bathroom', 'icon': Icons.bedroom_baby_rounded},
   ];
 
   @override
@@ -151,7 +149,7 @@ class _Feature1Part7State extends State<Feature1Part7> {
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              if (selectedRooms.contains(style['name'])) {
+                              if (isSelected) {
                                 selectedRooms.remove(style['name']);
                               } else {
                                 selectedRooms.add(style['name']);
@@ -262,9 +260,16 @@ class _Feature1Part7State extends State<Feature1Part7> {
                                 // Handle next action
                                 print('Selected rooms: $selectedRooms');
                                 BlueprintSelections.bathroomTypeSelections = List<String>.from(selectedRooms);
+                                Widget nextScreen;
+                                if (selectedRooms.contains('Attached bathroom')) {
+                                  nextScreen = const Feature1Part8();
+                                } else {
+                                  nextScreen = const Feature1Part12();
+                                }
+
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const Feature1Part8()),
+                                  MaterialPageRoute(builder: (context) => nextScreen),
                                 );
                               }
                             : null,
@@ -310,3 +315,4 @@ class _Feature1Part7State extends State<Feature1Part7> {
     );
   }
 }
+

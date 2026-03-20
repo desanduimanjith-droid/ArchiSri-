@@ -88,7 +88,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
 
             final data = snapshot.data!;
 
-            String _capitalizeWords(String input) {
+            String capitalizeWords(String input) {
               if (input.isEmpty) return input;
               return input
                   .split(' ')
@@ -100,7 +100,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
                   .join(' ');
             }
 
-            final String fullName = _capitalizeWords(data['fullName'] ?? 'N/A');
+            final String fullName = capitalizeWords(data['fullName'] ?? 'N/A');
             final String specialization = data['specialization'] ?? 'N/A';
             final String company = data['company'] ?? 'N/A';
             final String experience = data['yearsOfExperience'] ?? '0';
@@ -134,7 +134,6 @@ class _connection_EngineerState extends State<connection_Engineer> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // --- TOP SECTION ---
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -222,7 +221,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
                       ),
                       const SizedBox(height: 24),
 
-                      // --- TAGS SECTION (Blue styled containers) ---
+                      // tages section
                       Wrap(
                         spacing: 12,
                         runSpacing: 12,
@@ -230,7 +229,6 @@ class _connection_EngineerState extends State<connection_Engineer> {
                       ),
                       const SizedBox(height: 24),
 
-                      // --- METRICS SECTION ---
                       Row(
                         children: [
                           Expanded(

@@ -1,10 +1,14 @@
+import 'package:archisri_1/main_content_part.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:typed_data';
 import 'package:file_saver/file_saver.dart';
 import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
 import 'package:archisri_1/Constructor-connect-feature/screens/constructor_screen.dart';
+import 'package:archisri_1/marketPlace.dart';
 
 class HouseplanDesignerScreen extends StatefulWidget {
   final int landsize;
@@ -27,12 +31,15 @@ class HouseplanDesignerScreen extends StatefulWidget {
   });
 
   @override
-  State<HouseplanDesignerScreen> createState() => _HouseplanDesignerScreenState();
+  State<HouseplanDesignerScreen> createState() =>
+      _HouseplanDesignerScreenState();
 }
 
 class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
   bool _isLoading = false;
   Uint8List? _generatedBlueprintImage;
+  double currentStep = 8;
+  final double totalSteps = 8;
 
   @override
   void initState() {
@@ -42,28 +49,44 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     });
   }
 
+  String _getBackendUrl() {
+    if (kIsWeb) {
+      return 'http://127.0.0.1:5002/blueprint';
+    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      return 'http://127.0.0.1:5002/blueprint';
+    } else if (Platform.isAndroid) {
+      // Uses the network IP so both physical device and emulator can connect gracefully.
+      // (10.0.2.2 is usually for just the emulator, but LAN IP handles both)
+      return 'http://10.31.17.178:5002/blueprint';
+    }
+    return 'http://127.0.0.1:5002/blueprint';
+  }
+
   Future<void> _generateBlueprint() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      final response = await http.post(
-        Uri.parse('http://127.0.0.1:5002/blueprint'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'landsize': widget.landsize,
-          'floors': widget.floors,
-          'bedrooms': widget.bedrooms,
-          'bathrooms': widget.bathrooms,
-          'kitchen': widget.kitchen,
-          'living_room': widget.livingRoom,
-          'style': widget.style,
-        }),
-      ).timeout(
-        const Duration(seconds: 60),
-        onTimeout: () => throw Exception('Request timeout - backend may be unavailable'),
-      );
+      final response = await http
+          .post(
+            Uri.parse(_getBackendUrl()),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'landsize': widget.landsize,
+              'floors': widget.floors,
+              'bedrooms': widget.bedrooms,
+              'bathrooms': widget.bathrooms,
+              'kitchen': widget.kitchen,
+              'living_room': widget.livingRoom,
+              'style': widget.style,
+            }),
+          )
+          .timeout(
+            const Duration(seconds: 60),
+            onTimeout: () =>
+                throw Exception('Request timeout - backend may be unavailable'),
+          );
 
       if (response.statusCode == 200) {
         setState(() {
@@ -104,9 +127,8 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
 
     try {
       await FileSaver.instance.saveFile(
-        name: 'archisri_blueprint_${DateTime.now().millisecondsSinceEpoch}',
+        name: 'archisri_blueprint_${DateTime.now().millisecondsSinceEpoch}.png',
         bytes: _generatedBlueprintImage!,
-        ext: 'png',
         mimeType: MimeType.png,
       );
 
@@ -180,29 +202,26 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    // Calculate dynamic blueprint container height
+    final blueprintHeight = (screenHeight * 0.5).clamp(250.0, 600.0);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF4EFE6), // Main background cream color
+      backgroundColor: const Color(0xFFF5E6D3),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ==================================================
-            // 1. HEADER SECTION
-            // ==================================================
+            // Header Section
             Container(
               width: double.infinity,
               padding: const EdgeInsets.only(
+                left: 40,
                 top: 60,
-                left: 20,
-                right: 20,
-                bottom: 30,
+                right: 40,
+                bottom: 40,
               ),
               decoration: const BoxDecoration(
-                color: Color.fromARGB(
-                  255,
-                  247,
-                  228,
-                  60,
-                ), // Yellow top background
+                color: Color(0xFFD4C55A),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
@@ -210,33 +229,23 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+
                 children: [
-                  // Brain Icon Box
                   Container(
-                    width: 80,
-                    height: 80,
+                    height: 100,
+                    width: 100,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE08B3E), // Orange box
+                      color: const Color(0xFFE68C46),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white, width: 2),
+                      border: Border.all(color: Colors.white, width: 3),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset(
-                        'assets/brain_icon.png',
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(
-                              Icons.psychology,
-                              size: 50,
-                              color: Colors.black87,
-                            ),
-                      ),
+                    padding: const EdgeInsets.all(10),
+
+                    child: Image.asset(
+                      'assets/images/artificial-intelligence.png',
                     ),
                   ),
-                  const SizedBox(width: 20),
-
-                  // Text and Progress Bar
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,46 +253,41 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                         const Text(
                           "AI House Plan Designer",
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 4),
                         const Text(
-                          "Start designing with AI\nassistant",
-                          style: TextStyle(fontSize: 13, color: Colors.white70),
-                        ),
-                        const SizedBox(height: 15),
-
-                        // Progress Bar
-                        const Text(
-                          "Step 4 of 4",
+                          "Start designing with AI assistance",
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 17,
                             color: Colors.white70,
-                            fontWeight: FontWeight.w500,
+                            height: 1.3,
                           ),
                         ),
-                        const SizedBox(height: 5),
-                        Stack(
-                          children: [
-                            Container(
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.3),
-                                borderRadius: BorderRadius.circular(10),
+                        const SizedBox(height: 17),
+                        Text(
+                          "Step ${currentStep.toInt()} of ${totalSteps.toInt()}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          height: 6,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(3),
+                            child: LinearProgressIndicator(
+                              value: currentStep / totalSteps,
+                              backgroundColor: Colors.white.withOpacity(0.3),
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white,
                               ),
                             ),
-                            Container(
-                              height: 6,
-                              width: 150, // Mock progress width
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -292,9 +296,6 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
               ),
             ),
 
-            // ==================================================
-            // 2. GENERATED PLAN SECTION
-            // ==================================================
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -319,7 +320,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFD6CDBF), // Beige background
+                      color: const Color(0xFFD6CDBF),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: const EdgeInsets.all(15),
@@ -332,35 +333,36 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                               ? _openFullImagePreview
                               : null,
                           child: Container(
-                          width: double.infinity,
-                          height: 250,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF4EFE6), // Inner cream
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: _generatedBlueprintImage != null
-                                ? Image.memory(
-                                    _generatedBlueprintImage!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Center(
-                                    child: Image.asset(
-                                      'assets/blueprint_placeholder.png',
+                            width: double.infinity,
+                            height: blueprintHeight,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF4EFE6),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: _generatedBlueprintImage != null
+                                  ? Image.memory(
+                                      _generatedBlueprintImage!,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) =>
-                                          const Center(
-                                            child: Icon(
-                                              Icons.architecture,
-                                              size: 80,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
+                                    )
+                                  : Center(
+                                      child: Image.asset(
+                                        'assets/blueprint_placeholder.png',
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                const Center(
+                                                  child: Icon(
+                                                    Icons.architecture,
+                                                    size: 80,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                      ),
                                     ),
-                                  ),
+                            ),
                           ),
-                        ),
                         ),
                         const SizedBox(height: 15),
 
@@ -391,7 +393,9 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                             Row(
                               children: [
                                 ElevatedButton(
-                                  onPressed: _isLoading ? null : _generateBlueprint,
+                                  onPressed: _isLoading
+                                      ? null
+                                      : _generateBlueprint,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFE2AE62),
                                     disabledBackgroundColor: Colors.grey,
@@ -411,7 +415,10 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                           width: 16,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
-                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  Colors.white,
+                                                ),
                                           ),
                                         )
                                       : const Text(
@@ -425,7 +432,9 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 ElevatedButton(
-                                  onPressed: _generatedBlueprintImage == null || _isLoading
+                                  onPressed:
+                                      _generatedBlueprintImage == null ||
+                                          _isLoading
                                       ? null
                                       : _downloadBlueprint,
                                   style: ElevatedButton.styleFrom(
@@ -453,14 +462,12 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
 
                   const SizedBox(height: 25),
 
-                  // ==================================================
-                  // 3. FOUNDATION ANALYST SECTION
-                  // ==================================================
+                  //funnadation recomendation part
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFC7E2B4), // Light Green
+                      color: const Color(0xFFC7E2B4),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: Colors.black12, width: 1),
                     ),
@@ -527,7 +534,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFD3A278), // Brown/Orange
+                                color: const Color(0xFFD3A278),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: const Text(
@@ -567,7 +574,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFD3A278), // Brown/Orange
+                                color: const Color(0xFFD3A278),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: const Text(
@@ -587,11 +594,16 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => IoTMarketplace(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(
-                                0xFFE2AE62,
-                              ), // Yellow/Orange
+                              backgroundColor: const Color(0xFFE2AE62),
                               foregroundColor: Colors.black87,
                               elevation: 2,
                               shape: RoundedRectangleBorder(
@@ -612,9 +624,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                     ),
                   ),
 
-                  // ==================================================
-                  // 4. EXPLORE MORE SECTION
-                  // ==================================================
+                  //explore more section
                   const SizedBox(height: 25),
                   const Text(
                     "Explore More",
@@ -644,7 +654,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                               horizontal: 15,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE2C4A2), // Light Brown/Tan
+                              color: const Color(0xFFE2C4A2),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
@@ -660,9 +670,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: const Color(
-                                      0xFFD6AB75,
-                                    ), // Darker tan circle
+                                    color: const Color(0xFFD6AB75),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   child: const Icon(
@@ -706,7 +714,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                               horizontal: 15,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE2C4A2), // Light Brown/Tan
+                              color: const Color(0xFFE2C4A2),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
@@ -733,7 +741,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 ),
                                 const SizedBox(height: 15),
                                 const Text(
-                                  "Engineers\nGet feedback\n", // Extra newline to align height
+                                  "Engineers\nGet feedback\n",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
@@ -749,19 +757,23 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                     ],
                   ),
 
-                  // ==================================================
-                  // 5. START NEW DESIGN BUTTON
-                  // ==================================================
+                  // start new design part
                   const SizedBox(height: 40),
                   Center(
                     child: SizedBox(
                       width: 250,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainContentPart(),
+                            ),
+                          );
+                        },
+
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(
-                            0xFFB5BD55,
-                          ), // Olive Green
+                          backgroundColor: const Color(0xFFB5BD55),
                           foregroundColor: Colors.black87,
                           elevation: 3,
                           shape: RoundedRectangleBorder(
@@ -796,3 +808,4 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     );
   }
 }
+

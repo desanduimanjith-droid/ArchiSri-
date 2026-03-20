@@ -12,13 +12,18 @@ class BlueprintSelections {
 
   static int get floors {
     if (selectedFloors.isEmpty) return 1;
-    return selectedFloors.length;
+    final first = selectedFloors.first.toLowerCase();
+    if (first.contains('single')) return 1;
+    if (first.contains('double')) return 2;
+    if (first.contains('triple')) return 3;
+    if (first.contains('quadruple')) return 4;
+    return 1;
   }
 
   static int get bedrooms {
     final total = bedroomSelectionsByFloor.values.fold<int>(
       0,
-      (sum, selections) => sum + _maxRoomSelectionValue(selections),
+      (sum, selections) => sum + maxRoomSelectionValue(selections),
     );
     return total > 0 ? total : 1;
   }
@@ -40,14 +45,11 @@ class BlueprintSelections {
   }
 
   static int get livingRooms {
-    final total = livingRoomSelectionsByFloor.values.fold<int>(
-      0,
-      (sum, selections) => sum + _maxRoomSelectionValue(selections),
-    );
-    return total > 0 ? total : 1;
+    // Fixed to 1 living room as per requirements
+    return 1;
   }
 
-  static int _maxRoomSelectionValue(List<String> selections) {
+  static int maxRoomSelectionValue(List<String> selections) {
     if (selections.isEmpty) return 0;
     var maxValue = 0;
 
