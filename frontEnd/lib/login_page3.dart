@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:archisri_1/connection_Construction.dart';
 // Note: You will likely need a signup screen for companies later.
 import 'package:archisri_1/signin_page3.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class login_page3 extends StatefulWidget {
   const login_page3({super.key});
@@ -14,6 +16,15 @@ class _CompanyLoginScreenState extends State<login_page3> {
   // Controllers to retrieve text from the fields
   final TextEditingController _companyNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _companyNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,6 +159,34 @@ class _CompanyLoginScreenState extends State<login_page3> {
                         ),
                       ),
 
+                      const SizedBox(height: 16),
+
+                      const Text(
+                        "Password",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          hintText: "password",
+                          hintStyle: TextStyle(color: Colors.grey[400]),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                        ),
+                      ),
+
                       const SizedBox(height: 24),
 
                       // Sign In Button
@@ -163,36 +202,106 @@ class _CompanyLoginScreenState extends State<login_page3> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          onPressed: () {
-                            print("Company Sign In Clicked");
-
+                          onPressed: () async {
                             final companyName = _companyNameController.text
                                 .trim();
                             final email = _emailController.text.trim();
+                            final password = _passwordController.text.trim();
 
-                            if (companyName.isEmpty || email.isEmpty) {
+                            if (companyName.isEmpty ||
+                                email.isEmpty ||
+                                password.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
-                                    'Please enter Company Name and Email',
+                                    'Please enter Company Name, Email and Password',
                                   ),
                                 ),
                               );
                               return;
                             }
 
-                            // For now, we are skipping actual Firebase Email/Password check
-                            // since companies login with Company Name + Email instead of a password.
-                            // You will need a custom backend function or to verify document existence in Firestore.
+                            try {
+                              final userCredential = await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                    email: email,
+                                    password: password,
+                                  );
 
-                            // Simulating successful login navigation:
-                            if (context.mounted) {
+                              final uid = userCredential.user?.uid;
+                              if (uid == null) {
+                                throw FirebaseAuthException(
+                                  code: 'user-not-found',
+                                  message: 'Authentication failed.',
+                                );
+                              }
+
+                              final doc = await FirebaseFirestore.instance
+                                  .collection('companies')
+                                  .doc(uid)
+                                  .get();
+
+                              if (!doc.exists) {
+                                await FirebaseAuth.instance.signOut();
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Company profile not found. Use a registered company account.',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              final data = doc.data() ?? <String, dynamic>{};
+                              final savedCompanyName =
+                                  (data['companyName'] ?? '').toString().trim();
+
+                              if (savedCompanyName.isNotEmpty &&
+                                  savedCompanyName.toLowerCase() !=
+                                      companyName.toLowerCase()) {
+                                await FirebaseAuth.instance.signOut();
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Company name does not match this account.',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              if (!context.mounted) return;
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       const connection_Construction(),
                                 ),
+                              );
+                            } on FirebaseAuthException catch (e) {
+                              if (!context.mounted) return;
+                              String errorMessage = 'Authentication failed';
+                              if (e.code == 'user-not-found') {
+                                errorMessage = 'No user found for that email.';
+                              } else if (e.code == 'wrong-password' ||
+                                  e.code == 'invalid-credential') {
+                                errorMessage = 'Wrong email or password.';
+                              } else if (e.code == 'too-many-requests') {
+                                errorMessage =
+                                    'Too many attempts. Please try again later.';
+                              } else if (e.message != null) {
+                                errorMessage = e.message!;
+                              }
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(errorMessage)),
+                              );
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Error: $e')),
                               );
                             }
                           },
@@ -218,8 +327,6 @@ class _CompanyLoginScreenState extends State<login_page3> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        print("Company Sign Up Clicked");
-
                         // Navigate to Company Sign Up Screen (signin_page3)
                         Navigator.push(
                           context,

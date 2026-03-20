@@ -9,12 +9,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      debugPrint('Firebase Initialized Successfully');
+    } else {
+      Firebase.app();
+      debugPrint('Firebase already initialized: using existing [DEFAULT] app');
+    }
+
+    debugPrint(
+      'Firebase project: ${DefaultFirebaseOptions.currentPlatform.projectId}',
     );
-    print("Firebase Initialized Successfully");
   } catch (e) {
-    print('Firebase initialization error: $e');
+    debugPrint('Firebase initialization error: $e');
   }
 
   runApp(const MainApp());

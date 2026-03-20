@@ -5,7 +5,7 @@ import 'package:archisri_1/main_page5.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -181,7 +181,6 @@ class _SignInScreenState extends State<LoginPage> {
                             ),
                           ),
                           onPressed: () async {
-                            print("Sign In Clicked");
                             try {
                               final email = _emailController.text.trim();
                               final password = _passwordController.text.trim();
@@ -205,7 +204,7 @@ class _SignInScreenState extends State<LoginPage> {
                                   );
 
                               // Navigate to home page on successful login
-                              if (userCredential.user != null && mounted) {
+                              if (userCredential.user != null && context.mounted) {
                                 // Update displayName in background (don't block navigation)
                                 final user = userCredential.user!;
                                 if (user.displayName == null || user.displayName!.isEmpty) {
@@ -231,19 +230,36 @@ class _SignInScreenState extends State<LoginPage> {
                                 );
                               }
                             } on FirebaseAuthException catch (e) {
-                              if (mounted) {
-                                String errorMessage = 'Authentication failed';
+                              debugPrint(
+                                'LoginPage auth error -> code: ${e.code}, message: ${e.message}',
+                              );
+                              if (context.mounted) {
+                                String errorMessage = 'Authentication failed.';
                                 if (e.code == 'user-not-found') {
                                   errorMessage =
                                       'No user found for that email.';
                                 } else if (e.code == 'wrong-password' ||
                                     e.code == 'invalid-credential') {
                                   errorMessage = 'Wrong email or password.';
+                                } else if (e.code == 'invalid-email') {
+                                  errorMessage = 'Please enter a valid email address.';
+                                } else if (e.code == 'user-disabled') {
+                                  errorMessage = 'This account has been disabled.';
+                                } else if (e.code == 'network-request-failed') {
+                                  errorMessage =
+                                      'Network error. Check your internet connection and try again.';
+                                } else if (e.code == 'operation-not-allowed') {
+                                  errorMessage =
+                                      'Email/password login is not enabled in Firebase Authentication.';
+                                } else if (e.code == 'configuration-not-found') {
+                                  errorMessage =
+                                      'Firebase Auth is not fully configured for this app. Enable Email/Password and add localhost in Authorized domains.';
                                 } else if (e.code == 'too-many-requests') {
                                   errorMessage =
                                       'Too many attempts. Please wait a few minutes and try again.';
-                                } else if (e.message != null) {
-                                  errorMessage = e.message!;
+                                } else if (e.code == 'internal-error') {
+                                  errorMessage =
+                                      'Internal authentication error. Please try again shortly.';
                                 }
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -258,9 +274,15 @@ class _SignInScreenState extends State<LoginPage> {
                                 );
                               }
                             } catch (e) {
-                              if (mounted) {
+                              debugPrint('LoginPage sign-in error: $e');
+                              if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Error: $e')),
+                                  const SnackBar(
+                                    content: Text(
+                                      'Sign in failed. Please try again.',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
                                 );
                               }
                             }
@@ -278,7 +300,6 @@ class _SignInScreenState extends State<LoginPage> {
                       Center(
                         child: GestureDetector(
                           onTap: () {
-                            print("Forgot Password Clicked");
                             // Add navigation to forgot password screen
                           },
                           child: const Text(
@@ -340,7 +361,7 @@ class _SignInScreenState extends State<LoginPage> {
                         // Changed to match your defined method name
                         final user = await _googleSignInGoogle();
 
-                        if (user != null) {
+                        if (user != null && context.mounted) {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -348,7 +369,6 @@ class _SignInScreenState extends State<LoginPage> {
                             ),
                           );
                         }
-                        print("Google Login Clicked");
                       },
                     ),
 
@@ -363,7 +383,6 @@ class _SignInScreenState extends State<LoginPage> {
                         size: 28,
                       ),
                       onTap: () {
-                        print("Facebook Login Clicked");
                       },
                     ),
                   ],
@@ -381,7 +400,6 @@ class _SignInScreenState extends State<LoginPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        print("Sign Up Clicked");
                         // Navigate to Sign Up Screen
                         Navigator.pushReplacement(
                           context,
@@ -434,7 +452,6 @@ class _SignInScreenState extends State<LoginPage> {
         return await FirebaseAuth.instance.signInWithCredential(credential);
       }
     } catch (e) {
-      print("Google Sign In Error: $e");
       return null;
     }
   }

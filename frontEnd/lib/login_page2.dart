@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:archisri_1/signin_page2.dart';
 import 'package:archisri_1/connection_Engineer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class login_page2 extends StatefulWidget {
   const login_page2({super.key});
@@ -164,7 +165,6 @@ class _EngineerLoginScreenState extends State<login_page2> {
                             ),
                           ),
                           onPressed: () async {
-                            print("Engineer Sign In Clicked");
                             try {
                               final email = _emailController.text.trim();
                               final password = _passwordController.text.trim();
@@ -181,11 +181,37 @@ class _EngineerLoginScreenState extends State<login_page2> {
                               }
 
                               // Sign in with Firebase Authentication
-                              await FirebaseAuth.instance
+                              final userCredential = await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
                                     email: email,
                                     password: password,
                                   );
+
+                              final uid = userCredential.user?.uid;
+                              if (uid == null) {
+                                throw FirebaseAuthException(
+                                  code: 'user-not-found',
+                                  message: 'Authentication failed.',
+                                );
+                              }
+
+                              final engineerDoc = await FirebaseFirestore.instance
+                                  .collection('engineers')
+                                  .doc(uid)
+                                  .get();
+
+                              if (!engineerDoc.exists) {
+                                await FirebaseAuth.instance.signOut();
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'This account is not registered as an engineer. Please use the correct login page.',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
 
                               // Navigate to home page on successful login
                               if (context.mounted) {
@@ -198,7 +224,7 @@ class _EngineerLoginScreenState extends State<login_page2> {
                                 );
                               }
                             } on FirebaseAuthException catch (e) {
-                              if (mounted) {
+                              if (context.mounted) {
                                 String errorMessage = 'Authentication failed';
                                 if (e.code == 'user-not-found') {
                                   errorMessage =
@@ -222,7 +248,7 @@ class _EngineerLoginScreenState extends State<login_page2> {
                                 );
                               }
                             } catch (e) {
-                              if (mounted) {
+                              if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('Error: $e')),
                                 );
@@ -242,7 +268,6 @@ class _EngineerLoginScreenState extends State<login_page2> {
                       Center(
                         child: GestureDetector(
                           onTap: () {
-                            print("Forgot Password Clicked");
                             // Add navigation to forgot password screen
                           },
                           child: const Text(
@@ -271,7 +296,6 @@ class _EngineerLoginScreenState extends State<login_page2> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        print("Sign Up Clicked");
                         // Navigate to Sign Up Screen
                         Navigator.push(
                           context,
