@@ -253,13 +253,13 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                     ),
                     const SizedBox(height: 10),
 
-                    // rating system
+                    // Interactive product rating system using star icons and user feedback
                     Row(
                       children: [
                         Row(
                           children: List.generate(5, (index) {
                             int starValue = index + 1;
-                            // Fill star if it's less than user rating OR average rating
+                            // Dynamic logic to determine star fill state based on user input or average rating
                             bool isFilled =
                                 starValue <=
                                 (_userRating != 0
