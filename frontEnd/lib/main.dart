@@ -3,22 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:archisri_1/main_page1.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:archisri_1/firebase_options.dart';
-import 'package:archisri_1/IoTResultreport.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Launch the App UI immediately to prevent black screen hangs
-  runApp(const MainApp());
+  // Initialize Firebase before launching the app (needed for auth check in splash)
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    print("Firebase Initialized Successfully");
+  } catch (e) {
+    print('Firebase initialization error: $e');
+  }
 
-  // Initialize Firebase in the background
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
-      .then((_) {
-        print("Firebase Initialized Successfully");
-      })
-      .catchError((e) {
-        print('Firebase initialization error: $e');
-      });
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
@@ -32,14 +30,3 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class ArchisriIoTReportApp extends StatelessWidget {
-  const ArchisriIoTReportApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SoilTestingScreen(),
-    );
-  }
-}
