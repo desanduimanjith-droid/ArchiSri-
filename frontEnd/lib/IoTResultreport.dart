@@ -12,17 +12,40 @@ class SoilTestingScreen extends StatefulWidget {
 class _SoilTestingScreenState extends State<SoilTestingScreen> {
   final IoTService service = IoTService();
   bool _timedOut = false;
-  late final Stream<Map<String, dynamic>> _sensorStream;
+  bool _isScanning = false;
+  late Stream<Map<String, dynamic>> _sensorStream;
 
   @override
   void initState() {
     super.initState();
     _sensorStream = service.getSensorData();
+    _startTimeout();
+  }
+
+  void _startTimeout() {
+    _timedOut = false;
     // Timeout after 10 seconds if no data arrives
     Future.delayed(const Duration(seconds: 10), () {
       if (mounted) {
         setState(() {
           _timedOut = true;
+        });
+      }
+    });
+  }
+
+  void _scanAgain() {
+    setState(() {
+      _isScanning = true;
+      _sensorStream = service.getSensorData();
+    });
+    // Restart timeout timer
+    _startTimeout();
+    // Simulate scan duration for UX
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) {
+        setState(() {
+          _isScanning = false;
         });
       }
     });
@@ -271,19 +294,21 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
               circularStrokeCap: CircularStrokeCap.round,
               backgroundColor: Colors.grey.shade200,
               progressColor: Colors.purple,
-              center: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "${moisture.toStringAsFixed(1)}%",
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  Text(
-                    "(${rawMoisture.toInt()})",
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                  ),
-                ],
-              ),
+              center: _isScanning
+                  ? const CircularProgressIndicator()
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "${moisture.toStringAsFixed(1)}%",
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        Text(
+                          "(${rawMoisture.toInt()})",
+                          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
             ),
             const SizedBox(height: 20),
             Container(
@@ -489,23 +514,32 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
               borderRadius: BorderRadius.circular(30),
             ),
           ),
-          onPressed: () {},
-          child: const Text(
-            "SCAN AGAIN",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  blurRadius: 4,
-                  color: Colors.black26,
-                  offset: Offset(0, 2),
+          onPressed: _isScanning ? null : _scanAgain,
+          child: _isScanning
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : const Text(
+                  "SCAN AGAIN",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 4,
+                        color: Colors.black26,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
         ),
       ),
     );
