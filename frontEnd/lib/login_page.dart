@@ -300,7 +300,7 @@ class _SignInScreenState extends State<LoginPage> {
                       Center(
                         child: GestureDetector(
                           onTap: () {
-                            // Add navigation to forgot password screen
+                            _showForgotPasswordDialog();
                           },
                           child: const Text(
                             "Forgot password?",
@@ -345,47 +345,28 @@ class _SignInScreenState extends State<LoginPage> {
                 const SizedBox(height: 20),
 
                 // --- 5. SOCIAL BUTTONS ---
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Google Button
-                    _socialButton(
-                      label: "Google",
-                      //google  icon
-                      icon: Image.asset(
-                        "assets/images/google.webp",
-                        height: 28,
-                        width: 28,
-                      ),
-                      onTap: () async {
-                        // Changed to match your defined method name
-                        final user = await _googleSignInGoogle();
+                // Google Button
+                _socialButton(
+                  label: "Continue with Google",
+                  //google  icon
+                  icon: Image.asset(
+                    "assets/images/google.webp",
+                    height: 24,
+                    width: 24,
+                  ),
+                  onTap: () async {
+                    // Changed to match your defined method name
+                    final user = await _googleSignInGoogle();
 
-                        if (user != null && context.mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MainContentPart(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-
-                    const SizedBox(width: 16), // Spacing between buttons
-                    // Facebook Button
-                    _socialButton(
-                      label: "Facebook",
-                      // facebook icon
-                      icon: const Icon(
-                        Icons.facebook,
-                        color: Colors.blue,
-                        size: 28,
-                      ),
-                      onTap: () {
-                      },
-                    ),
-                  ],
+                    if (user != null && context.mounted) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MainContentPart(),
+                        ),
+                      );
+                    }
+                  },
                 ),
 
                 const SizedBox(height: 30),
@@ -456,43 +437,204 @@ class _SignInScreenState extends State<LoginPage> {
     }
   }
 
-  // Helper widget to create the Social Buttons (Google/Facebook)
+  void _showForgotPasswordDialog() {
+    final resetEmailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        bool isSending = false;
+
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              backgroundColor: const Color(0xFFF5F0E6),
+              title: const Text(
+                "Reset Password",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Serif',
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Enter your email address and we'll send you a link to reset your password.",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.black54,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: resetEmailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: "example@email.com",
+                      hintStyle: TextStyle(color: Colors.grey[400]),
+                      prefixIcon: const Icon(Icons.email_outlined, size: 20),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: const BorderSide(color: Color(0xFF2D2D2D), width: 1.5),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSending ? null : () => Navigator.pop(context),
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: isSending
+                      ? null
+                      : () async {
+                          final email = resetEmailController.text.trim();
+                          if (email.isEmpty) {
+                            ScaffoldMessenger.of(this.context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please enter your email address'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          setDialogState(() => isSending = true);
+
+                          try {
+                            debugPrint('Sending password reset email to: $email');
+                            await FirebaseAuth.instance
+                                .sendPasswordResetEmail(email: email);
+                            debugPrint('Password reset email sent successfully to: $email');
+
+                            if (context.mounted) Navigator.pop(context);
+
+                            if (this.context.mounted) {
+                              ScaffoldMessenger.of(this.context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Password reset link sent! Check your inbox or spam folder.',
+                                  ),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
+                          } on FirebaseAuthException catch (e) {
+                            setDialogState(() => isSending = false);
+                            String msg = 'Failed to send reset email.';
+                            if (e.code == 'user-not-found') {
+                              msg = 'No account found with that email.';
+                            } else if (e.code == 'invalid-email') {
+                              msg = 'Please enter a valid email address.';
+                            } else if (e.code == 'too-many-requests') {
+                              msg = 'Too many attempts. Please try again later.';
+                            }
+                            if (this.context.mounted) {
+                              ScaffoldMessenger.of(this.context).showSnackBar(
+                                SnackBar(
+                                  content: Text(msg),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            setDialogState(() => isSending = false);
+                            if (this.context.mounted) {
+                              ScaffoldMessenger.of(this.context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Something went wrong. Please try again.',
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2D2D2D),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: isSending
+                      ? const SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text(
+                          "Send Reset Link",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // Helper widget to create the Social Button (Google)
   Widget _socialButton({
     required String label,
     required Widget icon,
     required VoidCallback onTap,
   }) {
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(30),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200, // Light grey background
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black87,
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: BorderSide(color: Colors.grey.shade300),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+        ),
+        onPressed: onTap,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

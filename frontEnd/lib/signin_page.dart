@@ -209,13 +209,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
      String pass = _passwordController.text;
      String confirmPass = _confirmPasswordController.text;
 
-     if(name.isEmpty || email.isEmpty || pass.isEmpty) {
-       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error: Please fill all fields")));
+     // Client-side validations
+     if (name.isEmpty || email.isEmpty || pass.isEmpty || confirmPass.isEmpty) {
+       _showError('Please fill in all fields.');
        return;
      }
 
-     if(pass != confirmPass) {
-       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error: Passwords do not match")));
+     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+       _showError('Please enter a valid email address.');
+       return;
+     }
+
+     if (pass.length < 6) {
+       _showError('Password must be at least 6 characters long.');
+       return;
+     }
+
+     if (pass != confirmPass) {
+       _showError('Passwords do not match.');
        return;
      }
 
@@ -237,7 +248,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
        });
 
        if (!context.mounted) return;
-       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Sign Up Successful!")));
+       ScaffoldMessenger.of(context).showSnackBar(
+         const SnackBar(
+           content: Text('Account created successfully!'),
+           backgroundColor: Colors.green,
+         ),
+       );
        
        // Navigate to MainContent instead of LoginPage
        Navigator.pushReplacement(
@@ -248,11 +264,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
        );
      } on FirebaseAuthException catch (e) {
        if (!context.mounted) return;
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.message}")));
+       String errorMessage = 'Sign up failed. Please try again.';
+       if (e.code == 'email-already-in-use') {
+         errorMessage = 'An account already exists with this email. Try signing in instead.';
+       } else if (e.code == 'weak-password') {
+         errorMessage = 'Password is too weak. Use at least 6 characters.';
+       } else if (e.code == 'invalid-email') {
+         errorMessage = 'Please enter a valid email address.';
+       } else if (e.code == 'operation-not-allowed') {
+         errorMessage = 'Email/password sign up is not enabled. Please contact support.';
+       } else if (e.code == 'network-request-failed') {
+         errorMessage = 'Network error. Check your internet connection and try again.';
+       } else if (e.code == 'too-many-requests') {
+         errorMessage = 'Too many attempts. Please wait a few minutes and try again.';
+       } else if (e.code == 'configuration-not-found') {
+         errorMessage = 'Firebase is not fully configured for this app.';
+       }
+       _showError(errorMessage);
      } catch (e) {
        if (!context.mounted) return;
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
+       _showError('Something went wrong. Please try again.');
      }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   // Helper widget to build consistent text fields
