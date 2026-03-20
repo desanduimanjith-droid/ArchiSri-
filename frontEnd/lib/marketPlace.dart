@@ -362,7 +362,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
             ),
           ),
 
-          // Bottom Recommendation Button
+          // Primary action button to trigger recommendation engine
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton.icon(
