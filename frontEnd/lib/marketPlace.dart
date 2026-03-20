@@ -11,29 +11,29 @@ class IoTMarketplace extends StatefulWidget {
 }
 
 class _IoTMarketplaceState extends State<IoTMarketplace> {
-
-  Future<void>_processPayment() async {
-    final String serverUrl="http://192.168.1.21:5001/create-checkout";
+  Future<void> _processPayment() async {
+    final String serverUrl = "http://192.168.1.21:5001/create-checkout";
     try {
-    final response = await http.post(Uri.parse(serverUrl));
-    
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final url = Uri.parse(data['url']);
-      
-      // This opens the Stripe payment page in the browser
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+      final response = await http.post(Uri.parse(serverUrl));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final url = Uri.parse(data['url']);
+
+        // This opens the Stripe payment page in the browser
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Server Error: ${response.statusCode}")),
         );
+      }
+    } catch (e) {
+      print("Connection Error: $e");
     }
-  } catch (e) {
-    print("Connection Error: $e");
   }
-  }
+
   int _cartCount = 0;
   bool _isDescriptionExpanded = false;
 
@@ -67,7 +67,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
       backgroundColor: const Color(0xFFF5E6D3),
       body: Column(
         children: [
-          // Header Section
+          // UI Header Section for ArchiSri Marketplace
           Container(
             width: double.infinity,
             padding: const EdgeInsets.only(
@@ -133,6 +133,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
               alignment: Alignment.centerRight,
               child: Stack(
                 children: [
+                  // Trigger cart view overlay or navigation
                   IconButton(
                     icon: const Icon(Icons.add_shopping_cart, size: 30),
                     onPressed: () => print("Cart clicked"),
@@ -167,7 +168,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
             ),
           ),
 
-          // Product Card
+          // UI COmponent for displaying product Card
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
