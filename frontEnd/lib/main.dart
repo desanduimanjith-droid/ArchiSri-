@@ -8,9 +8,10 @@ import 'package:archisri_1/firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase before launching the app (needed for auth check in splash)
   try {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     print("Firebase Initialized Successfully");
   } catch (e) {
     print('Firebase initialization error: $e');

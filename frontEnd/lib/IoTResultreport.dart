@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'iot_service.dart';
 
-
-
 class SoilTestingScreen extends StatefulWidget {
   const SoilTestingScreen({super.key});
 
@@ -12,32 +10,102 @@ class SoilTestingScreen extends StatefulWidget {
 }
 
 class _SoilTestingScreenState extends State<SoilTestingScreen> {
+  final IoTService service = IoTService();
+  bool _timedOut = false;
+  bool _isScanning = false;
+  late Stream<Map<String, dynamic>> _sensorStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _sensorStream = service.getSensorData();
+    _startTimeout();
+  }
+
+  void _startTimeout() {
+    _timedOut = false;
+    // Timeout after 10 seconds if no data arrives
+    Future.delayed(const Duration(seconds: 10), () {
+      if (mounted) {
+        setState(() {
+          _timedOut = true;
+        });
+      }
+    });
+  }
+
+  void _scanAgain() {
+    setState(() {
+      _isScanning = true;
+      _sensorStream = service.getSensorData();
+    });
+    // Restart timeout timer
+    _startTimeout();
+    // Simulate scan duration for UX
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) {
+        setState(() {
+          _isScanning = false;
+        });
+      }
+    });
+  }
+
+  String _getMoistureStatus(double moisture) {
+    if (moisture < 20) return "Dry";
+    if (moisture < 40) return "Low Moisture";
+    if (moisture < 60) return "Moderate";
+    if (moisture < 80) return "Optimal";
+    return "Saturated";
+  }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Map<String, dynamic>>(
-      stream: service.getSensorData(),
+      stream: _sensorStream,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+        if (snapshot.connectionState == ConnectionState.waiting && !_timedOut) {
+          return Scaffold(
+            backgroundColor: const Color(0xFFF5F0E1),
+            appBar: AppBar(
+              backgroundColor: const Color(0xFFD4D977),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              title: const Text("Soil Testing", style: TextStyle(color: Colors.black)),
+              elevation: 0,
+            ),
+            body: const Center(child: CircularProgressIndicator()),
           );
         }
 
-        if (snapshot.hasError) {
+        if (_timedOut && !snapshot.hasData) {
           return Scaffold(
             backgroundColor: const Color(0xFFF5F0E1),
-            body: Center(
-              child: Text(
-                "Firebase Error: ${snapshot.error}",
-                textAlign: TextAlign.center,
+            appBar: AppBar(
+              backgroundColor: const Color(0xFFD4D977),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              title: const Text("Soil Testing", style: TextStyle(color: Colors.black)),
+              elevation: 0,
+            ),
+            body: const Center(
+              child: Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Text(
+                  "Could not connect to IoT sensor.\nPlease check your internet connection and Firebase setup.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ),
           );
         }
 
-        final data =
-            snapshot.data ??
+        final data = snapshot.data ??
             {
               "moisture": 0.0,
               "temperature": 0.0,
@@ -48,10 +116,11 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             };
 
         final double moisture = (data["moisture"] as num).toDouble();
+        final double rawMoisture = (data["rawMoisture"] as num).toDouble();
         final double ec = (data["ec"] as num).toDouble();
-        final double soilDensity = (data["soilDensity"] as num).toDouble();
+        // Custom calculation for temperature: ec - 198
+        final double calculatedTemp = ec - 198;
         final double ph = (data["ph"] as num).toDouble();
-        final double conductivity = (data["conductivity"] as num).toDouble();
 
         final String moistureStatus = _getMoistureStatus(moisture);
 
@@ -65,13 +134,13 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                   const SizedBox(height: 20),
                   _buildConnectionBar(),
                   const SizedBox(height: 20),
-                  _buildMoistureCard(moisture, moistureStatus),
+                  _buildMoistureCard(moisture, rawMoisture, moistureStatus),
                   const SizedBox(height: 20),
-                  _buildSmallCards(ec, soilDensity),
+                  _buildSmallCards(calculatedTemp, ec),
                   const SizedBox(height: 20),
-                  _buildMoistureChart(moisture),
+                  _buildMoistureChart(),
                   const SizedBox(height: 20),
-                  _buildDetailedAnalysis(ph, conductivity),
+                  _buildDetailedAnalysis(ph, ec),
                   const SizedBox(height: 20),
                   _buildScanButton(),
                   const SizedBox(height: 30),
@@ -84,7 +153,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  
+  // HEADER part
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(24.0),
@@ -95,37 +164,53 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           bottomRight: Radius.circular(30),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: const Color(0xFF64B5F6),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Icon(
-              Icons.water_drop_outlined,
-              color: Colors.white,
-              size: 50,
-            ),
-          ),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Soil Testing",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF64B5F6),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Icon(
+                  Icons.water_drop_outlined,
                   color: Colors.white,
+                  size: 50,
                 ),
               ),
-              SizedBox(height: 4),
-              Text(
-                "Live IoT Sensor Data",
-                style: TextStyle(fontSize: 14, color: Colors.white),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "Soil Testing",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "Live IoT Sensor Data",
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                ],
               ),
             ],
           ),
@@ -134,7 +219,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  //  connection bar
+  //  CONNECTION BAR 
   Widget _buildConnectionBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -147,27 +232,37 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8),
           ],
         ),
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
-                Icon(Icons.circle, color: Colors.green, size: 12),
-                SizedBox(width: 8),
-                Text(
-                  "Live Connection Active",
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                const Icon(Icons.circle, color: Colors.green, size: 12),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Live Connection Active",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      "Last updated: ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}:${DateTime.now().second.toString().padLeft(2, '0')}",
+                      style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+                    ),
+                  ],
                 ),
               ],
             ),
-            Text("Device #4521", style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text("Device #4521", style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMoistureCard(double moisture, String moistureStatus) {
+  // MOISTURE CARD 
+  Widget _buildMoistureCard(double moisture, double rawMoisture, String moistureStatus) {
     final double percentValue = (moisture / 100).clamp(0.0, 1.0);
 
     return Padding(
@@ -199,11 +294,21 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
               circularStrokeCap: CircularStrokeCap.round,
               backgroundColor: Colors.grey.shade200,
               progressColor: Colors.purple,
-              center: Text(
-                "${moisture.toStringAsFixed(1)}%\nMoisture",
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              center: _isScanning
+                  ? const CircularProgressIndicator()
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "${moisture.toStringAsFixed(1)}%",
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        Text(
+                          "(${rawMoisture.toInt()})",
+                          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
             ),
             const SizedBox(height: 20),
             Container(
@@ -226,25 +331,26 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  Widget _buildSmallCards(double ec, double soilDensity) {
+  // SMALL CARDS 
+  Widget _buildSmallCards(double temp, double ec) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: [
           Expanded(
             child: _smallCard(
-              icon: Icons.electrical_services,
-              title: "EC Value",
-              value: ec.toStringAsFixed(0),
+              icon: Icons.thermostat,
+              title: "Temperature",
+              value: "${temp.toStringAsFixed(1)}°C",
               color: Colors.orange,
             ),
           ),
           const SizedBox(width: 15),
           Expanded(
             child: _smallCard(
-              icon: Icons.show_chart,
-              title: "Soil Density",
-              value: "${soilDensity.toStringAsFixed(2)} g/cm³",
+              icon: Icons.bolt,
+              title: "EC Value",
+              value: "${ec.toInt()} µS/cm",
               color: Colors.blue,
             ),
           ),
@@ -284,18 +390,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  Widget _buildMoistureChart(double moisture) {
-    final values = [
-      (moisture * 0.80).clamp(0, 100),
-      (moisture * 0.65).clamp(0, 100),
-      (moisture * 0.90).clamp(0, 100),
-      (moisture * 0.70).clamp(0, 100),
-      (moisture * 0.95).clamp(0, 100),
-      (moisture * 0.60).clamp(0, 100),
-      (moisture * 1.00).clamp(0, 100),
-      (moisture * 0.75).clamp(0, 100),
-    ];
-
+  //  MOISTURE CHART 
+  Widget _buildMoistureChart() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -316,36 +412,51 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             ),
             const SizedBox(height: 20),
 
-            
+            /// BARS
             SizedBox(
               height: 120,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: values.map((value) {
-                  final double height = (value / 100) * 110;
+                children: List.generate(18, (index) {
+                  double height = (index % 3 == 0)
+                      ? 110
+                      : (index % 3 == 1)
+                      ? 70
+                      : 40;
+
                   return Container(
-                    width: 12,
+                    width: 6,
                     height: height,
                     decoration: BoxDecoration(
                       color: index.isEven
-                          ? const Color(0xFF3B82F6) 
-                          : const Color(0xFFB4C34C), 
+                          ? const Color(0xFF3B82F6) // blue
+                          : const Color(0xFFB4C34C), // green
                       borderRadius: BorderRadius.circular(10),
                     ),
                   );
-                }).toList(),
+                }),
               ),
             ),
+
             const SizedBox(height: 15),
 
-            
+            /// TIME LABELS
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("00:00", style: TextStyle(fontSize: 12)),
-                Text("12:00", style: TextStyle(fontSize: 12)),
-                Text("23:59", style: TextStyle(fontSize: 12)),
+                Text(
+                  "00:00",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  "12:00",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  "23:59",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
               ],
             ),
           ],
@@ -354,7 +465,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  Widget _buildDetailedAnalysis(double ph, double conductivity) {
+  //  DETAILED ANALYSIS 
+  Widget _buildDetailedAnalysis(double ph, double ec) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -371,20 +483,20 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-            Text("pH Level: ${ph.toStringAsFixed(1)}"),
+            Text("pH Level: ${ph.toStringAsFixed(1)} (Neutral)"),
             const SizedBox(height: 8),
-            Text("Conductivity: ${conductivity.toStringAsFixed(2)}"),
+            Text("Conductivity: ${ec.toStringAsFixed(1)} mS/cm (Normal)"),
             const SizedBox(height: 8),
             const Text("Soil Type: Clay Loam"),
             const SizedBox(height: 8),
-            const Text("Compaction: Medium"),
+            const Text("Compaction: Medium (Good)"),
           ],
         ),
       ),
     );
   }
 
-  //  Scan button
+  //  SCAN BUTTON 
   Widget _buildScanButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -402,16 +514,32 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
               borderRadius: BorderRadius.circular(30),
             ),
           ),
-          onPressed: () {},
-          child: const Text(
-            "SCAN AGAIN",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
-              color: Colors.white,
-            ),
-          ),
+          onPressed: _isScanning ? null : _scanAgain,
+          child: _isScanning
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : const Text(
+                  "SCAN AGAIN",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 4,
+                        color: Colors.black26,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                ),
         ),
       ),
     );

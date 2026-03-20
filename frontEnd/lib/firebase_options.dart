@@ -41,14 +41,14 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCMIfKaXW9mt9VmuBVHuwXzmyiwmeEB0Ws',
-    appId: '1:286258998209:web:a1aff1bfdcf2261eeb5d40',
-    messagingSenderId: '286258998209',
+    apiKey: 'AIzaSyARO4fXj8YWl0JEzloemp88kz2QCGWaAmM',
+    appId: '1:925136969917:web:de6017e3cc0ec1309957d4',
+    messagingSenderId: '925136969917',
     projectId: 'archisri-system',
     authDomain: 'archisri-system.firebaseapp.com',
     storageBucket: 'archisri-system.firebasestorage.app',
     databaseURL: 'https://archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app',
-    measurementId: 'G-QK3K86H958',
+    measurementId: 'G-L9TQ0VE5NV',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
