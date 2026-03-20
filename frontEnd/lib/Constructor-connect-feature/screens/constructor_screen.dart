@@ -764,9 +764,13 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
 
             // 6. BOTTOM BUTTON
             ElevatedButton.icon(
-              onPressed: _connectWhatsApp,
+              onPressed: _constructorPhone(widget.item).isNotEmpty
+                  ? _connectWhatsApp
+                  : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF25D366), // WhatsApp green
+                backgroundColor: _constructorPhone(widget.item).isNotEmpty
+                    ? const Color(0xFF25D366)
+                    : Colors.grey,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
@@ -780,9 +784,11 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
                 errorBuilder: (context, error, stackTrace) =>
                     const Icon(Icons.chat, color: Colors.white),
               ),
-              label: const Text(
-                "Connect via WhatsApp",
-                style: TextStyle(
+              label: Text(
+                _constructorPhone(widget.item).isNotEmpty
+                    ? "Connect via WhatsApp"
+                    : "Phone number not available",
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
