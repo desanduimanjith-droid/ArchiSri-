@@ -325,7 +325,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
 
                     const SizedBox(height: 20),
 
-                    // Buttons
+                    // Market place action buttons purchasing and cart management
                     ElevatedButton(
                       onPressed: _processPayment,
 
