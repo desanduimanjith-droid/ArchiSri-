@@ -58,6 +58,16 @@ curl -X POST http://127.0.0.1:5002/blueprint \
   }' \
   --output architectural_blueprint.png
 ```
+## Technical Flow
+1. Receives architectural requirements via POST request.
+2. Constructs a specialized prompt for OpenAI DALL-E.
+3. Generates a high-resolution blueprint image.
+4. Returns the result to the ArchiSri frontend interface.
+
+## Error Handling
+- Validates landsize and room counts before API calls.
+- Handles OpenAI API quota or connectivity errors.
+
 
 ## Notes
 

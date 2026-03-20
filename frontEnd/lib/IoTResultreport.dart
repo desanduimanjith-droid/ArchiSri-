@@ -12,6 +12,13 @@ class SoilTestingScreen extends StatefulWidget {
 }
 
 class _SoilTestingScreenState extends State<SoilTestingScreen> {
+  final IoTService service = IoTService();
+
+  String _getMoistureStatus(double moisture) {
+    if (moisture > 60) return "High Moisture";
+    if (moisture > 30) return "Normal Moisture";
+    return "Low Moisture";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +329,9 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: values.map((value) {
+                children: values.asMap().entries.map((entry) {
+                  final int index = entry.key;
+                  final double value = entry.value.toDouble();
                   final double height = (value / 100) * 110;
                   return Container(
                     width: 12,
