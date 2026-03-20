@@ -8,17 +8,16 @@ import 'package:archisri_1/IoTResultreport.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Launch the App UI immediately to prevent black screen hangs
-  runApp(const MainApp());
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print("Firebase Initialized Successfully");
+  } catch (e) {
+    print('Firebase initialization error: $e');
+  }
 
-  // Initialize Firebase in the background
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
-      .then((_) {
-        print("Firebase Initialized Successfully");
-      })
-      .catchError((e) {
-        print('Firebase initialization error: $e');
-      });
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
