@@ -34,7 +34,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
     print("Connection Error: $e");
   }
   }
-  int _cartCount = 0;
+
   bool _isDescriptionExpanded = false;
 
   // Rating State
@@ -126,47 +126,9 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
             ),
           ),
 
-          // Cart Icon Section
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Stack(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.add_shopping_cart, size: 30),
-                    onPressed: () => print("Cart clicked"),
-                  ),
-                  if (_cartCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 18,
-                          minHeight: 18,
-                        ),
-                        child: Text(
-                          '$_cartCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
+          const SizedBox(height: 20),
 
+         
           // Product Card
           Expanded(
             child: SingleChildScrollView(
@@ -337,21 +299,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () => setState(() => _cartCount++),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFD48F4E),
-                        minimumSize: const Size(double.infinity, 45),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        "Add to Cart",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    
                   ],
                 ),
               ),
