@@ -296,7 +296,7 @@ class _Feature1Part2State extends State<Feature1Part2> {
                       // Next Button
                     
                       ElevatedButton(
-                        onPressed: selectOptions.isNotEmpty
+                        onPressed: selectedFloors.isNotEmpty
                             ? () {
                                 // Handle next action
 

@@ -160,10 +160,21 @@ class _Feature1Part11State extends State<Feature1Part11> {
                           child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              if (selectedRooms.contains(style['name'])) {
-                                selectedRooms.remove(style['name']);
+                              if (style['name'] == 'Not needed') {
+                                if (selectedRooms.contains(style['name'])) {
+                                  selectedRooms.remove(style['name']);
+                                } else {
+                                  selectedRooms
+                                    ..clear()
+                                    ..add(style['name']);
+                                }
                               } else {
-                                selectedRooms.add(style['name']);
+                                selectedRooms.remove('Not needed');
+                                if (selectedRooms.contains(style['name'])) {
+                                  selectedRooms.remove(style['name']);
+                                } else {
+                                  selectedRooms.add(style['name']);
+                                }
                               }
                             });
                           },

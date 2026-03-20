@@ -152,7 +152,9 @@ class _Feature1Part7State extends State<Feature1Part7> {
                               if (isSelected) {
                                 selectedRooms.remove(style['name']);
                               } else {
-                                selectedRooms.add(style['name']);
+                                selectedRooms
+                                  ..clear()
+                                  ..add(style['name']);
                               }
                             });
                           },
