@@ -9,6 +9,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
 import 'package:archisri_1/Constructor-connect-feature/screens/constructor_screen.dart';
 import 'package:archisri_1/marketPlace.dart';
+import 'package:archisri_1/IoTResultreport.dart';
 
 class HouseplanDesignerScreen extends StatefulWidget {
   final int landsize;
@@ -488,7 +489,15 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                               ),
                             ),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SoilTestingScreen(),
+                                  ),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFA5D6B6),
                                 foregroundColor: Colors.black87,
