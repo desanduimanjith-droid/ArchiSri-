@@ -49,3 +49,8 @@ frontEnd/logcat.txt
 frontEnd/build/
 backend/engineer&constructor_connect_backend/constructor_connect.db
 backend/blueprint-generator/test_blueprint*.png
+
+# Environment variables (API keys, secrets)
+.env
+.env.local
+.env.*.local
