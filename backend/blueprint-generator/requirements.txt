@@ -1,4 +1,4 @@
-flask
-flask-cors
-openai
-python-dotenv
+flask          # Web framework for API development
+flask-cors     # Enabling Cross-Origin Resource Sharing for Flutter frontend
+openai         # Official OpenAI library for blueprint generation
+python-dotenv  # Loading configuration from .env environment files
