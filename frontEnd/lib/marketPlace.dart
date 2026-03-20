@@ -288,8 +288,9 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                     ),
                     const SizedBox(height: 10),
 
-                    // Description Toggle
+                    // Logical toggle to expland or collaps the product description view
                     GestureDetector(
+                      //Update the UI state reflect description expansion state
                       onTap: () => setState(
                         () => _isDescriptionExpanded = !_isDescriptionExpanded,
                       ),
