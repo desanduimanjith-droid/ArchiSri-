@@ -15,6 +15,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // Controllers for standard text fields
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _contactNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -43,6 +44,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     // Clean up controllers when widget is removed
     _nameController.dispose();
     _emailController.dispose();
+    _contactNumberController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _registrationNumberController.dispose();
@@ -151,6 +153,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _emailController,
                         hint: "engineer@email.com",
                         keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildInputField(
+                        label: "Contact Number",
+                        controller: _contactNumberController,
+                        hint: "+94 77 123 4567",
+                        keyboardType: TextInputType.phone,
                       ),
                       const SizedBox(height: 16),
 
@@ -359,6 +369,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _handleSignUp() async {
     String name = _nameController.text.trim();
     String email = _emailController.text.trim();
+    String contactNumber = _contactNumberController.text.trim();
     String pass = _passwordController.text;
     String confirmPass = _confirmPasswordController.text;
 
@@ -370,6 +381,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (name.isEmpty ||
         email.isEmpty ||
+      contactNumber.isEmpty ||
         pass.isEmpty ||
         registrationNo.isEmpty ||
         _selectedSpecialization == null) {
@@ -398,6 +410,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .set({
             'fullName': name,
             'email': email,
+            'phoneNumber': contactNumber,
             'role': 'Engineer', // Tagging the role explicitly
             'registrationNumber': registrationNo,
             'specialization': _selectedSpecialization,

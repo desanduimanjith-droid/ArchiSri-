@@ -104,7 +104,8 @@ class _connection_EngineerState extends State<connection_Engineer> {
             final String specialization = data['specialization'] ?? 'N/A';
             final String company = data['company'] ?? 'N/A';
             final String experience = data['yearsOfExperience'] ?? '0';
-            final String email = data['email'] ?? 'N/A';
+            final String phoneNumber =
+              data['phoneNumber'] ?? data['contactNumber'] ?? data['phone'] ?? 'N/A';
             final String ratePerHour = data['ratePerHour'] ?? '0';
             final int rating = data['rating'] is num
                 ? (data['rating'] as num).round()
@@ -248,7 +249,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
                           const SizedBox(width: 12),
                           Expanded(
                             flex: 2,
-                            child: _buildMetricColumn("Email Address", email),
+                            child: _buildMetricColumn("Phone Number", phoneNumber),
                           ),
                         ],
                       ),
@@ -428,6 +429,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController _registrationController;
   late TextEditingController _experienceController;
   late TextEditingController _companyController;
+  late TextEditingController _phoneController;
   late TextEditingController _rateController;
 
   bool _isSaving = false;
@@ -450,6 +452,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _companyController = TextEditingController(
       text: widget.userData['company'] ?? '',
     );
+    _phoneController = TextEditingController(
+      text: widget.userData['phoneNumber'] ??
+          widget.userData['contactNumber'] ??
+          widget.userData['phone'] ??
+          '',
+    );
     _rateController = TextEditingController(
       text: widget.userData['ratePerHour'] ?? '',
     );
@@ -462,6 +470,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _registrationController.dispose();
     _experienceController.dispose();
     _companyController.dispose();
+    _phoneController.dispose();
     _rateController.dispose();
     super.dispose();
   }
@@ -481,6 +490,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             'registrationNumber': _registrationController.text.trim(),
             'yearsOfExperience': _experienceController.text.trim(),
             'company': _companyController.text.trim(),
+            'phoneNumber': _phoneController.text.trim(),
             'ratePerHour': _rateController.text.trim(),
           });
 
@@ -536,6 +546,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               const SizedBox(height: 16),
               _buildTextField(label: "Company", controller: _companyController),
+              const SizedBox(height: 16),
+              _buildTextField(
+                label: "Phone Number",
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+              ),
               const SizedBox(height: 16),
               _buildTextField(
                 label: "Rate per Hour (LKR)",
