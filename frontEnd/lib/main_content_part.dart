@@ -2,6 +2,10 @@ import 'package:archisri_1/feature_1_part1.dart';
 import 'package:archisri_1/feature_1_selections.dart';
 import 'package:flutter/material.dart';
 import 'package:archisri_1/plan-view-screen/houseplan_designer_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:archisri_1/login_page.dart';
+import 'package:archisri_1/marketPlace.dart';
 
 // project model
 class Project {
@@ -98,7 +102,76 @@ class _MainContentPartState extends State<MainContentPart> {
   bool startBuildClicked = false;
   bool isModified = false;
 
-  
+  // User profile data
+  String _userName = 'User';
+  String _userEmail = '';
+  String _userInitial = 'U';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  /// Fetches user info — sets email immediately, then tries Firestore for full name
+  Future<void> _loadUserProfile() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    String email = user.email ?? '';
+
+    // Step 1: Set immediately from what we already have (email is always available)
+    String quickName = '';
+    if (user.displayName != null && user.displayName!.isNotEmpty) {
+      quickName = user.displayName!;
+    } else if (email.isNotEmpty) {
+      quickName = email.split('@').first;
+    } else {
+      quickName = 'User';
+    }
+
+    if (mounted) {
+      setState(() {
+        _userName = quickName;
+        _userEmail = email;
+        _userInitial = quickName.isNotEmpty ? quickName[0].toUpperCase() : 'U';
+      });
+    }
+
+    // Step 2: Try to upgrade to full name from Firestore (runs after UI is already showing)
+    if (user.displayName == null || user.displayName!.isEmpty) {
+      try {
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        if (doc.exists && doc.data() != null) {
+          final fullName = doc.data()!['fullName'] ?? '';
+          if (fullName.isNotEmpty && mounted) {
+            setState(() {
+              _userName = fullName;
+              _userInitial = fullName[0].toUpperCase();
+            });
+          }
+        }
+      } catch (e) {
+        print('Firestore fetch error: $e');
+        // Not critical — email-based name is already showing
+      }
+    }
+  }
+
+  /// Signs the user out and returns to the login page
+  Future<void> _handleLogout() async {
+    await FirebaseAuth.instance.signOut();
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    }
+  }
+
   // reset the state
   void reset() {
     setState(() {
@@ -118,10 +191,19 @@ class _MainContentPartState extends State<MainContentPart> {
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircleAvatar(radius: 30, backgroundColor: Colors.white, child: Icon(Icons.person, size: 35)),
-                  SizedBox(height: 10),
-                  Text("ArchiSri User", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Text(
+                      _userInitial,
+                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFFD4A574)),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(_userName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  if (_userEmail.isNotEmpty)
+                    Text(_userEmail, style: const TextStyle(color: Colors.white70, fontSize: 12)),
                 ],
               ),
             ),
@@ -131,15 +213,7 @@ class _MainContentPartState extends State<MainContentPart> {
             "Home",
             onTap: () {
               Navigator.pop(context);
-              
-            },
-          ),
-          _drawerTile(
-            Icons.dashboard,
-            "Dashboard",
-            onTap: () {
-              Navigator.pop(context);
-              
+              // Already on home, no navigation needed
             },
           ),
           _drawerTile(
@@ -147,7 +221,12 @@ class _MainContentPartState extends State<MainContentPart> {
             "My Blueprints",
             onTap: () {
               Navigator.pop(context);
-              
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Feature1Part1(),
+                ),
+              );
             },
           ),
           _drawerTile(
@@ -155,25 +234,45 @@ class _MainContentPartState extends State<MainContentPart> {
             "Marketplace",
             onTap: () {
               Navigator.pop(context);
-              
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const IoTMarketplace(),
+                ),
+              );
             },
           ),
-
-
           _drawerTile(
-          Icons.help_outline,
-           "Help",
-
-           onTap: (){
-            Navigator.pop(context);
-
-           },
+            Icons.help_outline,
+            "Help",
+            onTap: () {
+              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Help & Support'),
+                  content: const Text(
+                    'Need help? Contact us at support@archisri.com\n\n'
+                    '• Home: View your projects\n'
+                    '• My Blueprints: Design your house plan\n'
+                    '• Marketplace: Browse IoT devices',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
           const Spacer(),
           _drawerTile(Icons.logout, 
           "Logout", 
-          onTap: (){
-
+          onTap: () {
+            Navigator.pop(context); // close drawer first
+            _handleLogout();
           },
           color: Colors.redAccent
           ),
@@ -215,9 +314,9 @@ class _MainContentPartState extends State<MainContentPart> {
         backgroundColor: backgroundColor,
         elevation: 0,
         centerTitle: false,
-        title: const Text(
-          'Welcome, ',
-          style: TextStyle(
+        title: Text(
+          'Welcome, $_userName',
+          style: const TextStyle(
             color: Colors.black87,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -248,23 +347,25 @@ class _MainContentPartState extends State<MainContentPart> {
           // Avatar
           Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: Container(
-              width: 34,
-              height: 34,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFFD4A574),
-              ),
-              child: Center(
-                child:
-                  IconButton(
-                 icon: Icon(Icons.person, color: Colors.white, size: 18),
-                 onPressed: () {
-                   print("Avatar clicked");
-                 },
-                    
-              ),
-                
+            child: GestureDetector(
+              onTap: () => _scaffoldKey.currentState?.openDrawer(),
+              child: Container(
+                width: 34,
+                height: 34,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFD4A574),
+                ),
+                child: Center(
+                  child: Text(
+                    _userInitial,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

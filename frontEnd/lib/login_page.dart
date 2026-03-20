@@ -4,6 +4,7 @@ import 'package:archisri_1/main_content_part.dart';
 import 'package:archisri_1/main_page5.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginPage extends StatefulWidget {
@@ -205,6 +206,23 @@ class _SignInScreenState extends State<LoginPage> {
 
                               // Navigate to home page on successful login
                               if (userCredential.user != null && mounted) {
+                                // Update displayName in background (don't block navigation)
+                                final user = userCredential.user!;
+                                if (user.displayName == null || user.displayName!.isEmpty) {
+                                  FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(user.uid)
+                                      .get()
+                                      .then((doc) {
+                                    if (doc.exists && doc.data() != null) {
+                                      final fullName = doc.data()!['fullName'] ?? '';
+                                      if (fullName.isNotEmpty) {
+                                        user.updateDisplayName(fullName);
+                                      }
+                                    }
+                                  }).catchError((_) {});
+                                }
+
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -221,6 +239,9 @@ class _SignInScreenState extends State<LoginPage> {
                                 } else if (e.code == 'wrong-password' ||
                                     e.code == 'invalid-credential') {
                                   errorMessage = 'Wrong email or password.';
+                                } else if (e.code == 'too-many-requests') {
+                                  errorMessage =
+                                      'Too many attempts. Please wait a few minutes and try again.';
                                 } else if (e.message != null) {
                                   errorMessage = e.message!;
                                 }

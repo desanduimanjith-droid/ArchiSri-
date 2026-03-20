@@ -226,6 +226,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
          password: pass,
        );
 
+       // Set displayName on the Auth profile so it's available everywhere
+       await userCredential.user!.updateDisplayName(name);
+
        // Insert details to Firestore
        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
          'fullName': name,

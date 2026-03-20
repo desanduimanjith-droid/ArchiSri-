@@ -1,20 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 class IoTMarketplace extends StatefulWidget {
+  const IoTMarketplace({super.key});
+
   @override
-  _IoTMarketplaceState createState() => _IoTMarketplaceState();
+  State<IoTMarketplace> createState() => _IoTMarketplaceState();
 }
 
 class _IoTMarketplaceState extends State<IoTMarketplace> {
-  int _cartCount = 0;
+
+  Future<void>_processPayment() async {
+    final String serverUrl="http://192.168.1.21:5001/create-checkout";
+    try {
+    final response = await http.post(Uri.parse(serverUrl));
+    
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final url = Uri.parse(data['url']);
+      
+      // This opens the Stripe payment page in the browser
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Server Error: ${response.statusCode}")),
+        );
+    }
+  } catch (e) {
+    print("Connection Error: $e");
+  }
+  }
+
   bool _isDescriptionExpanded = false;
-  int _totalStars = 0;
+
+  // Rating State
+  int _totalRatingsCount = 24;
+  double _averageRating = 4.5;
   int _userRating = 0;
 
   void _handleRating(int rating) {
     setState(() {
-      _totalStars += rating;
+      if (_userRating == 0) {
+        // First time rating
+        _averageRating =
+            ((_averageRating * _totalRatingsCount) + rating) /
+            (_totalRatingsCount + 1);
+        _totalRatingsCount++;
+      } else {
+        // Updating existing rating
+        _averageRating =
+            ((_averageRating * _totalRatingsCount) - _userRating + rating) /
+            _totalRatingsCount;
+      }
       _userRating = rating;
+      _averageRating = _averageRating.clamp(1.0, 5.0);
     });
   }
 
@@ -42,7 +85,6 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 Container(
                   height: 100,
@@ -50,37 +92,32 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                   decoration: BoxDecoration(
                     color: const Color(0xFFE68C46),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white, width: 3),
+                    border: Border.all(color: Colors.black, width: 3),
                   ),
                   padding: const EdgeInsets.all(10),
-
-                  child: Icon(
+                  child: const Icon(
                     Icons.shopping_cart,
                     size: 50,
-                    color: Colors.black26,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
+                const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "AI House Plan Designer",
+                      Text(
+                        "Marketplace",
                         style: TextStyle(
                           fontSize: 20,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        "Start designing with AI assistance",
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.white70,
-                          height: 1.3,
-                        ),
+                      SizedBox(height: 4),
+                      Text(
+                        "IoT devices & recommended materials",
+                        style: TextStyle(fontSize: 15, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -89,47 +126,10 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Stack(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.add_shopping_cart, size: 30),
-                    onPressed: () => print("Cart clicked"),
-                  ),
-                  if (_cartCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 16,
-                          minHeight: 16,
-                        ),
-                        child: Text(
-                          '$_cartCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
+          const SizedBox(height: 20),
 
-          //  Product Card
+         
+          // Product Card
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -138,7 +138,9 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
-                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+                  boxShadow: const [
+                    BoxShadow(color: Colors.black12, blurRadius: 10),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,9 +155,9 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                         color: const Color(0xFFE6C98A),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Icon(Icons.settings, size: 16),
                           SizedBox(width: 4),
                           Text(
@@ -167,19 +169,23 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                     ),
                     const SizedBox(height: 15),
 
+                    // Product Image Placeholder
                     Container(
                       height: 150,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.orange.shade100),
                         borderRadius: BorderRadius.circular(15),
-                        image: const DecorationImage(
-                          image: AssetImage("assets/images/iot.png"),
-                          fit: BoxFit.contain,
-                        ),
+
+                        color: Colors.grey.shade100,
+                      ),
+                      child: Image.asset(
+                        'assets/images/iot.png',
+                        fit: BoxFit.fill,
                       ),
                     ),
                     const SizedBox(height: 15),
+
                     // Title and Price
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -192,8 +198,11 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                           ),
                         ),
                         const Text(
-                          "Price: LKR 4500",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          "LKR 4500",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFBF711D),
+                          ),
                         ),
                       ],
                     ),
@@ -201,35 +210,44 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                       "Capable of mature soil moisture and saltiness.",
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
-                    // --- Interactive Star Rating ---
+                    const SizedBox(height: 10),
+
+                    // rating system
                     Row(
                       children: [
                         Row(
                           children: List.generate(5, (index) {
+                            int starValue = index + 1;
+                            // Fill star if it's less than user rating OR average rating
+                            bool isFilled =
+                                starValue <=
+                                (_userRating != 0
+                                    ? _userRating
+                                    : _averageRating.round());
                             return GestureDetector(
-                              onTap: () => _handleRating(index + 1),
+                              onTap: () => _handleRating(starValue),
                               child: Icon(
-                                index < _userRating
-                                    ? Icons.star
-                                    : Icons.star_border,
+                                isFilled ? Icons.star : Icons.star_border,
                                 color: Colors.amber,
-                                size: 20,
+                                size: 24,
                               ),
                             );
                           }),
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          "Total Stars: $_totalStars",
+                          "${_averageRating.toStringAsFixed(1)} ($_totalRatingsCount reviews)",
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             color: Colors.grey,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 10),
 
+                    // Description Toggle
                     GestureDetector(
                       onTap: () => setState(
                         () => _isDescriptionExpanded = !_isDescriptionExpanded,
@@ -241,7 +259,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                             style: TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.bold,
-                              fontSize: 17,
+                              fontSize: 14,
                             ),
                           ),
                           Icon(
@@ -258,18 +276,17 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: const Text(
-                          "This module uses Internet of Things (IoT) sensors to monitor and analyze land conditions in real time."
-                          " It integrates multiple sensors, including soil moisture sensors, electrical conductivity (EC) sensors for measuring soil salinity, and sensors to track pore pressure and moisture levels. "
-                          "By collecting and analyzing this data, the system can detect potential environmental risks such as coastal corrosion, landslide-prone areas, and weak soil conditions."
-                          " This helps in early warning, better land management, and informed decision-making for construction and agriculture.",
-                          style: TextStyle(fontSize: 17, color: Colors.black54),
+                          "This module uses IoT sensors to monitor and analyze land conditions in real time. It detects environmental risks such as coastal corrosion and weak soil conditions.",
+                          style: TextStyle(fontSize: 14, color: Colors.black54),
                         ),
                       ),
 
                     const SizedBox(height: 20),
 
+                    // Buttons
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _processPayment,
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFBF711D),
                         minimumSize: const Size(double.infinity, 45),
@@ -282,27 +299,14 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () => setState(() => _cartCount++),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFD48F4E),
-                        minimumSize: const Size(double.infinity, 45),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        "Add to Cart",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    
                   ],
                 ),
               ),
             ),
           ),
 
+          // Bottom Recommendation Button
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton.icon(
