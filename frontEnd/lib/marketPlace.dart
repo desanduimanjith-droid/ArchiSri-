@@ -184,12 +184,13 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // IoT Badge
+                    // UI Badge for identifying IoT enabled materials
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 6,
                       ),
+                      //Custom background styling with specific color and borders
                       decoration: BoxDecoration(
                         color: const Color(0xFFE6C98A),
                         borderRadius: BorderRadius.circular(8),
