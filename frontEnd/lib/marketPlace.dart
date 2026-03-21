@@ -11,8 +11,93 @@ class IoTMarketplace extends StatefulWidget {
 }
 
 class _IoTMarketplaceState extends State<IoTMarketplace> {
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+
+  String _savedPhoneNumber = '';
+  String _savedAddress = '';
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _addressController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _showPersonalDetailsDialog() async {
+    _phoneController.text = _savedPhoneNumber;
+    _addressController.text = _savedAddress;
+
+    return showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Personal Details'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: const InputDecoration(
+                  labelText: 'Phone Number',
+                  hintText: '+94xxxxxxxxx',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _addressController,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Address',
+                  hintText: 'Enter your address',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (_phoneController.text.trim().isEmpty ||
+                  _addressController.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please fill phone and address')),
+                );
+                return;
+              }
+
+              setState(() {
+                _savedPhoneNumber = _phoneController.text.trim();
+                _savedAddress = _addressController.text.trim();
+              });
+
+              Navigator.pop(dialogContext);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Personal details saved')),
+              );
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void>_processPayment() async {
+    if (_savedPhoneNumber.isEmpty || _savedAddress.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please add Personal Details first')),
+      );
+      return;
+    }
+
     final String serverUrl="http://192.168.1.21:5001/create-checkout";
     try {
     final response = await http.post(Uri.parse(serverUrl));
@@ -284,6 +369,23 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                     const SizedBox(height: 20),
 
                     // Buttons
+                    OutlinedButton.icon(
+                      onPressed: _showPersonalDetailsDialog,
+                      icon: const Icon(Icons.person_outline),
+                      label: Text(
+                        _savedPhoneNumber.isEmpty
+                            ? 'Personal Details'
+                            : 'Personal Details Saved',
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 45),
+                        side: const BorderSide(color: Color(0xFFBF711D)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: _processPayment,
 
@@ -299,6 +401,46 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
+                    const SizedBox(height: 14),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF7EB),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFFE6C98A)),
+                      ),
+                      child: _savedPhoneNumber.isEmpty && _savedAddress.isEmpty
+                          ? const Text(
+                              'Personal details are not added yet.',
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 13,
+                              ),
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Personal Details',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFBF711D),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Phone: $_savedPhoneNumber',
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Address: $_savedAddress',
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                              ],
+                            ),
+                    ),
                     
                   ],
                 ),
@@ -310,7 +452,11 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Recommend Materials is coming soon!')),
+                );
+              },
               icon: const Icon(Icons.build, color: Colors.black87),
               label: const Text(
                 "Recommend Materials",
