@@ -26,6 +26,20 @@ if stripe.api_key.startswith("sk_test_51"):
     print("WARNING: You are using a placeholder Stripe API key.")
 
 
+@app.route('/')
+def home():
+    return jsonify({
+        'status': 'live',
+        'service': 'ArchiSri Marketplace API',
+        'endpoints': ['/create-checkout', '/success', '/cancel', '/health']
+    })
+
+
+@app.route('/health')
+def health():
+    return jsonify({'status': 'healthy', 'message': 'Marketplace API is running'})
+
+
 
 @app.route('/create-checkout', methods=['POST'])
 def create_checkout():
