@@ -24,30 +24,26 @@ class _Feature1Part12State extends State<Feature1Part12> {
     int floorCount = BlueprintSelections.floors;
 
     floorOptions = [];
-    if (floorCount >= 1) {
+    if (floorCount >= 1)
       floorOptions.add({
         'name': 'for the 1st floor',
         'icon': Icons.bathroom_rounded,
       });
-    }
-    if (floorCount >= 2) {
+    if (floorCount >= 2)
       floorOptions.add({
         'name': 'for the 2nd floor',
         'icon': Icons.bathroom_rounded,
       });
-    }
-    if (floorCount >= 3) {
+    if (floorCount >= 3)
       floorOptions.add({
         'name': 'for the 3rd floor',
         'icon': Icons.bathroom_rounded,
       });
-    }
-    if (floorCount >= 4) {
+    if (floorCount >= 4)
       floorOptions.add({
         'name': 'for the 4th floor',
         'icon': Icons.bathroom_rounded,
       });
-    }
     floorOptions.add({'name': 'Not needed', 'icon': Icons.backspace_outlined});
   }
 

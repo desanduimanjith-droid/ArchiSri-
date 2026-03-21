@@ -320,7 +320,7 @@ class EngineerCard extends StatelessWidget {
           color: const Color(0xFFFFF3F3),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
+            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
           ],
         ),
         child: Row(
@@ -704,7 +704,7 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
                     color: const Color(0xFFF0F8FF),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: const Color(0xFF4DA6FF).withValues(alpha: 0.3),
+                      color: const Color(0xFF4DA6FF).withOpacity(0.3),
                     ),
                   ),
                   child: Row(
@@ -802,7 +802,6 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
           try {
             await launchUrl(emailLaunchUri);
           } catch (e) {
-            if (!context.mounted) return;
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text("Could not open email: $e")));
@@ -812,7 +811,6 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
           try {
             await launchUrl(phoneLaunchUri);
           } catch (e) {
-            if (!context.mounted) return;
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text("Could not open phone: $e")));
@@ -1176,13 +1174,11 @@ List<String> _engineerTags(Map<String, dynamic> data) {
   final company = _engineerCompany(data);
   final registration = _engineerRegistration(data);
 
-  if (specialty.isNotEmpty && specialty != 'General Engineering') {
+  if (specialty.isNotEmpty && specialty != 'General Engineering')
     tags.add(specialty);
-  }
   if (company.isNotEmpty && company != 'Independent') tags.add(company);
-  if (registration.isNotEmpty && registration != 'Not provided') {
+  if (registration.isNotEmpty && registration != 'Not provided')
     tags.add('Reg: $registration');
-  }
 
   return tags;
 }
