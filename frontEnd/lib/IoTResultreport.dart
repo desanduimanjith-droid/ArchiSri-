@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'iot_service.dart';
+import 'ai_recommendation_screen.dart';
 
 class SoilTestingScreen extends StatefulWidget {
   const SoilTestingScreen({super.key});
@@ -140,9 +141,9 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                   const SizedBox(height: 20),
                   _buildMoistureChart(),
                   const SizedBox(height: 20),
-                  _buildDetailedAnalysis(ph, ec),
+                  _buildScanAndRecommendations(moisture, ec, calculatedTemp),
                   const SizedBox(height: 20),
-                  _buildScanButton(),
+                  _buildDetailedAnalysis(ph, ec),
                   const SizedBox(height: 30),
                 ],
               ),
@@ -496,51 +497,128 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  //  SCAN BUTTON 
-  Widget _buildScanButton() {
+  String _getFoundationType(double moisture, double ec) {
+    if (moisture > 70 || ec > 1000) return "Piled Foundation";
+    if (moisture > 50) return "Raft Foundation";
+    if (moisture > 30) return "Pad Foundation";
+    return "Shallow Foundation";
+  }
+
+  String _getCementType(double moisture, double ec, double temp) {
+    if (ec > 800) return "SRC (Salt Resisting)";
+    if (temp > 35) return "PPC (Heat Resisting)";
+    if (moisture > 60) return "OPC 53";
+    return "OPC 43";
+  }
+
+  //  SCAN BUTTON AND RECOMMENDATIONS
+  Widget _buildScanAndRecommendations(double moisture, double ec, double temp) {
+    final String foundation = _getFoundationType(moisture, ec);
+    final String cement = _getCementType(moisture, ec, temp);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        height: 55,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Colors.purple, Colors.pink]),
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-          onPressed: _isScanning ? null : _scanAgain,
-          child: _isScanning
-              ? const SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              // Scan Button on the left
+              Expanded(
+                flex: 1,
+                child: Container(
+                  height: 55,
+                  decoration: BoxDecoration(
                     color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5),
+                    ],
                   ),
-                )
-              : const Text(
-                  "SCAN AGAIN",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 4,
-                        color: Colors.black26,
-                        offset: Offset(0, 2),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      foregroundColor: Colors.purple,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    onPressed: _isScanning ? null : _scanAgain,
+                    child: _isScanning
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.purple,
+                            ),
+                          )
+                        : const Icon(Icons.refresh, size: 28),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 15),
+              // AI Recommendations Button on the right
+              Expanded(
+                flex: 3,
+                child: Container(
+                  height: 55,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF8E24AA), Color(0xFFD81B60)],
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFD81B60).withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AIRecommendationScreen(
+                            foundationType: foundation,
+                            cementType: cement,
+                            moisture: moisture,
+                            ec: ec,
+                            temp: temp,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.auto_awesome, color: Colors.white, size: 20),
+                        SizedBox(width: 10),
+                        Text(
+                          "GET AI RECOMMENDATION",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
