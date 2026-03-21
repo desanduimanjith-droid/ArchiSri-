@@ -1,11 +1,12 @@
 import 'package:archisri_1/feature_1_part1.dart';
-import 'package:archisri_1/feature_1_selections.dart';
+
 import 'package:flutter/material.dart';
-import 'package:archisri_1/plan-view-screen/houseplan_designer_screen.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:archisri_1/login_page.dart';
 import 'package:archisri_1/marketPlace.dart';
+import 'package:archisri_1/contiuneScrren.dart';
 
 // project model
 class Project {
@@ -518,17 +519,11 @@ class _MainContentPartState extends State<MainContentPart> {
                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HouseplanDesignerScreen(
-                               landsize: BlueprintSelections.landsize,
-                              floors: BlueprintSelections.floors,
-                              style: BlueprintSelections.style,
-                              bedrooms: BlueprintSelections.bedrooms,
-                              bathrooms: BlueprintSelections.bathrooms,
-                              kitchen: BlueprintSelections.kitchens,
-                              livingRoom: BlueprintSelections.livingRooms,
-                            ),
+                            builder: (context) => ProjectAnalysisScreen(
+                              
                       ),
-                      );
+                      ),
+                       );
 
 
                 },
