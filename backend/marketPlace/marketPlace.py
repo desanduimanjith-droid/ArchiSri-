@@ -52,12 +52,6 @@ def create_checkout():
         print(f"Error: {e}") # This prints the error in your terminal
         return jsonify(error=str(e)), 500
 
-
-if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5001))
-    debug = os.getenv('FLASK_ENV', 'production') == 'development'
-    app.run(debug=debug, host='0.0.0.0', port=port)
-
 @app.route('/success')
 def success():
     return " Payment Successful!"
@@ -68,4 +62,6 @@ def cancel():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True,use_reloader =False)
+    port = int(os.getenv('PORT', 5001))
+    debug = os.getenv('FLASK_ENV', 'production') == 'development'
+    app.run(debug=debug, host='0.0.0.0', port=port)
