@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:archisri_1/login_page2.dart';
-import 'package:archisri_1/connection_Engineer.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,11 +23,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       TextEditingController();
 
   // Controllers for Engineer-specific fields
-  final TextEditingController _registrationNumberController =
-      TextEditingController();
   final TextEditingController _experienceController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
   final TextEditingController _rateController = TextEditingController();
+  final TextEditingController _projectsController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   // File picker state
   String? _pickedFileName;
@@ -36,6 +35,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isUploading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+
+  // Dropdown value for Location (Districts)
+  String? _selectedDistrict;
+  final List<String> _districts = [
+    "Colombo", "Gampaha", "Kalutara", "Kandy", "Matale", "Nuwara Eliya",
+    "Galle", "Matara", "Hambantota", "Jaffna", "Kilinochchi", "Mannar",
+    "Vavuniya", "Mullaitivu", "Batticaloa", "Ampara", "Trincomalee",
+    "Kurunegala", "Puttalam", "Anuradhapura", "Polonnaruwa", "Badulla",
+    "Moneragala", "Ratnapura", "Kegalle"
+  ];
 
   // Country code dropdown
   Map<String, String> _selectedCountry = {'name': 'Sri Lanka', 'flag': '🇱🇰', 'code': '+94'};
@@ -112,10 +121,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _contactNumberController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _registrationNumberController.dispose();
     _experienceController.dispose();
     _companyController.dispose();
     _rateController.dispose();
+    _projectsController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -358,13 +368,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      _buildInputField(
-                        label: "Engineer Registration Number",
-                        controller: _registrationNumberController,
-                        hint: "e.g. EC-123456",
-                      ),
-                      const SizedBox(height: 16),
-
                       // Dropdown for Specialization
                       const Text(
                         "Engineering Field / Specialization",
@@ -422,6 +425,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _rateController,
                         hint: "e.g. 1200",
                         keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 16),
+
+                      // District Dropdown
+                      const Text(
+                        "District",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                        ),
+                        value: _selectedDistrict,
+                        hint: const Text("Select your district"),
+                        items: _districts.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedDistrict = newValue;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildInputField(
+                        label: "Completed Projects",
+                        controller: _projectsController,
+                        hint: "e.g. 15",
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 16),
+
+                      _buildInputField(
+                        label: "Full Address",
+                        controller: _addressController,
+                        hint: "123 Main St, City",
+                        maxLines: 2,
                       ),
                       const SizedBox(height: 16),
 
@@ -622,10 +678,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String confirmPass = _confirmPasswordController.text;
 
     // Professional details
-    String registrationNo = _registrationNumberController.text.trim();
     String experience = _experienceController.text.trim();
     String company = _companyController.text.trim();
     String ratePerHour = _rateController.text.trim();
+    String projects = _projectsController.text.trim();
+    String address = _addressController.text.trim();
 
     // --- Client-side validations ---
     if (name.isEmpty ||
@@ -633,9 +690,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
         phoneDigits.isEmpty ||
         pass.isEmpty ||
         confirmPass.isEmpty ||
-        registrationNo.isEmpty ||
+        experience.isEmpty ||
+        company.isEmpty ||
+        ratePerHour.isEmpty ||
+        projects.isEmpty ||
+        address.isEmpty ||
+        _selectedDistrict == null ||
         _selectedSpecialization == null) {
       _showError('Please fill in all required fields.');
+      return;
+    }
+
+    if (_pickedFileBytes == null || _pickedFileName == null) {
+      _showError('Please upload your Professional ID / License document.');
       return;
     }
 
@@ -677,11 +744,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'email': email,
         'phoneNumber': contactNumber,
         'role': 'Engineer',
-        'registrationNumber': registrationNo,
         'specialization': _selectedSpecialization,
         'yearsOfExperience': experience,
         'company': company,
         'ratePerHour': ratePerHour,
+        'projects': projects,
+        'location': _selectedDistrict,
+        'address': address,
         'isVerified': false,
         'createdAt': FieldValue.serverTimestamp(),
       };
@@ -700,17 +769,58 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .set(userData);
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Engineer Registration Successful!"),
-          backgroundColor: Colors.green,
-        ),
-      );
+      
+      // Sign out - user cannot use app until admin verifies
+      await FirebaseAuth.instance.signOut();
 
-      // Navigate to MainContent automatically
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const connection_Engineer()),
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: const Color(0xFFF5F0E6),
+          title: const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 28),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Registration Submitted!',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Serif',
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            'Your engineer registration has been submitted successfully!\n\nOur admin team will review your credentials and documents. You will be able to sign in once your account has been verified.\n\nThis usually takes 24-48 hours.',
+            style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const login_page2()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2D2D2D),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text('Go to Login', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
       );
     } on FirebaseAuthException catch (e) {
       if (!context.mounted) return;
@@ -764,6 +874,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     bool obscure = false,
     VoidCallback? onToggleObscure,
     TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -774,6 +885,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           controller: controller,
           obscureText: isPassword ? obscure : false,
           keyboardType: keyboardType,
+          maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey[400]),

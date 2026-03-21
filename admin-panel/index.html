@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArchiSri Admin — Login</title>
+  <meta name="description" content="ArchiSri Admin Panel - Manage and verify engineer and construction company registrations">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-icon">🏗️</div>
+        <h1>ArchiSri Admin</h1>
+        <p>Verify engineer & company registrations</p>
+      </div>
+
+      <div id="login-error" class="login-error"></div>
+
+      <form id="login-form" autocomplete="on">
+        <div class="form-group">
+          <label for="admin-email">Email Address</label>
+          <input 
+            type="email" 
+            id="admin-email" 
+            class="form-input" 
+            placeholder="admin@archisri.com" 
+            required 
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="admin-password">Password</label>
+          <input 
+            type="password" 
+            id="admin-password" 
+            class="form-input" 
+            placeholder="Enter your password" 
+            required 
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" id="login-btn" class="btn-login">
+          <div id="login-spinner" class="login-spinner"></div>
+          <span id="login-btn-text">Sign In</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initLoginPage } from "./js/auth.js";
+    initLoginPage();
+  </script>
+</body>
+</html>
