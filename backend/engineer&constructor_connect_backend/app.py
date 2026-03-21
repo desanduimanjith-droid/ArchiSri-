@@ -116,5 +116,7 @@ if __name__ == '__main__':
     print("\nHEALTH:")
     print("  GET    /api/health                    - Health check")
     
-    # Run the Flask development server on port 8000
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    # Run the Flask server
+    port = int(os.getenv('PORT', 5000))
+    debug = os.getenv('FLASK_ENV', 'production') == 'development'
+    app.run(debug=debug, host='0.0.0.0', port=port)

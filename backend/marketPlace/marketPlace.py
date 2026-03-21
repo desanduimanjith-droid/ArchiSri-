@@ -12,6 +12,9 @@ load_dotenv(dotenv_path=".env")
 app = Flask(__name__)
 CORS(app)
 
+# Get base URL from environment (for production)
+BASE_URL = os.getenv('BASE_URL', 'http://127.0.0.1:5001')
+
 # Your Real Key
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
@@ -41,13 +44,19 @@ def create_checkout():
                 'quantity': 1,
             }],
             mode='payment',
-            success_url='http://127.0.0.1:5001/success',
-            cancel_url='http://127.0.0.1:5001/cancel',
+            success_url=f'{BASE_URL}/success',
+            cancel_url=f'{BASE_URL}/cancel',
         )
         return jsonify({'url': session.url})
     except Exception as e:
         print(f"Error: {e}") # This prints the error in your terminal
         return jsonify(error=str(e)), 500
+
+
+if __name__ == '__main__':
+    port = int(os.getenv('PORT', 5001))
+    debug = os.getenv('FLASK_ENV', 'production') == 'development'
+    app.run(debug=debug, host='0.0.0.0', port=port)
 
 @app.route('/success')
 def success():
