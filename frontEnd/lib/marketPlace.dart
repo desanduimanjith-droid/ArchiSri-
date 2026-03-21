@@ -98,7 +98,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
       return;
     }
 
-    final String serverUrl="http://192.168.1.21:5001/create-checkout";
+    final String serverUrl="https://archisri-marketplace.onrender.com/create-checkout";
     try {
     final response = await http.post(Uri.parse(serverUrl));
     

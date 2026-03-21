@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="archisri_1"
+        android:label="Archiශ්‍රී"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
