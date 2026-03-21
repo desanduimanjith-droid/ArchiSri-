@@ -32,9 +32,9 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: assets/images/ARCHISHI.png
+  image_path: assets/images/ArchiSrilogo.png
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: assets/images/ARCHISHI.png
+  adaptive_icon_foreground: assets/images/ArchiSrilogo.png
 
 flutter:
   uses-material-design: true
