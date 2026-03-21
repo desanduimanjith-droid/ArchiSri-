@@ -140,9 +140,9 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                   const SizedBox(height: 20),
                   _buildMoistureChart(),
                   const SizedBox(height: 20),
-                  _buildDetailedAnalysis(ph, ec),
+                  _buildScanAndRecommendations(moisture),
                   const SizedBox(height: 20),
-                  _buildScanButton(),
+                  _buildDetailedAnalysis(ph, ec),
                   const SizedBox(height: 30),
                 ],
               ),
@@ -496,51 +496,130 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  //  SCAN BUTTON 
-  Widget _buildScanButton() {
+  String _getFoundationType(double moisture) {
+    if (moisture > 70) return "Raft Foundation";
+    if (moisture > 50) return "Pad Foundation";
+    if (moisture > 30) return "Strip Foundation";
+    return "Shallow Foundation";
+  }
+
+  String _getCementType(double moisture) {
+    if (moisture > 70) return "SRC / PPC";
+    if (moisture > 50) return "OPC 53";
+    return "OPC 43";
+  }
+
+  //  SCAN BUTTON AND RECOMMENDATIONS
+  Widget _buildScanAndRecommendations(double moisture) {
+    final String foundation = _getFoundationType(moisture);
+    final String cement = _getCementType(moisture);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        height: 55,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Colors.purple, Colors.pink]),
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-          onPressed: _isScanning ? null : _scanAgain,
-          child: _isScanning
-              ? const SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              // Scan Button on the left
+              Expanded(
+                flex: 2,
+                child: Container(
+                  height: 55,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(colors: [Colors.purple, Colors.pink]),
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                )
-              : const Text(
-                  "SCAN AGAIN",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 4,
-                        color: Colors.black26,
-                        offset: Offset(0, 2),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                    ],
+                    ),
+                    onPressed: _isScanning ? null : _scanAgain,
+                    child: _isScanning
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            "SCAN AGAIN",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
-        ),
+              ),
+              const SizedBox(width: 15),
+              // Recommendations on the right
+              Expanded(
+                flex: 3,
+                child: Column(
+                  children: [
+                    _recommendationRow(
+                      label: "Foundation",
+                      value: foundation,
+                      icon: Icons.foundation,
+                    ),
+                    const SizedBox(height: 8),
+                    _recommendationRow(
+                      label: "Cement",
+                      value: cement,
+                      icon: Icons.architecture,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _recommendationRow({required String label, required String value, required IconData icon}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 4),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: Colors.blueGrey),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
