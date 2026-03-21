@@ -68,7 +68,9 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
               if (_phoneController.text.trim().isEmpty ||
                   _addressController.text.trim().isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please fill phone and address')),
+                  const SnackBar(
+                    content: Text('Please fill phone and address'),
+                  ),
                 );
                 return;
               }
@@ -90,7 +92,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
     );
   }
 
-  Future<void>_processPayment() async {
+  Future<void> _processPayment() async {
     if (_savedPhoneNumber.isEmpty || _savedAddress.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please add Personal Details first')),
@@ -98,26 +100,27 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
       return;
     }
 
-    final String serverUrl="https://archisri-marketplace.onrender.com/create-checkout";
+    final String serverUrl =
+        "https://archisri-marketplace.onrender.com/create-checkout";
     try {
-    final response = await http.post(Uri.parse(serverUrl));
-    
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final url = Uri.parse(data['url']);
-      
-      // This opens the Stripe payment page in the browser
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+      final response = await http.post(Uri.parse(serverUrl));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final url = Uri.parse(data['url']);
+
+        // This opens the Stripe payment page in the browser
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Server Error: ${response.statusCode}")),
         );
+      }
+    } catch (e) {
+      print("Connection Error: $e");
     }
-  } catch (e) {
-    print("Connection Error: $e");
-  }
   }
 
   bool _isDescriptionExpanded = false;
@@ -213,7 +216,6 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
 
           const SizedBox(height: 20),
 
-         
           // Product Card
           Expanded(
             child: SingleChildScrollView(
@@ -265,7 +267,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                         color: Colors.grey.shade100,
                       ),
                       child: Image.asset(
-                        'assets/images/iot.png',
+                        'assets/images/IOTDevice.png',
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -441,7 +443,6 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                               ],
                             ),
                     ),
-                    
                   ],
                 ),
               ),
@@ -454,7 +455,9 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
             child: ElevatedButton.icon(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Recommend Materials is coming soon!')),
+                  const SnackBar(
+                    content: Text('Recommend Materials is coming soon!'),
+                  ),
                 );
               },
               icon: const Icon(Icons.build, color: Colors.black87),
