@@ -15,14 +15,73 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // Controllers for text fields
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
+  // Country code dropdown
+  Map<String, String> _selectedCountry = {'name': 'Sri Lanka', 'flag': '🇱🇰', 'code': '+94'};
+  final List<Map<String, String>> _countries = [
+    {'name': 'Sri Lanka', 'flag': '🇱🇰', 'code': '+94'},
+    {'name': 'India', 'flag': '🇮🇳', 'code': '+91'},
+    {'name': 'United States', 'flag': '🇺🇸', 'code': '+1'},
+    {'name': 'United Kingdom', 'flag': '🇬🇧', 'code': '+44'},
+    {'name': 'Australia', 'flag': '🇦🇺', 'code': '+61'},
+    {'name': 'Canada', 'flag': '🇨🇦', 'code': '+1'},
+    {'name': 'Germany', 'flag': '🇩🇪', 'code': '+49'},
+    {'name': 'France', 'flag': '🇫🇷', 'code': '+33'},
+    {'name': 'Japan', 'flag': '🇯🇵', 'code': '+81'},
+    {'name': 'China', 'flag': '🇨🇳', 'code': '+86'},
+    {'name': 'South Korea', 'flag': '🇰🇷', 'code': '+82'},
+    {'name': 'Singapore', 'flag': '🇸🇬', 'code': '+65'},
+    {'name': 'Malaysia', 'flag': '🇲🇾', 'code': '+60'},
+    {'name': 'Pakistan', 'flag': '🇵🇰', 'code': '+92'},
+    {'name': 'Bangladesh', 'flag': '🇧🇩', 'code': '+880'},
+    {'name': 'Nepal', 'flag': '🇳🇵', 'code': '+977'},
+    {'name': 'Maldives', 'flag': '🇲🇻', 'code': '+960'},
+    {'name': 'UAE', 'flag': '🇦🇪', 'code': '+971'},
+    {'name': 'Saudi Arabia', 'flag': '🇸🇦', 'code': '+966'},
+    {'name': 'Qatar', 'flag': '🇶🇦', 'code': '+974'},
+    {'name': 'Italy', 'flag': '🇮🇹', 'code': '+39'},
+    {'name': 'Spain', 'flag': '🇪🇸', 'code': '+34'},
+    {'name': 'Netherlands', 'flag': '🇳🇱', 'code': '+31'},
+    {'name': 'Sweden', 'flag': '🇸🇪', 'code': '+46'},
+    {'name': 'Switzerland', 'flag': '🇨🇭', 'code': '+41'},
+    {'name': 'New Zealand', 'flag': '🇳🇿', 'code': '+64'},
+    {'name': 'South Africa', 'flag': '🇿🇦', 'code': '+27'},
+    {'name': 'Brazil', 'flag': '🇧🇷', 'code': '+55'},
+    {'name': 'Mexico', 'flag': '🇲🇽', 'code': '+52'},
+    {'name': 'Russia', 'flag': '🇷🇺', 'code': '+7'},
+    {'name': 'Thailand', 'flag': '🇹🇭', 'code': '+66'},
+    {'name': 'Indonesia', 'flag': '🇮🇩', 'code': '+62'},
+    {'name': 'Philippines', 'flag': '🇵🇭', 'code': '+63'},
+    {'name': 'Vietnam', 'flag': '🇻🇳', 'code': '+84'},
+    {'name': 'Nigeria', 'flag': '🇳🇬', 'code': '+234'},
+    {'name': 'Egypt', 'flag': '🇪🇬', 'code': '+20'},
+    {'name': 'Kenya', 'flag': '🇰🇪', 'code': '+254'},
+    {'name': 'Turkey', 'flag': '🇹🇷', 'code': '+90'},
+    {'name': 'Ireland', 'flag': '🇮🇪', 'code': '+353'},
+    {'name': 'Portugal', 'flag': '🇵🇹', 'code': '+351'},
+    {'name': 'Poland', 'flag': '🇵🇱', 'code': '+48'},
+    {'name': 'Norway', 'flag': '🇳🇴', 'code': '+47'},
+    {'name': 'Denmark', 'flag': '🇩🇰', 'code': '+45'},
+    {'name': 'Finland', 'flag': '🇫🇮', 'code': '+358'},
+    {'name': 'Belgium', 'flag': '🇧🇪', 'code': '+32'},
+    {'name': 'Austria', 'flag': '🇦🇹', 'code': '+43'},
+    {'name': 'Greece', 'flag': '🇬🇷', 'code': '+30'},
+    {'name': 'Argentina', 'flag': '🇦🇷', 'code': '+54'},
+    {'name': 'Colombia', 'flag': '🇨🇴', 'code': '+57'},
+    {'name': 'Chile', 'flag': '🇨🇱', 'code': '+56'},
+  ];
 
   @override
   void dispose() {
     // Clean up controllers when widget is removed
     _nameController.dispose();
     _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -121,11 +180,101 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 16),
 
+                      // Phone Number with Country Code
+                      const Text(
+                        "Phone Number",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Container(
+                            width: 110,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: _selectedCountry['name'],
+                                isExpanded: true,
+                                icon: const Icon(Icons.arrow_drop_down, size: 18),
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black87,
+                                ),
+                                selectedItemBuilder: (context) {
+                                  return _countries.map((c) {
+                                    return Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        '${c['flag']} ${c['code']}',
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                    );
+                                  }).toList();
+                                },
+                                items: _countries.map((c) {
+                                  return DropdownMenuItem<String>(
+                                    value: c['name'],
+                                    child: Text(
+                                      '${c['flag']} ${c['name']} (${c['code']})',
+                                      style: const TextStyle(fontSize: 13),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (val) {
+                                  setState(() {
+                                    _selectedCountry = _countries
+                                        .firstWhere((c) => c['name'] == val);
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: _phoneController,
+                              keyboardType: TextInputType.phone,
+                              maxLength: 10,
+                              decoration: InputDecoration(
+                                hintText: "77 123 4567",
+                                hintStyle: TextStyle(color: Colors.grey[400]),
+                                counterText: '',
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(color: Colors.black87),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
                       _buildInputField(
                         label: "Password", 
                         controller: _passwordController, 
                         hint: "********",
-                        isPassword: true
+                        isPassword: true,
+                        obscure: _obscurePassword,
+                        onToggleObscure: () {
+                          setState(() => _obscurePassword = !_obscurePassword);
+                        },
                       ),
                       const SizedBox(height: 16),
                       
@@ -133,7 +282,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         label: "Confirm Password", 
                         controller: _confirmPasswordController, 
                         hint: "********",
-                        isPassword: true
+                        isPassword: true,
+                        obscure: _obscureConfirmPassword,
+                        onToggleObscure: () {
+                          setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                        },
                       ),
 
                       const SizedBox(height: 24),
@@ -206,17 +359,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _handleSignUp() async {
      String name = _nameController.text.trim();
      String email = _emailController.text.trim();
+     String phoneDigits = _phoneController.text.trim();
+     String fullPhone = '${_selectedCountry['code']} $phoneDigits';
      String pass = _passwordController.text;
      String confirmPass = _confirmPasswordController.text;
 
      // Client-side validations
-     if (name.isEmpty || email.isEmpty || pass.isEmpty || confirmPass.isEmpty) {
+     if (name.isEmpty || email.isEmpty || phoneDigits.isEmpty || pass.isEmpty || confirmPass.isEmpty) {
        _showError('Please fill in all fields.');
        return;
      }
 
      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
        _showError('Please enter a valid email address.');
+       return;
+     }
+
+     if (!RegExp(r'^[0-9]{7,10}$').hasMatch(phoneDigits)) {
+       _showError('Please enter a valid phone number (7-10 digits).');
        return;
      }
 
@@ -244,6 +404,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
          'fullName': name,
          'email': email,
+         'phoneNumber': fullPhone,
          'createdAt': FieldValue.serverTimestamp(),
        });
 
@@ -305,6 +466,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     required TextEditingController controller, 
     required String hint,
     bool isPassword = false,
+    bool obscure = false,
+    VoidCallback? onToggleObscure,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -313,11 +476,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
-          obscureText: isPassword,
+          obscureText: isPassword ? obscure : false,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey[400]),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      obscure ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey[600],
+                    ),
+                    onPressed: onToggleObscure,
+                  )
+                : null,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey.shade300),
