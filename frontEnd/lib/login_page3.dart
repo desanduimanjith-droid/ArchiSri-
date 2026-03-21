@@ -4,7 +4,6 @@ import 'package:archisri_1/connection_Construction.dart';
 import 'package:archisri_1/signin_page3.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart' show debugPrint;
 
 class login_page3 extends StatefulWidget {
   const login_page3({super.key});
