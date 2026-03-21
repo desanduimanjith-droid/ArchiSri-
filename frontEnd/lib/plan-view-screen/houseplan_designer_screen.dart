@@ -2,8 +2,11 @@ import 'package:archisri_1/main_content_part.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:gal/gal.dart';
 import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
 import 'package:archisri_1/Constructor-connect-feature/screens/constructor_screen.dart';
 import 'package:archisri_1/marketPlace.dart';
@@ -128,16 +131,32 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     if (_generatedBlueprintImage == null) return;
 
     try {
-      await FileSaver.instance.saveFile(
-        name: 'archisri_blueprint_${DateTime.now().millisecondsSinceEpoch}.png',
-        bytes: _generatedBlueprintImage!,
-        mimeType: MimeType.png,
-      );
+      final fileName =
+          'archisri_blueprint_${DateTime.now().millisecondsSinceEpoch}';
+
+      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+        final hasPermission = await Gal.requestAccess();
+        if (!hasPermission) {
+          throw Exception('Gallery permission denied');
+        }
+
+        await Gal.putImageBytes(
+          _generatedBlueprintImage!,
+          name: fileName,
+          album: 'ArchiSri',
+        );
+      } else {
+        await FileSaver.instance.saveFile(
+          name: '$fileName.png',
+          bytes: _generatedBlueprintImage!,
+          mimeType: MimeType.png,
+        );
+      }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Blueprint downloaded successfully!'),
+            content: Text('Blueprint saved successfully!'),
             backgroundColor: Colors.green,
           ),
         );
