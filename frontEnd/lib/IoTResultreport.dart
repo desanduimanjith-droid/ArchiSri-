@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'iot_service.dart';
+import 'ai_recommendation_screen.dart';
 
 class SoilTestingScreen extends StatefulWidget {
   const SoilTestingScreen({super.key});
@@ -523,17 +524,21 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             children: [
               // Scan Button on the left
               Expanded(
-                flex: 2,
+                flex: 1,
                 child: Container(
                   height: 55,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [Colors.purple, Colors.pink]),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5),
+                    ],
                   ),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
+                      foregroundColor: Colors.purple,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -545,80 +550,73 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: Colors.white,
+                              color: Colors.purple,
                             ),
                           )
-                        : const Text(
-                            "SCAN AGAIN",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
+                        : const Icon(Icons.refresh, size: 28),
                   ),
                 ),
               ),
               const SizedBox(width: 15),
-              // Recommendations on the right
+              // AI Recommendations Button on the right
               Expanded(
                 flex: 3,
-                child: Column(
-                  children: [
-                    _recommendationRow(
-                      label: "Foundation",
-                      value: foundation,
-                      icon: Icons.foundation,
+                child: Container(
+                  height: 55,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF8E24AA), Color(0xFFD81B60)],
                     ),
-                    const SizedBox(height: 8),
-                    _recommendationRow(
-                      label: "Cement",
-                      value: cement,
-                      icon: Icons.architecture,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFD81B60).withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                     ),
-                  ],
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AIRecommendationScreen(
+                            foundationType: foundation,
+                            cementType: cement,
+                            moisture: moisture,
+                            ec: ec,
+                            temp: temp,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.auto_awesome, color: Colors.white, size: 20),
+                        SizedBox(width: 10),
+                        Text(
+                          "GET AI RECOMMENDATION",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _recommendationRow({required String label, required String value, required IconData icon}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 4),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 16, color: Colors.blueGrey),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-                ),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
           ),
         ],
       ),
