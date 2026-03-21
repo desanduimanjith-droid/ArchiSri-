@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:archisri_1/login_page3.dart';
 import 'package:archisri_1/connection_Construction.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 
 class signin_page3 extends StatefulWidget {
   const signin_page3({super.key});
@@ -39,6 +42,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
     'Renovation & Remodeling',
     'Other',
   ];
+
+  // File picker state
+  String? _pickedFileName;
+  Uint8List? _pickedFileBytes;
+  bool _isUploading = false;
 
   @override
   void dispose() {
@@ -238,33 +246,65 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Colors.grey.shade300,
+                            color: _pickedFileName != null
+                                ? Colors.green.shade400
+                                : Colors.grey.shade300,
                             style: BorderStyle.solid,
                           ),
                           borderRadius: BorderRadius.circular(8),
-                          color: Colors.grey.shade50,
+                          color: _pickedFileName != null
+                              ? Colors.green.shade50
+                              : Colors.grey.shade50,
                         ),
                         child: TextButton.icon(
-                          onPressed: () {
-                            // TODO: Add file picker logic
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "Certificate upload logic coming soon!",
-                                ),
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.upload_file,
-                            color: Colors.indigo,
+                          onPressed: _pickFile,
+                          icon: Icon(
+                            _pickedFileName != null
+                                ? Icons.check_circle
+                                : Icons.upload_file,
+                            color: _pickedFileName != null
+                                ? Colors.green
+                                : Colors.indigo,
                           ),
-                          label: const Text(
-                            "Upload Business Registration",
-                            style: TextStyle(color: Colors.black87),
+                          label: Text(
+                            _pickedFileName != null
+                                ? "Change File"
+                                : "Upload Business Registration",
+                            style: const TextStyle(color: Colors.black87),
                           ),
                         ),
                       ),
+                      if (_pickedFileName != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.insert_drive_file,
+                                  size: 18, color: Colors.green),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  _pickedFileName!,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black87,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _pickedFileName = null;
+                                    _pickedFileBytes = null;
+                                  });
+                                },
+                                child: const Icon(Icons.close,
+                                    size: 18, color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
 
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 20),
@@ -326,8 +366,17 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          onPressed: _handleSignUp,
-                          child: const Text(
+                          onPressed: _isUploading ? null : _handleSignUp,
+                          child: _isUploading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
                             "Register Company",
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
@@ -374,6 +423,48 @@ class _CompanySignUpScreenState extends State<signin_page3> {
     );
   }
 
+  // Pick a file from the device
+  Future<void> _pickFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+        withData: true,
+      );
+
+      if (result != null && result.files.single.bytes != null) {
+        final file = result.files.single;
+        // Check file size (max 1 MB)
+        if (file.size > 1 * 1024 * 1024) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("File too large! Please select a file under 1 MB."),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
+        setState(() {
+          _pickedFileName = file.name;
+          _pickedFileBytes = file.bytes;
+        });
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('File selected: ${file.name}'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error picking file: $e")),
+      );
+    }
+  }
+
   // Handle Firebase Sign Up & Firestore Entry
   Future<void> _handleSignUp() async {
     String companyName = _companyNameController.text.trim();
@@ -412,30 +503,44 @@ class _CompanySignUpScreenState extends State<signin_page3> {
       return;
     }
 
+    setState(() {
+      _isUploading = true;
+    });
+
     try {
       // Create user with Firebase Auth (uses email & pass)
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: pass);
 
+      // Prepare company data
+      Map<String, dynamic> companyData = {
+        'companyName': companyName,
+        'businessRegistrationNumber': regNo,
+        'email': email,
+        'contactPersonName': contactPerson,
+        'phoneNumber': phone,
+        'about': about,
+        'location': location,
+        'constructionType': _selectedConstructionType,
+        'yearsOfExperience': experience,
+        'projects': projects,
+        'role': 'Construction Company',
+        'isVerified': false,
+        'createdAt': FieldValue.serverTimestamp(),
+      };
+
+      // If a file was picked, convert to base64 and add to document
+      if (_pickedFileBytes != null && _pickedFileName != null) {
+        String base64File = base64Encode(_pickedFileBytes!);
+        companyData['registrationCertificateFile'] = base64File;
+        companyData['registrationCertificateFileName'] = _pickedFileName;
+      }
+
       // Save company details into Firestore
       await FirebaseFirestore.instance
           .collection('companies')
           .doc(userCredential.user!.uid)
-          .set({
-            'companyName': companyName,
-            'businessRegistrationNumber': regNo,
-            'email': email,
-            'contactPersonName': contactPerson,
-            'phoneNumber': phone,
-            'about': about,
-            'location': location,
-            'constructionType': _selectedConstructionType,
-            'yearsOfExperience': experience,
-            'projects': projects,
-            'role': 'Construction Company',
-            'isVerified': false,
-            'createdAt': FieldValue.serverTimestamp(),
-          });
+          .set(companyData);
 
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -459,6 +564,12 @@ class _CompanySignUpScreenState extends State<signin_page3> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
+      }
     }
   }
 
