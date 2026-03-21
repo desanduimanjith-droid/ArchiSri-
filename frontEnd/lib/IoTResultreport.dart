@@ -140,7 +140,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                   const SizedBox(height: 20),
                   _buildMoistureChart(),
                   const SizedBox(height: 20),
-                  _buildScanAndRecommendations(moisture),
+                  _buildScanAndRecommendations(moisture, ec, calculatedTemp),
                   const SizedBox(height: 20),
                   _buildDetailedAnalysis(ph, ec),
                   const SizedBox(height: 30),
@@ -496,23 +496,24 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  String _getFoundationType(double moisture) {
-    if (moisture > 70) return "Raft Foundation";
-    if (moisture > 50) return "Pad Foundation";
-    if (moisture > 30) return "Strip Foundation";
+  String _getFoundationType(double moisture, double ec) {
+    if (moisture > 70 || ec > 1000) return "Piled Foundation";
+    if (moisture > 50) return "Raft Foundation";
+    if (moisture > 30) return "Pad Foundation";
     return "Shallow Foundation";
   }
 
-  String _getCementType(double moisture) {
-    if (moisture > 70) return "SRC / PPC";
-    if (moisture > 50) return "OPC 53";
+  String _getCementType(double moisture, double ec, double temp) {
+    if (ec > 800) return "SRC (Salt Resisting)";
+    if (temp > 35) return "PPC (Heat Resisting)";
+    if (moisture > 60) return "OPC 53";
     return "OPC 43";
   }
 
   //  SCAN BUTTON AND RECOMMENDATIONS
-  Widget _buildScanAndRecommendations(double moisture) {
-    final String foundation = _getFoundationType(moisture);
-    final String cement = _getCementType(moisture);
+  Widget _buildScanAndRecommendations(double moisture, double ec, double temp) {
+    final String foundation = _getFoundationType(moisture, ec);
+    final String cement = _getCementType(moisture, ec, temp);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
