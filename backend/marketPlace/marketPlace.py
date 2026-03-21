@@ -3,6 +3,8 @@ from flask_cors import CORS
 import stripe
 import os
 from dotenv import load_dotenv
+import json
+from datetime import datetime
 
 
 load_dotenv(dotenv_path=".env")
@@ -20,9 +22,7 @@ if not stripe.api_key:
 if stripe.api_key.startswith("sk_test_51"):
     print("WARNING: You are using a placeholder Stripe API key.")
 
-@app.route('/')
-def home():
-    return "Server is Live!"
+
 
 @app.route('/create-checkout', methods=['POST'])
 def create_checkout():
