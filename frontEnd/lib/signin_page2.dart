@@ -1,8 +1,11 @@
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:archisri_1/login_page2.dart';
 import 'package:archisri_1/connection_Engineer.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -26,6 +29,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _experienceController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
   final TextEditingController _rateController = TextEditingController();
+
+  // File picker state
+  String? _pickedFileName;
+  Uint8List? _pickedFileBytes;
+  bool _isUploading = false;
 
   // Dropdown value for Specialization
   String? _selectedSpecialization;
@@ -273,32 +281,65 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Colors.grey.shade300,
+                            color: _pickedFileName != null
+                                ? Colors.green.shade400
+                                : Colors.grey.shade300,
                             style: BorderStyle.solid,
                           ),
                           borderRadius: BorderRadius.circular(8),
-                          color: Colors.grey.shade50,
+                          color: _pickedFileName != null
+                              ? Colors.green.shade50
+                              : Colors.grey.shade50,
                         ),
                         child: TextButton.icon(
-                          onPressed: () {
-                            // TODO: Implement file picking logic
-                            print("Upload Professional ID Initialized");
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("File upload logic coming soon!"),
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.upload_file,
-                            color: Colors.indigo,
+                          onPressed: _pickFile,
+                          icon: Icon(
+                            _pickedFileName != null
+                                ? Icons.check_circle
+                                : Icons.upload_file,
+                            color: _pickedFileName != null
+                                ? Colors.green
+                                : Colors.indigo,
                           ),
-                          label: const Text(
-                            "Upload License / IESL Card / Company ID",
-                            style: TextStyle(color: Colors.black87),
+                          label: Text(
+                            _pickedFileName != null
+                                ? "Change File"
+                                : "Upload License / IESL Card / Company ID",
+                            style: const TextStyle(color: Colors.black87),
                           ),
                         ),
                       ),
+                      if (_pickedFileName != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.insert_drive_file,
+                                  size: 18, color: Colors.green),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                child: Text(
+                                  _pickedFileName!,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black87,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _pickedFileName = null;
+                                    _pickedFileBytes = null;
+                                  });
+                                },
+                                child: const Icon(Icons.close,
+                                    size: 18, color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
 
                       const SizedBox(height: 30),
 
@@ -315,8 +356,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          onPressed: _handleSignUp,
-                          child: const Text(
+                          onPressed: _isUploading ? null : _handleSignUp,
+                          child: _isUploading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
                             "Register as Engineer",
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
@@ -365,6 +415,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  // Pick a file from the device
+  Future<void> _pickFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+        withData: true, // Load bytes into memory
+      );
+
+      if (result != null && result.files.single.bytes != null) {
+        final file = result.files.single;
+        // Check file size (max 1 MB)
+        if (file.size > 1 * 1024 * 1024) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("File too large! Please select a file under 1 MB."),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return;
+        }
+        setState(() {
+          _pickedFileName = file.name;
+          _pickedFileBytes = file.bytes;
+        });
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('File selected: ${file.name}'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error picking file: $e")),
+      );
+    }
+  }
+
   // Handles the sign up action using Firebase Auth and Firestore
   Future<void> _handleSignUp() async {
     String name = _nameController.text.trim();
@@ -398,28 +490,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
+    setState(() {
+      _isUploading = true;
+    });
+
     try {
       // Create user with Firebase Auth
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: pass);
 
-      // Insert details to Firestore under a specific 'engineers' collection
+      // Prepare document data
+      Map<String, dynamic> userData = {
+        'fullName': name,
+        'email': email,
+        'phoneNumber': contactNumber,
+        'role': 'Engineer',
+        'registrationNumber': registrationNo,
+        'specialization': _selectedSpecialization,
+        'yearsOfExperience': experience,
+        'company': company,
+        'ratePerHour': ratePerHour,
+        'isVerified': false,
+        'createdAt': FieldValue.serverTimestamp(),
+      };
+
+      // If a file was picked, convert to base64 and add to document
+      if (_pickedFileBytes != null && _pickedFileName != null) {
+        String base64File = base64Encode(_pickedFileBytes!);
+        userData['professionalIdFile'] = base64File;
+        userData['professionalIdFileName'] = _pickedFileName;
+      }
+
+      // Save to Firestore
       await FirebaseFirestore.instance
           .collection('engineers')
           .doc(userCredential.user!.uid)
-          .set({
-            'fullName': name,
-            'email': email,
-            'phoneNumber': contactNumber,
-            'role': 'Engineer', // Tagging the role explicitly
-            'registrationNumber': registrationNo,
-            'specialization': _selectedSpecialization,
-            'yearsOfExperience': experience,
-            'company': company,
-            'ratePerHour': ratePerHour,
-            'isVerified': false,
-            'createdAt': FieldValue.serverTimestamp(),
-          });
+          .set(userData);
 
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -441,6 +547,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploading = false;
+        });
+      }
     }
   }
 
