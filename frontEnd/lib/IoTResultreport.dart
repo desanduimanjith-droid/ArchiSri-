@@ -142,6 +142,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                   const SizedBox(height: 20),
                   _buildDetailedAnalysis(ph, ec),
                   const SizedBox(height: 20),
+                  _buildFoundationRecommendation(),
+                  const SizedBox(height: 20),
                   _buildScanButton(),
                   const SizedBox(height: 30),
                 ],
@@ -179,7 +181,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           ),
           const SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 width: 80,
@@ -194,8 +196,9 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                   size: 50,
                 ),
               ),
+              const SizedBox(width: 16),
               const Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Soil Testing",
@@ -490,6 +493,111 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
             const Text("Soil Type: Clay Loam"),
             const SizedBox(height: 8),
             const Text("Compaction: Medium (Good)"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  //  FOUNDATION RECOMMENDATION 
+  Widget _buildFoundationRecommendation() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFFC7E2B4),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Foundation Analyst",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Recommendation Type Row
+            Row(
+              children: [
+                const Icon(
+                  Icons.star,
+                  color: Colors.deepOrange,
+                  size: 16,
+                ),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    "Recommendation Type",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD3A278),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Text(
+                    "Raft Foundation",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 15),
+
+            // Cement Type Row
+            Row(
+              children: [
+                const Icon(
+                  Icons.star,
+                  color: Colors.deepOrange,
+                  size: 16,
+                ),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    "Cement Type",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD3A278),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Text(
+                    "OPC 43",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
