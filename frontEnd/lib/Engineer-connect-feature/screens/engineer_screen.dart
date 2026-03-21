@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../services/whatsapp_helper.dart';
+import '../../shared/rating_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EngineerHomeScreen extends StatefulWidget {
@@ -14,7 +15,6 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
   String _searchQuery = "";
   List<String> _selectedSpecialties = [];
   String _selectedLocation = "";
-  bool _verifiedOnly = false;
 
   // Filter engineers based on search and filters
   List<QueryDocumentSnapshot<Map<String, dynamic>>> _filterEngineers(
@@ -47,7 +47,8 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
           _selectedLocation.isEmpty ||
           location.contains(_selectedLocation.toLowerCase());
 
-      final matchesVerified = !_verifiedOnly || _engineerIsVerified(data);
+      // ALWAYS require the engineer to be verified to show up in the public feed
+      final matchesVerified = _engineerIsVerified(data);
 
       return matchesSearch &&
           matchesSpecialty &&
@@ -72,7 +73,6 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
           final specialties = result['specialties'];
           _selectedSpecialties = specialties is List<String> ? specialties : [];
           _selectedLocation = result['location'] ?? "";
-          _verifiedOnly = result['verifiedOnly'] ?? false;
         });
       }
     });
@@ -277,8 +277,10 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
 
                 return ListView.builder(
                   itemCount: filtered.length,
-                  itemBuilder: (context, index) =>
-                      EngineerCard(item: filtered[index].data()),
+                    itemBuilder: (context, index) {
+                      final doc = filtered[index];
+                      return EngineerCard(item: doc.data(), docId: doc.id);
+                    },
                 );
               },
             ),
@@ -293,7 +295,8 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
 // Engineer Card Widget
 class EngineerCard extends StatelessWidget {
   final Map<String, dynamic> item;
-  const EngineerCard({super.key, required this.item});
+  final String docId;
+  const EngineerCard({super.key, required this.item, required this.docId});
 
   @override
   Widget build(BuildContext context) {
@@ -301,8 +304,8 @@ class EngineerCard extends StatelessWidget {
     final imageUrl = _engineerImageUrl(item);
 
     return GestureDetector(
-      onTap: () {
-        showModalBottomSheet(
+      onTap: () async {
+        final result = await showModalBottomSheet(
           context: context,
           isScrollControlled: true,
           backgroundColor: const Color(0xFFFFF3F3),
@@ -312,6 +315,37 @@ class EngineerCard extends StatelessWidget {
           // Pop up EngineerDetailSheet
           builder: (context) => EngineerDetailSheet(item: item),
         );
+
+        if (result == true) {
+          final phone = _engineerPhone(item);
+          final success = await WhatsAppHelper.contactEngineer(
+            engineerName: _engineerName(item),
+            engineerPhone: phone,
+            projectDetails:
+                'Hi, I found your profile on Engineer Connect and would like to discuss a project.',
+          );
+
+          if (!context.mounted) return;
+
+          if (!success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Could not open WhatsApp. Please make sure WhatsApp is installed.',
+                ),
+              ),
+            );
+          } else {
+            showRatingBottomSheet(
+              context: context,
+              name: _engineerName(item),
+              imageUrl: imageUrl,
+              currentRating: _engineerRating(item).toString(),
+              docId: docId,
+              collectionName: 'engineers',
+            );
+          }
+        }
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -482,25 +516,7 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
       return;
     }
 
-    final messenger = ScaffoldMessenger.of(context);
-    Navigator.pop(context);
-
-    final success = await WhatsAppHelper.contactEngineer(
-      engineerName: _engineerName(widget.item),
-      engineerPhone: phone,
-      projectDetails:
-          'Hi, I found your profile on Engineer Connect and would like to discuss a project.',
-    );
-
-    if (!success) {
-      messenger.showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Could not open WhatsApp. Please make sure WhatsApp is installed.',
-          ),
-        ),
-      );
-    }
+    Navigator.pop(context, true);
   }
 
   @override
@@ -860,7 +876,6 @@ class FilterSheet extends StatefulWidget {
 }
 
 class _FilterSheetState extends State<FilterSheet> {
-  bool isVerified = false;
   bool isCivil = false;
   bool isStructural = false;
   bool isElectrical = false;
@@ -921,27 +936,6 @@ class _FilterSheetState extends State<FilterSheet> {
             "Filters",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          const Divider(),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Verified Engineers Only",
-                style: TextStyle(fontSize: 15),
-              ),
-              Checkbox(
-                value: isVerified,
-                activeColor: Colors.black,
-                onChanged: (bool? value) {
-                  setState(() {
-                    isVerified = value ?? false;
-                  });
-                },
-              ),
-            ],
-          ),
-
           const Divider(),
           const SizedBox(height: 10),
           const Text(
@@ -1046,7 +1040,6 @@ class _FilterSheetState extends State<FilterSheet> {
               Navigator.pop(context, {
                 'specialties': specialties,
                 'location': selectedDistrict ?? "",
-                'verifiedOnly': isVerified,
               });
             },
             style: ElevatedButton.styleFrom(

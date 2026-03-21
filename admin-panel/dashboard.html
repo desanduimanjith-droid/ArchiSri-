@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArchiSri Admin — Dashboard</title>
+  <meta name="description" content="ArchiSri Admin Dashboard - View, verify, and manage registrations">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <!-- ═══ HEADER ═══ -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <div class="header-logo">🏗️</div>
+        <div class="header-title">
+          <h1>ArchiSri Admin</h1>
+          <p>Registration Management</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <span id="admin-name"></span>
+        <button id="logout-btn" class="btn-logout">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main class="dashboard-content">
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card pending">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-value" id="stat-pending">0</div>
+          <div class="stat-label">Pending Review</div>
+        </div>
+        <div class="stat-card verified">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value" id="stat-verified">0</div>
+          <div class="stat-label">Verified</div>
+        </div>
+        <div class="stat-card engineers">
+          <div class="stat-icon">👷</div>
+          <div class="stat-value" id="stat-engineers">0</div>
+          <div class="stat-label">Total Engineers</div>
+        </div>
+        <div class="stat-card companies">
+          <div class="stat-icon">🏢</div>
+          <div class="stat-value" id="stat-companies">0</div>
+          <div class="stat-label">Total Companies</div>
+        </div>
+      </div>
+
+      <!-- Controls: Tabs + Filters -->
+      <div class="controls-bar">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="engineers">👷 Engineers</button>
+          <button class="tab-btn" data-tab="companies">🏢 Companies</button>
+        </div>
+        <div class="filters">
+          <button class="filter-btn active" data-filter="pending">
+            Pending <span class="pending-badge" id="pending-badge">0</span>
+          </button>
+          <button class="filter-btn" data-filter="verified">Verified</button>
+          <button class="filter-btn" data-filter="all">All</button>
+        </div>
+      </div>
+
+      <!-- Registration Cards -->
+      <div id="registrations-container" class="registrations-container">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <p>Loading registrations...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Image Modal -->
+  <div id="image-modal" class="image-modal" onclick="closeImageModal()">
+    <button class="modal-close" onclick="closeImageModal()">✕</button>
+    <img id="modal-image" src="" alt="Document Preview">
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <script type="module">
+    import { initDashboardAuth } from "./js/auth.js";
+    import { initDashboard } from "./js/dashboard.js";
+
+    initDashboardAuth()
+      .then(() => {
+        initDashboard();
+      })
+      .catch((error) => {
+        console.log("Auth check failed, redirecting to login:", error);
+      });
+  </script>
+</body>
+</html>
