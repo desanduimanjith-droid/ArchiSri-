@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 
 class AIRecommendationScreen extends StatelessWidget {
   final String foundationType;

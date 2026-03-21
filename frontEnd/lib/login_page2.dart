@@ -3,6 +3,7 @@ import 'package:archisri_1/signin_page2.dart';
 import 'package:archisri_1/connection_Engineer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 
 class login_page2 extends StatefulWidget {
   const login_page2({super.key});
