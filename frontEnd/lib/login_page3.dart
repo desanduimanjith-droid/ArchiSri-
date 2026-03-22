@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:archisri_1/connection_Construction.dart';
 // Note: You will likely need a signup screen for companies later.
 import 'package:archisri_1/signin_page3.dart';
+import 'package:archisri_1/utils/company_login_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart' show debugPrint;
 
 class login_page3 extends StatefulWidget {
   const login_page3({super.key});
@@ -180,7 +180,9 @@ class _CompanyLoginScreenState extends State<login_page3> {
                           ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
                               color: Colors.grey[600],
                             ),
                             onPressed: () {
@@ -221,15 +223,14 @@ class _CompanyLoginScreenState extends State<login_page3> {
                             final email = _emailController.text.trim();
                             final password = _passwordController.text.trim();
 
-                            if (companyName.isEmpty ||
-                                email.isEmpty ||
-                                password.isEmpty) {
+                            final validationError = validateCompanyLoginInputs(
+                              companyName: companyName,
+                              email: email,
+                              password: password,
+                            );
+                            if (validationError != null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Please enter Company Name, Email and Password',
-                                  ),
-                                ),
+                                SnackBar(content: Text(validationError)),
                               );
                               return;
                             }
@@ -346,18 +347,11 @@ class _CompanyLoginScreenState extends State<login_page3> {
                               );
                             } on FirebaseAuthException catch (e) {
                               if (!context.mounted) return;
-                              String errorMessage = 'Authentication failed';
-                              if (e.code == 'user-not-found') {
-                                errorMessage = 'No user found for that email.';
-                              } else if (e.code == 'wrong-password' ||
-                                  e.code == 'invalid-credential') {
-                                errorMessage = 'Wrong email or password.';
-                              } else if (e.code == 'too-many-requests') {
-                                errorMessage =
-                                    'Too many attempts. Please try again later.';
-                              } else if (e.message != null) {
-                                errorMessage = e.message!;
-                              }
+                              final String errorMessage =
+                                  mapCompanyLoginErrorCode(
+                                    e.code,
+                                    fallbackMessage: e.message,
+                                  );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(errorMessage)),
                               );
@@ -465,10 +459,7 @@ class _CompanyLoginScreenState extends State<login_page3> {
                 children: [
                   const Text(
                     "Enter your email address and we'll send you a link to reset your password.",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                   const SizedBox(height: 16),
                   TextField(
@@ -492,7 +483,10 @@ class _CompanyLoginScreenState extends State<login_page3> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Color(0xFF2D2D2D), width: 1.5),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF2D2D2D),
+                          width: 1.5,
+                        ),
                       ),
                       filled: true,
                       fillColor: Colors.white,
@@ -516,7 +510,9 @@ class _CompanyLoginScreenState extends State<login_page3> {
                           if (email.isEmpty) {
                             ScaffoldMessenger.of(this.context).showSnackBar(
                               const SnackBar(
-                                content: Text('Please enter your email address'),
+                                content: Text(
+                                  'Please enter your email address',
+                                ),
                               ),
                             );
                             return;
@@ -525,10 +521,15 @@ class _CompanyLoginScreenState extends State<login_page3> {
                           setDialogState(() => isSending = true);
 
                           try {
-                            debugPrint('Sending password reset email to: $email');
-                            await FirebaseAuth.instance
-                                .sendPasswordResetEmail(email: email);
-                            debugPrint('Password reset email sent successfully to: $email');
+                            debugPrint(
+                              'Sending password reset email to: $email',
+                            );
+                            await FirebaseAuth.instance.sendPasswordResetEmail(
+                              email: email,
+                            );
+                            debugPrint(
+                              'Password reset email sent successfully to: $email',
+                            );
 
                             if (context.mounted) Navigator.pop(context);
 
@@ -544,14 +545,7 @@ class _CompanyLoginScreenState extends State<login_page3> {
                             }
                           } on FirebaseAuthException catch (e) {
                             setDialogState(() => isSending = false);
-                            String msg = 'Failed to send reset email.';
-                            if (e.code == 'user-not-found') {
-                              msg = 'No account found with that email.';
-                            } else if (e.code == 'invalid-email') {
-                              msg = 'Please enter a valid email address.';
-                            } else if (e.code == 'too-many-requests') {
-                              msg = 'Too many attempts. Please try again later.';
-                            }
+                            final msg = mapResetPasswordErrorCode(e.code);
                             if (this.context.mounted) {
                               ScaffoldMessenger.of(this.context).showSnackBar(
                                 SnackBar(
@@ -586,7 +580,9 @@ class _CompanyLoginScreenState extends State<login_page3> {
                           width: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Text(
