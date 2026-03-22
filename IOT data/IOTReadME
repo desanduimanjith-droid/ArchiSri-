@@ -1,0 +1,50 @@
+# 🌿 Archiශ්‍රී (ArchiSRI) - Smart Irrigation IoT System
+
+Archiශ්‍රී is an IoT-based soil monitoring system designed to track **Soil Moisture** and **Electrical Conductivity (EC)** in real-time. Data is captured by an ESP32 and beamed to a Firebase Realtime Database for global access.
+
+---
+
+## 🚀 System Architecture
+
+
+
+1. **Hardware Layer**: ESP32 + Capacitive Soil Moisture Sensor + EC Sensor.
+2. **Connectivity**: WiFi (AOT Hotspot).
+3. **Cloud Layer**: Firebase Realtime Database (Sri Lanka/Singapore Region).
+4. **Data Format**: JSON.
+
+---
+
+## 🛠️ Tech Stack
+
+| Component | Technology |
+| :--- | :--- |
+| **Microcontroller** | ESP32 (DevKit V1) |
+| **Framework** | Arduino / PlatformIO |
+| **Backend/Cloud** | Firebase Realtime Database |
+| **Library** | Firebase-ESP32, ArduinoJson |
+
+---
+
+## 📂 Project Structure
+
+* `src/main.cpp`: The core logic for WiFi connection and Firebase data transmission.
+* `platformio.ini`: Project configuration and library dependencies.
+* `app.py`: (Optional) Local Flask backend for debugging.
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Hardware Wiring
+* **Moisture Sensor**: Pin 34 (Analog)
+* **EC Sensor**: Pin 35 (Analog)
+* **VCC/GND**: 3.3V and Ground
+
+### 2. Software Configuration
+Update the following constants in `main.cpp`:
+```cpp
+const char* ssid = "AOT";
+const char* password = "12345678";
+#define FIREBASE_HOST "archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app/"
+#define FIREBASE_AUTH "O5GRHpKCN5clsbSj5OZpkcm6g8jY8ksH0npQWbXc"

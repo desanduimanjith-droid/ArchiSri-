@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Archisri needs photo library access to save generated blueprint images.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Archisri needs permission to save generated blueprint images to your gallery.</string>
 </dict>
 </plist>

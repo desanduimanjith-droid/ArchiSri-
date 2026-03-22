@@ -26,6 +26,20 @@ if stripe.api_key.startswith("sk_test_51"):
     print("WARNING: You are using a placeholder Stripe API key.")
 
 
+@app.route('/')
+def home():
+    return jsonify({
+        'status': 'live',
+        'service': 'ArchiSri Marketplace API',
+        'endpoints': ['/create-checkout', '/success', '/cancel', '/health']
+    })
+
+
+@app.route('/health')
+def health():
+    return jsonify({'status': 'healthy', 'message': 'Marketplace API is running'})
+
+
 
 @app.route('/create-checkout', methods=['POST'])
 def create_checkout():
@@ -52,12 +66,6 @@ def create_checkout():
         print(f"Error: {e}") # This prints the error in your terminal
         return jsonify(error=str(e)), 500
 
-
-if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5001))
-    debug = os.getenv('FLASK_ENV', 'production') == 'development'
-    app.run(debug=debug, host='0.0.0.0', port=port)
-
 @app.route('/success')
 def success():
     return " Payment Successful!"
@@ -68,4 +76,6 @@ def cancel():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True,use_reloader =False)
+    port = int(os.getenv('PORT', 5001))
+    debug = os.getenv('FLASK_ENV', 'production') == 'development'
+    app.run(debug=debug, host='0.0.0.0', port=port)

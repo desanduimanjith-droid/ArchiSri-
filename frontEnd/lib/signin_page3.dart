@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:archisri_1/login_page3.dart';
-import 'package:archisri_1/connection_Construction.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,14 +16,10 @@ class signin_page3 extends StatefulWidget {
 class _CompanySignUpScreenState extends State<signin_page3> {
   // Required Text Controllers
   final TextEditingController _companyNameController = TextEditingController();
-  final TextEditingController _businessRegNoController =
-      TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactPersonController =
-      TextEditingController();
+  final TextEditingController _contactPersonController = TextEditingController();
   final TextEditingController _aboutController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _experienceController = TextEditingController();
   final TextEditingController _projectsController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -37,10 +32,19 @@ class _CompanySignUpScreenState extends State<signin_page3> {
     'Residential',
     'Commercial',
     'Industrial',
-    'Infrastructure',
-    'Mixed-Use',
-    'Renovation & Remodeling',
+    'Sustainable',
+    'Restoration',
     'Other',
+  ];
+
+  // Dropdown value for Location (Districts)
+  String? _selectedLocation;
+  final List<String> _districts = [
+    "Colombo", "Gampaha", "Kalutara", "Kandy", "Matale", "Nuwara Eliya",
+    "Galle", "Matara", "Hambantota", "Jaffna", "Kilinochchi", "Mannar",
+    "Vavuniya", "Mullaitivu", "Batticaloa", "Ampara", "Trincomalee",
+    "Kurunegala", "Puttalam", "Anuradhapura", "Polonnaruwa", "Badulla",
+    "Moneragala", "Ratnapura", "Kegalle"
   ];
 
   // File picker state
@@ -51,7 +55,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
   bool _obscureConfirmPassword = true;
 
   // Country code dropdown
-  Map<String, String> _selectedCountry = {'name': 'Sri Lanka', 'flag': '🇱🇰', 'code': '+94'};
+  Map<String, String> _selectedCountry = {
+    'name': 'Sri Lanka',
+    'flag': '🇱🇰',
+    'code': '+94',
+  };
   final List<Map<String, String>> _countries = [
     {'name': 'Sri Lanka', 'flag': '🇱🇰', 'code': '+94'},
     {'name': 'India', 'flag': '🇮🇳', 'code': '+91'},
@@ -108,12 +116,10 @@ class _CompanySignUpScreenState extends State<signin_page3> {
   @override
   void dispose() {
     _companyNameController.dispose();
-    _businessRegNoController.dispose();
     _emailController.dispose();
     _contactPersonController.dispose();
     _aboutController.dispose();
     _phoneController.dispose();
-    _locationController.dispose();
     _experienceController.dispose();
     _projectsController.dispose();
     _passwordController.dispose();
@@ -210,13 +216,6 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                       const SizedBox(height: 16),
 
                       _buildInputField(
-                        label: "Business Registration Number",
-                        controller: _businessRegNoController,
-                        hint: "e.g. PV-12345",
-                      ),
-                      const SizedBox(height: 16),
-
-                      _buildInputField(
                         label: "Company Email",
                         controller: _emailController,
                         hint: "company@email.com",
@@ -232,10 +231,40 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                       ),
                       const SizedBox(height: 16),
 
-                      _buildInputField(
-                        label: "Location",
-                        controller: _locationController,
-                        hint: "e.g. Colombo",
+                      // Location Dropdown
+                      const Text(
+                        "Location (District)",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey.shade300),
+                          ),
+                        ),
+                        initialValue: _selectedLocation,
+                        hint: const Text('Select District'),
+                        items: _districts.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedLocation = newValue;
+                          });
+                        },
                       ),
                       const SizedBox(height: 16),
 
@@ -404,14 +433,10 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                           Container(
                             width: 110,
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey.shade300,
-                              ),
+                              border: Border.all(color: Colors.grey.shade300),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 value: _selectedCountry['name'],
@@ -430,9 +455,7 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                                       alignment: Alignment.centerLeft,
                                       child: Text(
                                         '${c['flag']} ${c['code']}',
-                                        style: const TextStyle(
-                                          fontSize: 13,
-                                        ),
+                                        style: const TextStyle(fontSize: 13),
                                       ),
                                     );
                                   }).toList();
@@ -448,8 +471,9 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                                 }).toList(),
                                 onChanged: (val) {
                                   setState(() {
-                                    _selectedCountry = _countries
-                                        .firstWhere((c) => c['name'] == val);
+                                    _selectedCountry = _countries.firstWhere(
+                                      (c) => c['name'] == val,
+                                    );
                                   });
                                 },
                               ),
@@ -464,12 +488,9 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                               maxLength: 10,
                               decoration: InputDecoration(
                                 hintText: "77 123 4567",
-                                hintStyle: TextStyle(
-                                  color: Colors.grey[400],
-                                ),
+                                hintStyle: TextStyle(color: Colors.grey[400]),
                                 counterText: '',
-                                contentPadding:
-                                    const EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                   vertical: 12,
                                 ),
@@ -643,13 +664,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
   // Handle Firebase Sign Up & Firestore Entry
   Future<void> _handleSignUp() async {
     String companyName = _companyNameController.text.trim();
-    String regNo = _businessRegNoController.text.trim();
     String email = _emailController.text.trim();
     String contactPerson = _contactPersonController.text.trim();
     String about = _aboutController.text.trim();
     String phone = _phoneController.text.trim();
     String fullPhone = '${_selectedCountry['code']} $phone';
-    String location = _locationController.text.trim();
     String experience = _experienceController.text.trim();
     String projects = _projectsController.text.trim();
     String pass = _passwordController.text;
@@ -657,18 +676,22 @@ class _CompanySignUpScreenState extends State<signin_page3> {
 
     // --- Client-side validations ---
     if (companyName.isEmpty ||
-        regNo.isEmpty ||
         email.isEmpty ||
         contactPerson.isEmpty ||
         phone.isEmpty ||
         about.isEmpty ||
-        location.isEmpty ||
         experience.isEmpty ||
         projects.isEmpty ||
         pass.isEmpty ||
         confirmPass.isEmpty ||
-        _selectedConstructionType == null) {
+        _selectedConstructionType == null ||
+        _selectedLocation == null) {
       _showError('Please fill in all required fields.');
+      return;
+    }
+
+    if (_pickedFileBytes == null || _pickedFileName == null) {
+      _showError('Please upload your Registration Certificate document.');
       return;
     }
 
@@ -707,12 +730,11 @@ class _CompanySignUpScreenState extends State<signin_page3> {
       // Prepare company data
       Map<String, dynamic> companyData = {
         'companyName': companyName,
-        'businessRegistrationNumber': regNo,
         'email': email,
         'contactPersonName': contactPerson,
         'phoneNumber': fullPhone,
         'about': about,
-        'location': location,
+        'location': _selectedLocation,
         'constructionType': _selectedConstructionType,
         'yearsOfExperience': experience,
         'projects': projects,
@@ -735,18 +757,60 @@ class _CompanySignUpScreenState extends State<signin_page3> {
           .set(companyData);
 
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Company Registration Successful!"),
-          backgroundColor: Colors.green,
-        ),
-      );
 
-      // Auto-navigate to MainContent upon successful registration
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const connection_Construction(),
+      // Sign out - user cannot use app until admin verifies
+      await FirebaseAuth.instance.signOut();
+
+      if (!context.mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: const Color(0xFFF5F0E6),
+          title: const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 28),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Registration Submitted!',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Serif',
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            'Your company registration has been submitted successfully!\n\nOur admin team will review your business registration and documents. You will be able to sign in once your company has been verified.\n\nThis usually takes 24-48 hours.',
+            style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const login_page3()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2D2D2D),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Go to Login',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
         ),
       );
     } on FirebaseAuthException catch (e) {

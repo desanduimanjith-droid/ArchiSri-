@@ -2,10 +2,11 @@ import 'package:archisri_1/main_content_part.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:gal/gal.dart';
 import 'package:archisri_1/Engineer-connect-feature/screens/engineer_screen.dart';
 import 'package:archisri_1/Constructor-connect-feature/screens/constructor_screen.dart';
 import 'package:archisri_1/marketPlace.dart';
@@ -52,16 +53,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
   }
 
   String _getBackendUrl() {
-    if (kIsWeb) {
-      return 'http://127.0.0.1:5002/blueprint';
-    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      return 'http://127.0.0.1:5002/blueprint';
-    } else if (Platform.isAndroid) {
-      // Uses the network IP so both physical device and emulator can connect gracefully.
-      // (10.0.2.2 is usually for just the emulator, but LAN IP handles both)
-      return 'http://10.31.17.178:5002/blueprint';
-    }
-    return 'http://127.0.0.1:5002/blueprint';
+    return 'https://archisri.onrender.com/blueprint';
   }
 
   Future<void> _generateBlueprint() async {
@@ -139,16 +131,32 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
     if (_generatedBlueprintImage == null) return;
 
     try {
-      await FileSaver.instance.saveFile(
-        name: 'archisri_blueprint_${DateTime.now().millisecondsSinceEpoch}.png',
-        bytes: _generatedBlueprintImage!,
-        mimeType: MimeType.png,
-      );
+      final fileName =
+          'archisri_blueprint_${DateTime.now().millisecondsSinceEpoch}';
+
+      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+        final hasPermission = await Gal.requestAccess();
+        if (!hasPermission) {
+          throw Exception('Gallery permission denied');
+        }
+
+        await Gal.putImageBytes(
+          _generatedBlueprintImage!,
+          name: fileName,
+          album: 'ArchiSri',
+        );
+      } else {
+        await FileSaver.instance.saveFile(
+          name: '$fileName.png',
+          bytes: _generatedBlueprintImage!,
+          mimeType: MimeType.png,
+        );
+      }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Blueprint downloaded successfully!'),
+            content: Text('Blueprint saved successfully!'),
             backgroundColor: Colors.green,
           ),
         );

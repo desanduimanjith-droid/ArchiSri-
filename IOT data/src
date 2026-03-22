@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../Desktop/IOT device"
+		},
+		{
+			"name": "IOT",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "IOT device"
+	}
+}

@@ -41,7 +41,7 @@ ArchiSri is a hybrid technological platform designed to automate and safeguard t
 
   * Mobile Frontend: Flutter (Dart).
 
-  * Backend: Node.js.
+  * Backend: Flask.
 
   * Database: Firebase.
 

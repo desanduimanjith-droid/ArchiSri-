@@ -226,6 +226,55 @@ class _EngineerLoginScreenState extends State<login_page2> {
                                 return;
                               }
 
+                              // Check if account is verified by admin
+                              final engineerData = engineerDoc.data() ?? <String, dynamic>{};
+                              final isVerified = engineerData['isVerified'] == true;
+
+                              if (!isVerified) {
+                                await FirebaseAuth.instance.signOut();
+                                if (!context.mounted) return;
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    backgroundColor: const Color(0xFFF5F0E6),
+                                    title: const Row(
+                                      children: [
+                                        Icon(Icons.hourglass_top, color: Colors.orange, size: 28),
+                                        SizedBox(width: 10),
+                                        Text(
+                                          'Pending Verification',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Serif',
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    content: const Text(
+                                      'Your engineer account is currently under review by the ArchiSri admin team.\n\nYou will be able to sign in once your credentials and documents have been verified.\n\nPlease check back later.',
+                                      style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () => Navigator.pop(ctx),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color(0xFF2D2D2D),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                        child: const Text('OK', style: TextStyle(color: Colors.white)),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return;
+                              }
+
                               // Navigate to home page on successful login
                               if (context.mounted) {
                                 Navigator.pushReplacement(
