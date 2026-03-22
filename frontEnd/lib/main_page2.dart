@@ -20,7 +20,7 @@ class _MainPage2State extends State<MainPage2> {
             padding: const EdgeInsets.only(left:30,top:10),
             child: Center(
               child: Align(
-                alignment: AlignmentGeometry.topLeft,
+                alignment: Alignment.topLeft,
                 child:Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

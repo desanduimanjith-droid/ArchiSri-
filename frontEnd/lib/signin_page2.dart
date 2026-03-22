@@ -389,7 +389,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                         ),
-                        initialValue: _selectedSpecialization,
+                        value: _selectedSpecialization,
                         hint: const Text('Select Specialization'),
                         items: _specializations.map((String value) {
                           return DropdownMenuItem<String>(

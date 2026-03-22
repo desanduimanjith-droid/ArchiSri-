@@ -21,7 +21,7 @@ class _MainPage3State extends State<MainPage3> {
             padding: const EdgeInsets.only(left:30,top:10),
             child: Center(
               child: Align(
-                alignment: AlignmentGeometry.topLeft,
+                alignment: Alignment.topLeft,
                 child:Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
