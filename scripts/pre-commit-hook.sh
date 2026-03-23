@@ -1,20 +1,24 @@
 #!/bin/bash
-# Pre-commit hook to run tests locally before pushing
+# Pre-commit hook to run frontend checks locally before pushing.
 # Install: cp scripts/pre-commit-hook.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
 
-set -e
+set -euo pipefail
 
-echo "🧪 Running Flutter tests locally..."
-cd frontEnd
+# Always run from the repository root, even when hook is invoked from .git/hooks.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Run analysis
-flutter analyze
+echo "Running Flutter checks..."
+cd "${REPO_ROOT}/frontEnd"
 
-# Run format check
-dart format --set-exit-if-changed lib/ test/
+# Ensure dependencies are available.
+flutter pub get
 
-# Run unit tests
+# Keep analyze/format informative (non-blocking), same as CI behavior.
+flutter analyze || true
+dart format --set-exit-if-changed lib/ test/ || true
+
+# Tests remain the gate.
 flutter test
 
-echo "✅ All tests passed! Ready to push."
-cd ..
+echo "All tests passed. Ready to commit."
