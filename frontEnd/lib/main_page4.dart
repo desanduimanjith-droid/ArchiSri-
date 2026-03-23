@@ -46,7 +46,7 @@ class _MainPage4State extends State<MainPage4> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
+                      color: Colors.grey.withValues(alpha: 0.5),
 
                       blurRadius: 10,
                       offset: const Offset(0, 5),

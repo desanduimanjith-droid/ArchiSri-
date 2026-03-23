@@ -108,7 +108,7 @@ class _Feature1Part4State extends State<Feature1Part4> {
                           borderRadius: BorderRadius.circular(3),
                           child: LinearProgressIndicator(
                             value: currentStep / totalSteps,
-                            backgroundColor: Colors.white.withOpacity(0.3),
+                            backgroundColor: Colors.white.withValues(alpha: 0.3),
                             valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
@@ -181,7 +181,7 @@ class _Feature1Part4State extends State<Feature1Part4> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.10),
+                                  color: Colors.black.withValues(alpha: 0.10),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),

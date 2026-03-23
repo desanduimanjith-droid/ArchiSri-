@@ -156,7 +156,7 @@ class _MainContentPartState extends State<MainContentPart> {
           }
         }
       } catch (e) {
-        print('Firestore fetch error: $e');
+        debugPrint('Firestore fetch error: $e');
         // Not critical — email-based name is already showing
       }
     }
@@ -338,7 +338,7 @@ class _MainContentPartState extends State<MainContentPart> {
                 icon: const Icon(Icons.notifications_outlined,
                     color: Colors.black87),
                 onPressed: (){
-                   print("Notification clicked");
+                   debugPrint("Notification clicked");
                 },
               ),
             
@@ -701,7 +701,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                         // start build button
                         GestureDetector(
                           onTap: (){
-                            print("Start Build Clicked");
+                            debugPrint("Start Build Clicked");
                            Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -772,7 +772,7 @@ class BlueprintPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // draw grid
     final gridPaint = Paint()
-      ..color = Colors.white.withOpacity(gridOpacity)
+      ..color = Colors.white.withValues(alpha: gridOpacity)
       ..strokeWidth = 0.5
       ..style = PaintingStyle.stroke;
 
@@ -798,7 +798,7 @@ class BlueprintPainter extends CustomPainter {
       ..close();
 
     final linePaint = Paint()
-      ..color = Colors.white.withOpacity(0.28)
+      ..color = Colors.white.withValues(alpha: 0.28)
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -811,7 +811,7 @@ class BlueprintPainter extends CustomPainter {
 
    
     final winPaint = Paint()
-      ..color = Colors.white.withOpacity(0.15 + pulseOpacity * 0.08)
+      ..color = Colors.white.withValues(alpha: 0.15 + pulseOpacity * 0.08)
       ..strokeWidth = 1.4
       ..style = PaintingStyle.stroke;
 
@@ -821,7 +821,7 @@ class BlueprintPainter extends CustomPainter {
 
     // door
     final doorPaint = Paint()
-      ..color = Colors.white.withOpacity(0.2 + pulseOpacity * 0.06)
+      ..color = Colors.white.withValues(alpha: 0.2 + pulseOpacity * 0.06)
       ..strokeWidth = 1.4
       ..style = PaintingStyle.stroke;
 
@@ -830,7 +830,7 @@ class BlueprintPainter extends CustomPainter {
 
     // pulsing dots
     final dotPaint = Paint()
-      ..color = Colors.white.withOpacity(pulseOpacity * 0.65)
+      ..color = Colors.white.withValues(alpha: pulseOpacity * 0.65)
       ..style = PaintingStyle.fill;
 
     final dots = [
@@ -845,7 +845,7 @@ class BlueprintPainter extends CustomPainter {
 
     // Door step lines
     final tickPaint = Paint()
-      ..color = Colors.white.withOpacity(0.12)
+      ..color = Colors.white.withValues(alpha: 0.12)
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 
@@ -875,11 +875,11 @@ class ProjectCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.94),
+        color: Colors.white.withValues(alpha: 0.94),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),

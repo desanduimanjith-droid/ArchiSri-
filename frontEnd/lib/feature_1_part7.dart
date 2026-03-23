@@ -97,7 +97,7 @@ class _Feature1Part7State extends State<Feature1Part7> {
                           borderRadius: BorderRadius.circular(3),
                           child: LinearProgressIndicator(
                             value: currentStep / totalSteps,
-                            backgroundColor: Colors.white.withOpacity(0.3),
+                            backgroundColor: Colors.white.withValues(alpha: 0.3),
                             valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
@@ -172,7 +172,7 @@ class _Feature1Part7State extends State<Feature1Part7> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.10),
+                                  color: Colors.black.withValues(alpha: 0.10),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),
@@ -260,7 +260,7 @@ class _Feature1Part7State extends State<Feature1Part7> {
                         onPressed: selectedRooms.isNotEmpty
                             ? () {
                                 // Handle next action
-                                print('Selected rooms: $selectedRooms');
+                                debugPrint('Selected rooms: $selectedRooms');
                                 BlueprintSelections.bathroomTypeSelections = List<String>.from(selectedRooms);
                                 Widget nextScreen;
                                 if (selectedRooms.contains('Attached bathroom')) {

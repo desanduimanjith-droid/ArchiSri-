@@ -126,7 +126,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
                     borderRadius: BorderRadius.circular(24.0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 5),
                       ),
@@ -192,7 +192,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: Colors.green.shade200
-                                            .withOpacity(0.7),
+                                            .withValues(alpha: 0.7),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
@@ -339,7 +339,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.blue.shade100.withOpacity(0.5),
+        color: Colors.blue.shade100.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.blue.shade300),
       ),

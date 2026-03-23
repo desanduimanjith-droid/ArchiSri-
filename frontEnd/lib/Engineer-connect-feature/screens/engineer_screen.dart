@@ -354,7 +354,7 @@ class EngineerCard extends StatelessWidget {
           color: const Color(0xFFFFF3F3),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
           ],
         ),
         child: Row(
@@ -720,7 +720,7 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
                     color: const Color(0xFFF0F8FF),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: const Color(0xFF4DA6FF).withOpacity(0.3),
+                      color: const Color(0xFF4DA6FF).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(

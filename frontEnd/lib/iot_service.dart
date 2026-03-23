@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class IoTService {
@@ -15,7 +16,7 @@ class IoTService {
   final Duration _pollInterval;
 
   Stream<Map<String, dynamic>> getSensorData() async* {
-    print("IoTService: Starting HTTP polling to SensorData...");
+    debugPrint("IoTService: Starting HTTP polling to SensorData...");
 
     while (true) {
       yield await fetchSensorDataOnce();
@@ -32,19 +33,19 @@ class IoTService {
 
       return parseResponse(response);
     } catch (e) {
-      print("IoTService: Exception polling IoT data: $e");
+      debugPrint("IoTService: Exception polling IoT data: $e");
       return _getDefaultData();
     }
   }
 
   Map<String, dynamic> parseResponse(http.Response response) {
     if (response.statusCode != 200) {
-      print("IoTService: HTTP error ${response.statusCode}");
+      debugPrint("IoTService: HTTP error ${response.statusCode}");
       return _getDefaultData();
     }
 
     final raw = jsonDecode(response.body);
-    print("IoTService: Raw data = $raw");
+    debugPrint("IoTService: Raw data = $raw");
 
     if (raw == null) {
       return _getDefaultData();

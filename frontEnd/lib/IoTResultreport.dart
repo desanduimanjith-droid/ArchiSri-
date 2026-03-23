@@ -230,7 +230,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8),
           ],
         ),
         child: Row(
@@ -274,7 +274,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
           ],
         ),
         child: Column(
@@ -372,7 +372,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8),
         ],
       ),
       child: Column(
@@ -401,7 +401,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
           ],
         ),
         child: Column(
@@ -531,7 +531,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5),
+                      BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 5),
                     ],
                   ),
                   child: ElevatedButton(
@@ -570,7 +570,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFD81B60).withOpacity(0.3),
+                        color: const Color(0xFFD81B60).withValues(alpha: 0.3),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),

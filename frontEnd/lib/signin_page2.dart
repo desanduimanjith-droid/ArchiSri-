@@ -196,7 +196,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // Same shadow style as login screen
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 5),
                       ),

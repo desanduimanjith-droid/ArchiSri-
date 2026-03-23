@@ -119,7 +119,7 @@ class AIRecommendationScreen extends StatelessWidget {
               child: Icon(
                 Icons.auto_awesome,
                 size: 200,
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
             Center(
@@ -130,9 +130,9 @@ class AIRecommendationScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 2),
                     ),
                     child: const Icon(
                       Icons.insights_rounded,
@@ -204,7 +204,7 @@ class AIRecommendationScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: kSecondaryColor.withOpacity(0.05),
+              color: kSecondaryColor.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -251,7 +251,7 @@ class AIRecommendationScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: kSecondaryColor.withOpacity(0.06),
+            color: kSecondaryColor.withValues(alpha: 0.06),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -298,7 +298,7 @@ class AIRecommendationScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.05),
+                          color: Colors.grey.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
@@ -330,7 +330,7 @@ class AIRecommendationScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: kSecondaryColor.withOpacity(0.3),
+            color: kSecondaryColor.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 10),
           ),
@@ -374,9 +374,9 @@ class AIRecommendationScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Text(
         label,

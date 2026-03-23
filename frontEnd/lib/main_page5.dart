@@ -78,7 +78,7 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05), 
+                      color: Colors.black.withValues(alpha: 0.05), 
                       blurRadius: 10, 
                       offset: const Offset(0, -5)
                     )
@@ -209,12 +209,12 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
         decoration: BoxDecoration(
           color: const Color(0xFF2D2D2D),
           borderRadius: BorderRadius.circular(18),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 4))],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 4))],
         ),
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: Colors.white.withOpacity(0.1),
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
               child: Icon(icon, color: Colors.white),
             ),
             const SizedBox(width: 15),
@@ -222,7 +222,7 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
-                Text(subtitle, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12)),
+                Text(subtitle, style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 12)),
               ],
             ),
             const Spacer(),

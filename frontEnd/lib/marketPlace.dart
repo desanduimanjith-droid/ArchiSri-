@@ -119,7 +119,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
         );
       }
     } catch (e) {
-      print("Connection Error: $e");
+      debugPrint("Connection Error: $e");
     }
   }
 

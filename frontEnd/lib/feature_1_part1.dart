@@ -96,7 +96,7 @@ class _Feature1Part1State extends State<Feature1Part1> {
                           borderRadius: BorderRadius.circular(3),
                           child: LinearProgressIndicator(
                             value: currentStep / totalSteps,
-                            backgroundColor: Colors.white.withOpacity(0.3),
+                            backgroundColor: Colors.white.withValues(alpha: 0.3),
                             valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
@@ -165,7 +165,7 @@ class _Feature1Part1State extends State<Feature1Part1> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
+                                  color: Colors.black.withValues(alpha: 0.05),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),
@@ -210,7 +210,7 @@ class _Feature1Part1State extends State<Feature1Part1> {
                       onPressed: selectedStyle != null
                           ? () {
                               // Handle next action
-                              print('Selected style: $selectedStyle');
+                              debugPrint('Selected style: $selectedStyle');
                               BlueprintSelections.style = selectedStyle ?? 'Traditional';
                               Navigator.push(
                                 context,
