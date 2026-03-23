@@ -112,8 +112,7 @@ class _ProjectAnalysisScreenState extends State<ProjectAnalysisScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const SoilTestingScreen(),
+                              builder: (context) => const SoilTestingScreen(),
                             ),
                           );
                         },
@@ -331,8 +330,7 @@ class _ProjectAnalysisScreenState extends State<ProjectAnalysisScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const EngineerHomeScreen(),
+                          builder: (context) => const EngineerHomeScreen(),
                         ),
                       );
                     },
@@ -389,12 +387,4 @@ class _ProjectAnalysisScreenState extends State<ProjectAnalysisScreen> {
       ),
     );
   }
-
-  
-
-  
-
-  
-
-  
 }

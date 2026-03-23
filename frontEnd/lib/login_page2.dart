@@ -141,7 +141,9 @@ class _EngineerLoginScreenState extends State<login_page2> {
                           ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              _obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
                               color: Colors.grey[600],
                             ),
                             onPressed: () {
@@ -195,9 +197,9 @@ class _EngineerLoginScreenState extends State<login_page2> {
                               // Sign in with Firebase Authentication
                               final userCredential = await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
-                                    email: email,
-                                    password: password,
-                                  );
+                                email: email,
+                                password: password,
+                              );
 
                               final uid = userCredential.user?.uid;
                               if (uid == null) {
@@ -207,7 +209,8 @@ class _EngineerLoginScreenState extends State<login_page2> {
                                 );
                               }
 
-                              final engineerDoc = await FirebaseFirestore.instance
+                              final engineerDoc = await FirebaseFirestore
+                                  .instance
                                   .collection('engineers')
                                   .doc(uid)
                                   .get();
@@ -226,8 +229,10 @@ class _EngineerLoginScreenState extends State<login_page2> {
                               }
 
                               // Check if account is verified by admin
-                              final engineerData = engineerDoc.data() ?? <String, dynamic>{};
-                              final isVerified = engineerData['isVerified'] == true;
+                              final engineerData =
+                                  engineerDoc.data() ?? <String, dynamic>{};
+                              final isVerified =
+                                  engineerData['isVerified'] == true;
 
                               if (!isVerified) {
                                 await FirebaseAuth.instance.signOut();
@@ -241,7 +246,8 @@ class _EngineerLoginScreenState extends State<login_page2> {
                                     backgroundColor: const Color(0xFFF5F0E6),
                                     title: const Row(
                                       children: [
-                                        Icon(Icons.hourglass_top, color: Colors.orange, size: 28),
+                                        Icon(Icons.hourglass_top,
+                                            color: Colors.orange, size: 28),
                                         SizedBox(width: 10),
                                         Text(
                                           'Pending Verification',
@@ -255,18 +261,25 @@ class _EngineerLoginScreenState extends State<login_page2> {
                                     ),
                                     content: const Text(
                                       'Your engineer account is currently under review by the ArchiSri admin team.\n\nYou will be able to sign in once your credentials and documents have been verified.\n\nPlease check back later.',
-                                      style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black87,
+                                          height: 1.5),
                                     ),
                                     actions: [
                                       ElevatedButton(
                                         onPressed: () => Navigator.pop(ctx),
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(0xFF2D2D2D),
+                                          backgroundColor:
+                                              const Color(0xFF2D2D2D),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                         ),
-                                        child: const Text('OK', style: TextStyle(color: Colors.white)),
+                                        child: const Text('OK',
+                                            style:
+                                                TextStyle(color: Colors.white)),
                                       ),
                                     ],
                                   ),
@@ -440,7 +453,8 @@ class _EngineerLoginScreenState extends State<login_page2> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Color(0xFF2D2D2D), width: 1.5),
+                        borderSide: const BorderSide(
+                            color: Color(0xFF2D2D2D), width: 1.5),
                       ),
                       filled: true,
                       fillColor: Colors.white,
@@ -464,7 +478,8 @@ class _EngineerLoginScreenState extends State<login_page2> {
                           if (email.isEmpty) {
                             ScaffoldMessenger.of(this.context).showSnackBar(
                               const SnackBar(
-                                content: Text('Please enter your email address'),
+                                content:
+                                    Text('Please enter your email address'),
                               ),
                             );
                             return;
@@ -473,10 +488,12 @@ class _EngineerLoginScreenState extends State<login_page2> {
                           setDialogState(() => isSending = true);
 
                           try {
-                            debugPrint('Sending password reset email to: $email');
+                            debugPrint(
+                                'Sending password reset email to: $email');
                             await FirebaseAuth.instance
                                 .sendPasswordResetEmail(email: email);
-                            debugPrint('Password reset email sent successfully to: $email');
+                            debugPrint(
+                                'Password reset email sent successfully to: $email');
 
                             if (context.mounted) Navigator.pop(context);
 
@@ -498,7 +515,8 @@ class _EngineerLoginScreenState extends State<login_page2> {
                             } else if (e.code == 'invalid-email') {
                               msg = 'Please enter a valid email address.';
                             } else if (e.code == 'too-many-requests') {
-                              msg = 'Too many attempts. Please try again later.';
+                              msg =
+                                  'Too many attempts. Please try again later.';
                             }
                             if (this.context.mounted) {
                               ScaffoldMessenger.of(this.context).showSnackBar(
@@ -534,7 +552,8 @@ class _EngineerLoginScreenState extends State<login_page2> {
                           width: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : const Text(

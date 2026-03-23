@@ -4,7 +4,6 @@ import 'package:archisri_1/main_page1.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:archisri_1/firebase_options.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -39,4 +38,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-

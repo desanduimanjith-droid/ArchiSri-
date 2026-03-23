@@ -5,7 +5,6 @@ import 'package:archisri_1/feature_1_part5.dart';
 import 'package:archisri_1/feature_1_part6.dart';
 import 'package:archisri_1/feature_1_selections.dart';
 
-
 class Feature1Part2 extends StatefulWidget {
   const Feature1Part2({super.key});
 
@@ -19,41 +18,57 @@ class _Feature1Part2State extends State<Feature1Part2> {
   List<String> selectedFloors = [];
 
   final List<Map<String, dynamic>> selectOptions = [
-    {'name': 'Single Floor','name1':'Single story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Double Floor','name1':'2-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Triple Floor','name1':'3-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    {'name': 'Quadruple Floor','name1':'4-story home', 'image': Image(image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)},
-    
-
+    {
+      'name': 'Single Floor',
+      'name1': 'Single story home',
+      'image': Image(
+          image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)
+    },
+    {
+      'name': 'Double Floor',
+      'name1': '2-story home',
+      'image': Image(
+          image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)
+    },
+    {
+      'name': 'Triple Floor',
+      'name1': '3-story home',
+      'image': Image(
+          image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)
+    },
+    {
+      'name': 'Quadruple Floor',
+      'name1': '4-story home',
+      'image': Image(
+          image: AssetImage('assets/images/home_plan.png'), fit: BoxFit.contain)
+    },
   ];
-  void _navigateNext(BuildContext context, List<String> flow){
-                              if (flow.isEmpty) return;
-                              String nextFloor =flow.first;
-                              List<String> remainingFlow = flow.sublist(1);
+  void _navigateNext(BuildContext context, List<String> flow) {
+    if (flow.isEmpty) return;
+    String nextFloor = flow.first;
+    List<String> remainingFlow = flow.sublist(1);
 
+    Widget nextScreen;
+    switch (nextFloor) {
+      case 'first':
+        nextScreen = Feature1Part3(remainingFlow: remainingFlow);
+        break;
+      case 'second':
+        nextScreen = Feature1Part4(remainingFlow: remainingFlow);
+        break;
+      case 'third':
+        nextScreen = Feature1Part5(remainingFlow: remainingFlow);
+        break;
+      case 'fourth':
+        nextScreen = Feature1Part6(remainingFlow: remainingFlow);
+        break;
+      default:
+        return;
+    }
 
-                              Widget nextScreen;
-                              switch (nextFloor) {
-                              case 'first':
-                                nextScreen = Feature1Part3(remainingFlow: remainingFlow);
-                                break;
-                              case 'second':
-                                nextScreen = Feature1Part4(remainingFlow: remainingFlow);
-                                break;
-                              case 'third':
-                                nextScreen = Feature1Part5(remainingFlow: remainingFlow);
-                                break;
-                              case 'fourth':
-                                nextScreen = Feature1Part6(remainingFlow: remainingFlow);
-                                break;
-                              default:
-                                return;
-                            }
-
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => nextScreen));
-
-
-                            }
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => nextScreen));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +79,8 @@ class _Feature1Part2State extends State<Feature1Part2> {
           // Header Section
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(left: 40,top: 60, right: 40, bottom: 40),
+            padding:
+                const EdgeInsets.only(left: 40, top: 60, right: 40, bottom: 40),
             decoration: const BoxDecoration(
               color: Color(0xFFD4C55A),
               borderRadius: BorderRadius.only(
@@ -74,7 +90,6 @@ class _Feature1Part2State extends State<Feature1Part2> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              
               children: [
                 Container(
                   height: 100,
@@ -85,15 +100,11 @@ class _Feature1Part2State extends State<Feature1Part2> {
                     border: Border.all(color: Colors.white, width: 3),
                   ),
                   padding: const EdgeInsets.all(10),
-                 
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
-
                   ),
-                  
-                
                 ),
-                const SizedBox(width: 16), 
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,8 +141,10 @@ class _Feature1Part2State extends State<Feature1Part2> {
                           borderRadius: BorderRadius.circular(3),
                           child: LinearProgressIndicator(
                             value: currentStep / totalSteps,
-                            backgroundColor: Colors.white.withValues(alpha: 0.3),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                            backgroundColor:
+                                Colors.white.withValues(alpha: 0.3),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white),
                           ),
                         ),
                       ),
@@ -170,84 +183,78 @@ class _Feature1Part2State extends State<Feature1Part2> {
                   // Grid of style options
                   Flexible(
                     child: ListView.builder(
-                      
                       itemCount: selectOptions.length,
                       itemBuilder: (context, index) {
                         final style = selectOptions[index];
-                        final isSelected = selectedFloors.contains(style['name']);
+                        final isSelected =
+                            selectedFloors.contains(style['name']);
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
-                          
                           child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (isSelected) {
-                                selectedFloors.remove(style['name']);
-                              } else {
-                                selectedFloors.clear();
-                                selectedFloors.add(style['name']);
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            
-                              border: Border.all(
-                                color: isSelected
-                                    ? const Color(0xFFE68C46)
-                                    : Colors.black87,
-                                width: 3,
+                            onTap: () {
+                              setState(() {
+                                if (isSelected) {
+                                  selectedFloors.remove(style['name']);
+                                } else {
+                                  selectedFloors.clear();
+                                  selectedFloors.add(style['name']);
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? const Color(0xFFE68C46)
+                                      : Colors.black87,
+                                  width: 3,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.10),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.10),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF5E6D3),
-                                    borderRadius: BorderRadius.circular(10),
-                                    
-                                    
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF5E6D3),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: style['image'],
                                   ),
-                                  child: style['image'],
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  style['name'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    style['name'],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
                                   ),
                                   const SizedBox(height: 8),
-                                Text(
-                                  style['name1'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
+                                  Text(
+                                    style['name1'],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
                                   ),
-                                  ),
-                                
-                                
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
                         );
                       },
                     ),
@@ -261,11 +268,12 @@ class _Feature1Part2State extends State<Feature1Part2> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                       style: ElevatedButton.styleFrom(
+                        style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 48, vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -287,40 +295,37 @@ class _Feature1Part2State extends State<Feature1Part2> {
                         ),
                       ),
 
-
-
-
-                  
                       const SizedBox(height: 8),
 
                       // Next Button
-                    
+
                       ElevatedButton(
                         onPressed: selectedFloors.isNotEmpty
                             ? () {
                                 // Handle next action
 
-                                List<String> flow =[];
-                                if(selectedFloors.contains('Single Floor')) flow = ['first'];
-                                if(selectedFloors.contains('Double Floor')) flow = ['first', 'second'];
-                                if(selectedFloors.contains('Triple Floor')) flow = ['first', 'second', 'third'];
-                                if(selectedFloors.contains('Quadruple Floor')) flow = ['first', 'second', 'third', 'fourth'];
+                                List<String> flow = [];
+                                if (selectedFloors.contains('Single Floor'))
+                                  flow = ['first'];
+                                if (selectedFloors.contains('Double Floor'))
+                                  flow = ['first', 'second'];
+                                if (selectedFloors.contains('Triple Floor'))
+                                  flow = ['first', 'second', 'third'];
+                                if (selectedFloors.contains('Quadruple Floor'))
+                                  flow = ['first', 'second', 'third', 'fourth'];
 
-                                BlueprintSelections.selectedFloors = List<String>.from(selectedFloors);
+                                BlueprintSelections.selectedFloors =
+                                    List<String>.from(selectedFloors);
 
-                               _navigateNext(context, flow);
-
+                                _navigateNext(context, flow);
                               }
                             : null,
-
-                            
-
-              
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 48, vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -339,21 +344,15 @@ class _Feature1Part2State extends State<Feature1Part2> {
                             SizedBox(width: 8),
                             Icon(Icons.arrow_forward, size: 25),
                           ],
-                         ),
+                        ),
                       ),
                     ],
                   ),
-                  
-                     
-                  
-                  
-
                 ],
               ),
             ),
           ),
         ],
-        
       ),
     );
   }

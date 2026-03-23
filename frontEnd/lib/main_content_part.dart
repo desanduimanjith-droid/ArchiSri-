@@ -31,14 +31,11 @@ class Project {
 
 const List<Project> allProjects = [
   Project(
-    name: "Modern Villa",
-    percent: 0.75,
-    status: "In progress",
-    barColor: Color(0xFF22C55E),
-    icon:""
-   
-    
-  ),
+      name: "Modern Villa",
+      percent: 0.75,
+      status: "In progress",
+      barColor: Color(0xFF22C55E),
+      icon: ""),
   Project(
     name: "Eco-friendly House",
     percent: 0.45,
@@ -96,9 +93,8 @@ class MainContentPart extends StatefulWidget {
 }
 
 class _MainContentPartState extends State<MainContentPart> {
-
   // control the menu drawer
-  final GlobalKey<ScaffoldState>_scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool showAll = false;
   bool startBuildClicked = false;
   bool isModified = false;
@@ -181,10 +177,10 @@ class _MainContentPartState extends State<MainContentPart> {
     });
   }
 
-  // slide menu builder 
+  // slide menu builder
   Widget _buildSlideMenu() {
     return Drawer(
-      backgroundColor: const Color(0xFF1E1E2E), 
+      backgroundColor: const Color(0xFF1E1E2E),
       child: Column(
         children: [
           DrawerHeader(
@@ -198,13 +194,20 @@ class _MainContentPartState extends State<MainContentPart> {
                     backgroundColor: Colors.white,
                     child: Text(
                       _userInitial,
-                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFFD4A574)),
+                      style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFD4A574)),
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(_userName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  Text(_userName,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
                   if (_userEmail.isNotEmpty)
-                    Text(_userEmail, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                    Text(_userEmail,
+                        style: const TextStyle(
+                            color: Colors.white70, fontSize: 12)),
                 ],
               ),
             ),
@@ -269,14 +272,10 @@ class _MainContentPartState extends State<MainContentPart> {
             },
           ),
           const Spacer(),
-          _drawerTile(Icons.logout, 
-          "Logout", 
-          onTap: () {
+          _drawerTile(Icons.logout, "Logout", onTap: () {
             Navigator.pop(context); // close drawer first
             _handleLogout();
-          },
-          color: Colors.redAccent
-          ),
+          }, color: Colors.redAccent),
           const SizedBox(height: 20),
         ],
       ),
@@ -307,7 +306,7 @@ class _MainContentPartState extends State<MainContentPart> {
     Color backgroundColor = const Color(0xFFEBE4D0);
 
     return Scaffold(
-      key:_scaffoldKey,
+      key: _scaffoldKey,
       backgroundColor: backgroundColor,
 
       drawer: _buildSlideMenu(),
@@ -326,8 +325,6 @@ class _MainContentPartState extends State<MainContentPart> {
         leading: IconButton(
           icon: const Icon(Icons.menu, color: Colors.black87),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-
-          
         ),
         actions: [
           // nitification bell with red dot
@@ -337,14 +334,13 @@ class _MainContentPartState extends State<MainContentPart> {
               IconButton(
                 icon: const Icon(Icons.notifications_outlined,
                     color: Colors.black87),
-                onPressed: (){
-                   debugPrint("Notification clicked");
+                onPressed: () {
+                  debugPrint("Notification clicked");
                 },
               ),
-            
             ],
           ),
-          
+
           // Avatar
           Padding(
             padding: const EdgeInsets.only(right: 12),
@@ -370,7 +366,6 @@ class _MainContentPartState extends State<MainContentPart> {
               ),
             ),
           ),
-
         ],
       ),
 
@@ -406,7 +401,8 @@ class _MainContentPartState extends State<MainContentPart> {
                           color: const Color(0xFF22C55E).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: const Color(0xFF22C55E).withValues(alpha: 0.35),
+                            color:
+                                const Color(0xFF22C55E).withValues(alpha: 0.35),
                           ),
                         ),
                         child: Row(
@@ -414,8 +410,6 @@ class _MainContentPartState extends State<MainContentPart> {
                           children: const [
                             Icon(Icons.check_circle,
                                 color: Color(0xFF16A34A), size: 25),
-                            
-
                             SizedBox(width: 10),
                             Expanded(
                               child: Text(
@@ -468,7 +462,6 @@ class _MainContentPartState extends State<MainContentPart> {
                           onTap: () => setState(() => showAll = !showAll),
                           child: Text(
                             showAll ? 'Show Less ✕' : 'View All >',
-                            
                             style: const TextStyle(
                               fontSize: 14,
                               color: Color(0xFF3B82F6),
@@ -487,11 +480,11 @@ class _MainContentPartState extends State<MainContentPart> {
                       child: Column(
                         children: visibleProjects
                             .map((p) => GestureDetector(
-                              onTap: () => setState(() {
-                                isModified = true;
-                              }),
-                              child: ProjectCard(project: p),
-                            ))
+                                  onTap: () => setState(() {
+                                    isModified = true;
+                                  }),
+                                  child: ProjectCard(project: p),
+                                ))
                             .toList(),
                       ),
                     ),
@@ -506,26 +499,22 @@ class _MainContentPartState extends State<MainContentPart> {
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Continue your the tour of the App!, " If you whant to contionue use other features, you can use this button later. "'),
+                      content: Text(
+                          'Continue your the tour of the App!, " If you whant to contionue use other features, you can use this button later. "'),
                       backgroundColor: const Color(0xFFF5A623),
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                       duration: const Duration(seconds: 2),
                       padding: const EdgeInsets.all(16),
-                      
                     ),
                   );
-                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProjectAnalysisScreen(
-                              
-                      ),
-                      ),
-                       );
-
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProjectAnalysisScreen(),
+                    ),
+                  );
                 },
                 child: Container(
                   width: double.infinity,
@@ -553,7 +542,6 @@ class _MainContentPartState extends State<MainContentPart> {
                   ),
                 ),
               ),
-
 
               const SizedBox(height: 40),
             ],
@@ -648,7 +636,6 @@ class _BlueprintBannerState extends State<BlueprintBanner>
               },
             ),
 
-            
             Padding(
               padding: const EdgeInsets.all(22),
               child: Row(
@@ -700,16 +687,15 @@ class _BlueprintBannerState extends State<BlueprintBanner>
 
                         // start build button
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             debugPrint("Start Build Clicked");
-                           Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Feature1Part1(), 
-                          ),
-                           );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Feature1Part1(),
+                              ),
+                            );
                           },
-  
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 30),
@@ -718,7 +704,7 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                               borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha:0.18),
+                                  color: Colors.black.withValues(alpha: 0.18),
                                   blurRadius: 8,
                                   offset: const Offset(0, 3),
                                 ),
@@ -740,7 +726,6 @@ class _BlueprintBannerState extends State<BlueprintBanner>
                           style: TextStyle(
                             fontSize: 11,
                             color: Colors.white,
-                            
                           ),
                         ),
                       ],
@@ -804,20 +789,18 @@ class BlueprintPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     canvas.save();
-    canvas.clipRect(
-        Rect.fromLTWH(0, 0, size.width * drawProgress, size.height));
+    canvas
+        .clipRect(Rect.fromLTWH(0, 0, size.width * drawProgress, size.height));
     canvas.drawPath(housePath, linePaint);
     canvas.restore();
 
-   
     final winPaint = Paint()
       ..color = Colors.white.withValues(alpha: 0.15 + pulseOpacity * 0.08)
       ..strokeWidth = 1.4
       ..style = PaintingStyle.stroke;
 
     canvas.drawRect(Rect.fromLTWH(sx + 12, sy + 28, 20, 20), winPaint);
-    canvas.drawRect(
-        Rect.fromLTWH(sx + houseW - 32, sy + 28, 20, 20), winPaint);
+    canvas.drawRect(Rect.fromLTWH(sx + houseW - 32, sy + 28, 20, 20), winPaint);
 
     // door
     final doorPaint = Paint()
@@ -922,8 +905,7 @@ class ProjectCard extends StatelessWidget {
                     value: project.percent,
                     minHeight: 8,
                     backgroundColor: const Color(0xFFE5E7EB),
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(project.barColor),
+                    valueColor: AlwaysStoppedAnimation<Color>(project.barColor),
                   ),
                 ),
                 const SizedBox(height: 7),

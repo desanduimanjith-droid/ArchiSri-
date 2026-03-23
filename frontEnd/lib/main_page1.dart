@@ -13,10 +13,10 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    Timer(const Duration(seconds: 2), (){
-      if(mounted){
+    Timer(const Duration(seconds: 2), () {
+      if (mounted) {
         // Check if user is already logged in
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFE1C796),
       body: Center(

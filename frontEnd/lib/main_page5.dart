@@ -10,7 +10,8 @@ class MainPage5 extends StatefulWidget {
   State<MainPage5> createState() => _MainPage5State();
 }
 
-class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMixin {
+class _MainPage5State extends State<MainPage5>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
 
@@ -39,7 +40,7 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
         child: Column(
           children: [
             const SizedBox(height: 50),
-            
+
             // Logo
             FadeTransition(
               opacity: _fadeAnimation,
@@ -57,31 +58,27 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
             const Text(
               "Select Your Role",
               style: TextStyle(
-                fontSize: 28, 
-                fontWeight: FontWeight.w900, 
-                fontFamily: 'Serif', 
-                color: Colors.black87
-              ),
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  fontFamily: 'Serif',
+                  color: Colors.black87),
             ),
-            
+
             const SizedBox(height: 15),
 
-           
             Expanded(
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(40), 
-                    topRight: Radius.circular(40)
-                  ),
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05), 
-                      blurRadius: 10, 
-                      offset: const Offset(0, -5)
-                    )
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, -5))
                   ],
                 ),
                 child: SingleChildScrollView(
@@ -93,66 +90,99 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
                         const SizedBox(height: 15),
                         // Drag Handle
                         Container(
-                          width: 40, 
-                          height: 5, 
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300], 
-                            borderRadius: BorderRadius.circular(10)
-                          )
-                        ),
-                        
+                            width: 40,
+                            height: 5,
+                            decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(10))),
+
                         const SizedBox(height: 30),
 
                         // status icons
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildStatItem("4.9/5 Rating", Icons.star_rounded, Colors.amber),
-                            _buildStatItem("Verified Pros", Icons.verified_user_rounded, Colors.blueGrey),
-                            _buildStatItem("24/7 Support", Icons.support_agent_rounded, Colors.green),
+                            _buildStatItem("4.9/5 Rating", Icons.star_rounded,
+                                Colors.amber),
+                            _buildStatItem("Verified Pros",
+                                Icons.verified_user_rounded, Colors.blueGrey),
+                            _buildStatItem("24/7 Support",
+                                Icons.support_agent_rounded, Colors.green),
                           ],
                         ),
 
                         const SizedBox(height: 35),
 
                         // role selction buttons
-                        _roleButton(context, "User", "Find your home plan and explor more", Icons.person_outline, 
-                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()))),
+                        _roleButton(
+                            context,
+                            "User",
+                            "Find your home plan and explor more",
+                            Icons.person_outline,
+                            () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()))),
                         const SizedBox(height: 16),
-                        _roleButton(context, "Engineer", "Manage technical designs and feedbacks", Icons.engineering_outlined, 
-                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => const login_page2()))),
+                        _roleButton(
+                            context,
+                            "Engineer",
+                            "Manage technical designs and feedbacks",
+                            Icons.engineering_outlined,
+                            () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const login_page2()))),
                         const SizedBox(height: 16),
-                        _roleButton(context, "Construction Co.", "Handle large scale builds and feedbacks", Icons.apartment_outlined, 
-                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => const login_page3()))),
+                        _roleButton(
+                            context,
+                            "Construction Co.",
+                            "Handle large scale builds and feedbacks",
+                            Icons.apartment_outlined,
+                            () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const login_page3()))),
 
                         const SizedBox(height: 40),
 
-                    
                         const Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "OUR SERVICES",
-                            style: TextStyle(letterSpacing: 1.5, fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black38),
+                            style: TextStyle(
+                                letterSpacing: 1.5,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black38),
                           ),
                         ),
                         const SizedBox(height: 20),
-                        
+
                         Row(
                           children: [
-                            _buildFeatureCard("House plan genarator", Icons.edit_note_rounded),
+                            _buildFeatureCard("House plan genarator",
+                                Icons.edit_note_rounded),
                             const SizedBox(width: 15),
-                            _buildFeatureCard("Conect with enginners and construction companies", Icons.account_balance_wallet_outlined),
+                            _buildFeatureCard(
+                                "Conect with enginners and construction companies",
+                                Icons.account_balance_wallet_outlined),
                           ],
                         ),
                         const SizedBox(height: 15),
                         Row(
                           children: [
-                            _buildFeatureCard("Iot feedback with smart recommendation", Icons.map_outlined),
+                            _buildFeatureCard(
+                                "Iot feedback with smart recommendation",
+                                Icons.map_outlined),
                             const SizedBox(width: 15),
-                            _buildFeatureCard("Smart market place", Icons.chat_bubble_outline_rounded),
+                            _buildFeatureCard("Smart market place",
+                                Icons.chat_bubble_outline_rounded),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 40),
                       ],
                     ),
@@ -183,7 +213,10 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
             Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black54),
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black54),
             ),
           ],
         ),
@@ -196,12 +229,17 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
       children: [
         Icon(icon, color: color, size: 22),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87)),
+        Text(label,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: Colors.black87)),
       ],
     );
   }
 
-  Widget _roleButton(BuildContext context, String title, String subtitle, IconData icon, VoidCallback onTap) {
+  Widget _roleButton(BuildContext context, String title, String subtitle,
+      IconData icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -209,7 +247,12 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
         decoration: BoxDecoration(
           color: const Color(0xFF2D2D2D),
           borderRadius: BorderRadius.circular(18),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8, offset: const Offset(0, 4))],
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 4))
+          ],
         ),
         child: Row(
           children: [
@@ -221,12 +264,20 @@ class _MainPage5State extends State<MainPage5> with SingleTickerProviderStateMix
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
-                Text(subtitle, style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 12)),
+                Text(title,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold)),
+                Text(subtitle,
+                    style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.6),
+                        fontSize: 12)),
               ],
             ),
             const Spacer(),
-            const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white54, size: 16),
+            const Icon(Icons.arrow_forward_ios_rounded,
+                color: Colors.white54, size: 16),
           ],
         ),
       ),

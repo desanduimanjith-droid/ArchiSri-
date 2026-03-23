@@ -30,18 +30,15 @@ class _HomeScreenState extends State<HomeScreen> {
       final description = _constructorDescription(data).toLowerCase();
       final location = _constructorLocation(data).toLowerCase();
 
-      final matchesSearch =
-          _searchQuery.isEmpty ||
+      final matchesSearch = _searchQuery.isEmpty ||
           name.contains(_searchQuery.toLowerCase()) ||
           specialty.contains(_searchQuery.toLowerCase()) ||
           description.contains(_searchQuery.toLowerCase());
 
-      final matchesSpecialty =
-          _selectedSpecialties.isEmpty ||
+      final matchesSpecialty = _selectedSpecialties.isEmpty ||
           _selectedSpecialties.any((s) => specialty.contains(s.toLowerCase()));
 
-      final matchesLocation =
-          _selectedLocation.isEmpty ||
+      final matchesLocation = _selectedLocation.isEmpty ||
           location.contains(_selectedLocation.toLowerCase());
 
       final matchesVerified = _constructorIsVerified(data);
@@ -617,9 +614,9 @@ class _ConstructorDetailSheetState extends State<ConstructorDetailSheet> {
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
                                   _buildConstructorAvatar(
-                                    widget.item,
-                                    size: 100,
-                                  ),
+                                widget.item,
+                                size: 100,
+                              ),
                             ),
                           )
                         : _buildConstructorAvatar(widget.item, size: 100),
@@ -1221,10 +1218,10 @@ String _constructorFirstNonEmpty(
 }
 
 String _constructorName(Map<String, dynamic> data) => _constructorFirstNonEmpty(
-  data,
-  ['companyName', 'name', 'displayName'],
-  fallback: 'Unnamed Company',
-);
+      data,
+      ['companyName', 'name', 'displayName'],
+      fallback: 'Unnamed Company',
+    );
 
 bool _constructorIsVerified(Map<String, dynamic> data) {
   final v = data['isVerified'];
@@ -1233,18 +1230,24 @@ bool _constructorIsVerified(Map<String, dynamic> data) {
 }
 
 String _constructorSpecialty(Map<String, dynamic> data) =>
-    _constructorFirstNonEmpty(data, [
-      'constructionType',
-      'specialty',
-      'specialization',
-    ], fallback: 'General Construction');
+    _constructorFirstNonEmpty(
+        data,
+        [
+          'constructionType',
+          'specialty',
+          'specialization',
+        ],
+        fallback: 'General Construction');
 
 String _constructorDescription(Map<String, dynamic> data) =>
-    _constructorFirstNonEmpty(data, [
-      'description',
-      'bio',
-      'about',
-    ], fallback: 'Registered construction company on ArchiSri.');
+    _constructorFirstNonEmpty(
+        data,
+        [
+          'description',
+          'bio',
+          'about',
+        ],
+        fallback: 'Registered construction company on ArchiSri.');
 
 String _constructorEmail(Map<String, dynamic> data) =>
     _constructorFirstNonEmpty(data, ['email'], fallback: 'Not provided');
@@ -1259,11 +1262,14 @@ String _constructorPhone(Map<String, dynamic> data) =>
     ]);
 
 String _constructorLocation(Map<String, dynamic> data) =>
-    _constructorFirstNonEmpty(data, [
-      'location',
-      'district',
-      'address',
-    ], fallback: 'Not specified');
+    _constructorFirstNonEmpty(
+        data,
+        [
+          'location',
+          'district',
+          'address',
+        ],
+        fallback: 'Not specified');
 
 String _constructorImageUrl(Map<String, dynamic> data) =>
     _constructorFirstNonEmpty(data, [
@@ -1289,10 +1295,8 @@ String _constructorProjects(Map<String, dynamic> data) {
 
 Widget _buildConstructorAvatar(Map<String, dynamic> item, {double size = 80}) {
   final name = _constructorName(item);
-  final parts = name
-      .split(' ')
-      .where((part) => part.trim().isNotEmpty)
-      .toList();
+  final parts =
+      name.split(' ').where((part) => part.trim().isNotEmpty).toList();
   final initials = parts.isEmpty
       ? 'C'
       : parts.take(2).map((part) => part[0].toUpperCase()).join();

@@ -21,16 +21,22 @@ class _Feature1Part11State extends State<Feature1Part11> {
   @override
   void initState() {
     super.initState();
-    int maxRooms = BlueprintSelections.bedroomSelectionsByFloor['fourth'] != null
-        ? BlueprintSelections.maxRoomSelectionValue(BlueprintSelections.bedroomSelectionsByFloor['fourth']!)
-        : 1;
+    int maxRooms =
+        BlueprintSelections.bedroomSelectionsByFloor['fourth'] != null
+            ? BlueprintSelections.maxRoomSelectionValue(
+                BlueprintSelections.bedroomSelectionsByFloor['fourth']!)
+            : 1;
 
     floorOptions = [];
     floorOptions.add({'name': 'Not needed', 'icon': Icons.do_not_disturb_alt});
-    if (maxRooms >= 1) floorOptions.add({'name': '1st bedroom', 'icon': Icons.bathroom_rounded});
-    if (maxRooms >= 2) floorOptions.add({'name': '2nd bedroom', 'icon': Icons.bathroom_rounded});
-    if (maxRooms >= 3) floorOptions.add({'name': '3rd bedroom', 'icon': Icons.bathroom_rounded});
-    if (maxRooms >= 4) floorOptions.add({'name': '4th bedroom', 'icon': Icons.bathroom_rounded});
+    if (maxRooms >= 1)
+      floorOptions.add({'name': '1st bedroom', 'icon': Icons.bathroom_rounded});
+    if (maxRooms >= 2)
+      floorOptions.add({'name': '2nd bedroom', 'icon': Icons.bathroom_rounded});
+    if (maxRooms >= 3)
+      floorOptions.add({'name': '3rd bedroom', 'icon': Icons.bathroom_rounded});
+    if (maxRooms >= 4)
+      floorOptions.add({'name': '4th bedroom', 'icon': Icons.bathroom_rounded});
   }
 
   @override
@@ -42,7 +48,8 @@ class _Feature1Part11State extends State<Feature1Part11> {
           // Header Section
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(left: 40,top: 60, right: 40, bottom: 40),
+            padding:
+                const EdgeInsets.only(left: 40, top: 60, right: 40, bottom: 40),
             decoration: const BoxDecoration(
               color: Color(0xFFD4C55A),
               borderRadius: BorderRadius.only(
@@ -52,7 +59,6 @@ class _Feature1Part11State extends State<Feature1Part11> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              
               children: [
                 Container(
                   height: 100,
@@ -63,15 +69,11 @@ class _Feature1Part11State extends State<Feature1Part11> {
                     border: Border.all(color: Colors.white, width: 3),
                   ),
                   padding: const EdgeInsets.all(10),
-                 
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
-                    
                   ),
-                  
-                
                 ),
-                const SizedBox(width: 16), 
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,8 +110,10 @@ class _Feature1Part11State extends State<Feature1Part11> {
                           borderRadius: BorderRadius.circular(3),
                           child: LinearProgressIndicator(
                             value: currentStep / totalSteps,
-                            backgroundColor: Colors.white.withValues(alpha: 0.3),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                            backgroundColor:
+                                Colors.white.withValues(alpha: 0.3),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white),
                           ),
                         ),
                       ),
@@ -148,87 +152,81 @@ class _Feature1Part11State extends State<Feature1Part11> {
                   // Grid of style options
                   Flexible(
                     child: ListView.builder(
-                      
                       itemCount: floorOptions.length,
                       itemBuilder: (context, index) {
                         final style = floorOptions[index];
-                        final isSelected = selectedRooms.contains(style['name']);
+                        final isSelected =
+                            selectedRooms.contains(style['name']);
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
-                          
                           child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (style['name'] == 'Not needed') {
-                                if (selectedRooms.contains(style['name'])) {
-                                  selectedRooms.remove(style['name']);
+                            onTap: () {
+                              setState(() {
+                                if (style['name'] == 'Not needed') {
+                                  if (selectedRooms.contains(style['name'])) {
+                                    selectedRooms.remove(style['name']);
+                                  } else {
+                                    selectedRooms
+                                      ..clear()
+                                      ..add(style['name']);
+                                  }
                                 } else {
-                                  selectedRooms
-                                    ..clear()
-                                    ..add(style['name']);
+                                  selectedRooms.remove('Not needed');
+                                  if (selectedRooms.contains(style['name'])) {
+                                    selectedRooms.remove(style['name']);
+                                  } else {
+                                    selectedRooms.add(style['name']);
+                                  }
                                 }
-                              } else {
-                                selectedRooms.remove('Not needed');
-                                if (selectedRooms.contains(style['name'])) {
-                                  selectedRooms.remove(style['name']);
-                                } else {
-                                  selectedRooms.add(style['name']);
-                                }
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                            
-                              border: Border.all(
-                                color: isSelected
-                                    ? const Color(0xFFE68C46)
-                                    : Colors.black87,
-                                width: 3,
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? const Color(0xFFE68C46)
+                                      : Colors.black87,
+                                  width: 3,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.10),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.10),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF5E6D3),
-                                    borderRadius: BorderRadius.circular(10),
-                                    
-                                    
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF5E6D3),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Icon(style['icon'],
+                                        size: 30,
+                                        color: const Color(0xFFE68C46)),
                                   ),
-                                  child: Icon(style['icon'], size: 30, color: const Color(0xFFE68C46)),
-                                  
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  style['name'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    style['name'],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
                                   ),
-                                  ),
-                                 
-                                
-                                
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
                         );
                       },
                     ),
@@ -242,11 +240,12 @@ class _Feature1Part11State extends State<Feature1Part11> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                       style: ElevatedButton.styleFrom(
+                        style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 48, vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -268,23 +267,23 @@ class _Feature1Part11State extends State<Feature1Part11> {
                         ),
                       ),
 
-
-
-
-                  
                       const SizedBox(height: 8),
 
                       // Next Button
-                    
+
                       ElevatedButton(
                         onPressed: selectedRooms.isNotEmpty
                             ? () {
                                 // Handle next action
                                 debugPrint('Selected rooms: $selectedRooms');
-                                BlueprintSelections.bathroomSelectionsByFloor['fourth'] = List<String>.from(selectedRooms);
+                                BlueprintSelections
+                                        .bathroomSelectionsByFloor['fourth'] =
+                                    List<String>.from(selectedRooms);
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const Feature1Part12()),
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Feature1Part12()),
                                 );
                               }
                             : null,
@@ -292,7 +291,8 @@ class _Feature1Part11State extends State<Feature1Part11> {
                           backgroundColor: const Color(0xFFE68C46),
                           disabledBackgroundColor: Colors.grey.shade300,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 48, vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -311,23 +311,16 @@ class _Feature1Part11State extends State<Feature1Part11> {
                             SizedBox(width: 8),
                             Icon(Icons.arrow_forward, size: 25),
                           ],
-                         ),
+                        ),
                       ),
                     ],
                   ),
-                  
-                     
-                  
-                  
-
                 ],
               ),
             ),
           ),
         ],
-        
       ),
     );
   }
 }
-

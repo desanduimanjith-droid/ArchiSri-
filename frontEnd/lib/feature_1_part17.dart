@@ -45,7 +45,6 @@ class _Feature1Part17State extends State<Feature1Part17> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 Container(
                   height: 100,
@@ -56,12 +55,10 @@ class _Feature1Part17State extends State<Feature1Part17> {
                     border: Border.all(color: Colors.white, width: 3),
                   ),
                   padding: const EdgeInsets.all(10),
-
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
                   ),
                 ),
-
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -88,9 +85,7 @@ class _Feature1Part17State extends State<Feature1Part17> {
                           fontSize: 14,
                         ),
                       ),
-
                       const SizedBox(height: 8),
-
                       SizedBox(
                         height: 6,
                         child: ClipRRect(
@@ -113,7 +108,6 @@ class _Feature1Part17State extends State<Feature1Part17> {
             ),
           ),
 
-          
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -292,7 +286,6 @@ class _Feature1Part17State extends State<Feature1Part17> {
               value,
               style: const TextStyle(color: Colors.black54, fontSize: 16),
               softWrap: true,
-              
             ),
           ),
         ],

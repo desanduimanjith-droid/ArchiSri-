@@ -17,7 +17,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // Controllers for standard text fields
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _contactNumberController = TextEditingController();
+  final TextEditingController _contactNumberController =
+      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -39,15 +40,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // Dropdown value for Location (Districts)
   String? _selectedDistrict;
   final List<String> _districts = [
-    "Colombo", "Gampaha", "Kalutara", "Kandy", "Matale", "Nuwara Eliya",
-    "Galle", "Matara", "Hambantota", "Jaffna", "Kilinochchi", "Mannar",
-    "Vavuniya", "Mullaitivu", "Batticaloa", "Ampara", "Trincomalee",
-    "Kurunegala", "Puttalam", "Anuradhapura", "Polonnaruwa", "Badulla",
-    "Moneragala", "Ratnapura", "Kegalle"
+    "Colombo",
+    "Gampaha",
+    "Kalutara",
+    "Kandy",
+    "Matale",
+    "Nuwara Eliya",
+    "Galle",
+    "Matara",
+    "Hambantota",
+    "Jaffna",
+    "Kilinochchi",
+    "Mannar",
+    "Vavuniya",
+    "Mullaitivu",
+    "Batticaloa",
+    "Ampara",
+    "Trincomalee",
+    "Kurunegala",
+    "Puttalam",
+    "Anuradhapura",
+    "Polonnaruwa",
+    "Badulla",
+    "Moneragala",
+    "Ratnapura",
+    "Kegalle"
   ];
 
   // Country code dropdown
-  Map<String, String> _selectedCountry = {'name': 'Sri Lanka', 'flag': '🇱🇰', 'code': '+94'};
+  Map<String, String> _selectedCountry = {
+    'name': 'Sri Lanka',
+    'flag': '🇱🇰',
+    'code': '+94'
+  };
   final List<Map<String, String>> _countries = [
     {'name': 'Sri Lanka', 'flag': '🇱🇰', 'code': '+94'},
     {'name': 'India', 'flag': '🇮🇳', 'code': '+91'},
@@ -250,7 +275,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
                                 value: _selectedCountry['name'],
-                                icon: const Icon(Icons.arrow_drop_down, size: 20),
+                                icon:
+                                    const Icon(Icons.arrow_drop_down, size: 20),
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black87,
@@ -259,7 +285,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   return _countries.map((country) {
                                     return Container(
                                       alignment: Alignment.center,
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12),
                                       child: Text(
                                         '${country['flag']} ${country['code']}',
                                         style: const TextStyle(fontSize: 14),
@@ -312,15 +339,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: const BorderSide(color: Colors.black87),
+                                  borderSide:
+                                      const BorderSide(color: Colors.black87),
                                 ),
                               ),
                             ),
@@ -348,7 +378,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         isPassword: true,
                         obscure: _obscureConfirmPassword,
                         onToggleObscure: () {
-                          setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                          setState(() => _obscureConfirmPassword =
+                              !_obscureConfirmPassword);
                         },
                       ),
 
@@ -578,9 +609,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ),
                                 )
                               : const Text(
-                            "Register as Engineer",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
+                                  "Register as Engineer",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ),
                         ),
                       ),
                     ],
@@ -769,7 +801,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .set(userData);
 
       if (!context.mounted) return;
-      
+
       // Sign out - user cannot use app until admin verifies
       await FirebaseAuth.instance.signOut();
 
@@ -817,7 +849,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('Go to Login', style: TextStyle(color: Colors.white)),
+              child: const Text('Go to Login',
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -826,17 +859,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (!context.mounted) return;
       String errorMessage = 'Registration failed. Please try again.';
       if (e.code == 'email-already-in-use') {
-        errorMessage = 'An account already exists with this email. Try signing in instead.';
+        errorMessage =
+            'An account already exists with this email. Try signing in instead.';
       } else if (e.code == 'weak-password') {
         errorMessage = 'Password is too weak. Use at least 6 characters.';
       } else if (e.code == 'invalid-email') {
         errorMessage = 'Please enter a valid email address.';
       } else if (e.code == 'operation-not-allowed') {
-        errorMessage = 'Email/password sign up is not enabled. Please contact support.';
+        errorMessage =
+            'Email/password sign up is not enabled. Please contact support.';
       } else if (e.code == 'network-request-failed') {
-        errorMessage = 'Network error. Check your internet connection and try again.';
+        errorMessage =
+            'Network error. Check your internet connection and try again.';
       } else if (e.code == 'too-many-requests') {
-        errorMessage = 'Too many attempts. Please wait a few minutes and try again.';
+        errorMessage =
+            'Too many attempts. Please wait a few minutes and try again.';
       } else if (e.code == 'configuration-not-found') {
         errorMessage = 'Firebase is not fully configured for this app.';
       }

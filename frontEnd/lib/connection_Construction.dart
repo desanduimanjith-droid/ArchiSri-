@@ -99,8 +99,8 @@ class _connection_ConstructionState extends State<connection_Construction> {
             final String contactPerson = data['contactPersonName'] ?? 'N/A';
             final String phone = data['phoneNumber'] ?? 'N/A';
             final String about = data['about'] ?? 'No description';
-            final String profileImageUrl = (data['profileImageUrl'] ?? '')
-                .toString();
+            final String profileImageUrl =
+                (data['profileImageUrl'] ?? '').toString();
 
             // Just a static 5.0 for rating as per the mock
             final String rating = "5.0";
@@ -146,15 +146,15 @@ class _connection_ConstructionState extends State<connection_Construction> {
                                       fit: BoxFit.cover,
                                       errorBuilder:
                                           (context, error, stackTrace) {
-                                            return Container(
-                                              color: Colors.grey.shade300,
-                                              child: const Icon(
-                                                Icons.person,
-                                                size: 50,
-                                                color: Colors.black54,
-                                              ),
-                                            );
-                                          },
+                                        return Container(
+                                          color: Colors.grey.shade300,
+                                          child: const Icon(
+                                            Icons.person,
+                                            size: 50,
+                                            color: Colors.black54,
+                                          ),
+                                        );
+                                      },
                                     )
                                   : Container(
                                       color: Colors.grey.shade300,
@@ -371,9 +371,9 @@ class _connection_ConstructionState extends State<connection_Construction> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             EditCompanyProfileScreen(
-                                              userData: data,
-                                              uid: currentUser!.uid,
-                                            ),
+                                          userData: data,
+                                          uid: currentUser!.uid,
+                                        ),
                                       ),
                                     ).then((_) => _refreshProfile());
                                   },
@@ -563,15 +563,15 @@ class _EditCompanyProfileScreenState extends State<EditCompanyProfileScreen> {
           .collection('companies')
           .doc(widget.uid)
           .update({
-            'companyName': _nameController.text.trim(),
-            'constructionType': _typeController.text.trim(),
-            'yearsOfExperience': _experienceController.text.trim(),
-            'location': _locationController.text.trim(),
-            'projects': _projectsController.text.trim(),
-            'contactPersonName': _contactPersonController.text.trim(),
-            'phoneNumber': _phoneController.text.trim(),
-            'about': _aboutController.text.trim(),
-          });
+        'companyName': _nameController.text.trim(),
+        'constructionType': _typeController.text.trim(),
+        'yearsOfExperience': _experienceController.text.trim(),
+        'location': _locationController.text.trim(),
+        'projects': _projectsController.text.trim(),
+        'contactPersonName': _contactPersonController.text.trim(),
+        'phoneNumber': _phoneController.text.trim(),
+        'about': _aboutController.text.trim(),
+      });
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

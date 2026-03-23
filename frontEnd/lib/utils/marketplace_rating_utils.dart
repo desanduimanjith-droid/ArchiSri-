@@ -15,9 +15,8 @@ MarketplaceRatingState applyMarketplaceRating({
   required int newRating,
 }) {
   final int normalizedRating = newRating.clamp(1, 5);
-  final int normalizedCount = current.totalRatingsCount < 0
-      ? 0
-      : current.totalRatingsCount;
+  final int normalizedCount =
+      current.totalRatingsCount < 0 ? 0 : current.totalRatingsCount;
 
   double nextAverage;
   int nextCount = normalizedCount;
@@ -25,11 +24,10 @@ MarketplaceRatingState applyMarketplaceRating({
   if (current.userRating == 0 || normalizedCount == 0) {
     nextAverage =
         ((current.averageRating * normalizedCount) + normalizedRating) /
-        (normalizedCount + 1);
+            (normalizedCount + 1);
     nextCount = normalizedCount + 1;
   } else {
-    nextAverage =
-        ((current.averageRating * normalizedCount) -
+    nextAverage = ((current.averageRating * normalizedCount) -
             current.userRating +
             normalizedRating) /
         normalizedCount;

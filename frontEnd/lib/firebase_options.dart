@@ -63,8 +63,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '286258998209',
     projectId: 'archi-sri-sign-in',
     storageBucket: 'archi-sri-sign-in.firebasestorage.app',
-    androidClientId: '286258998209-191atsp9auc0a1k96pg7kfvnk2bqma6p.apps.googleusercontent.com',
-    iosClientId: '286258998209-pn15s9kp0d0pk9ombbjd8urpdbm5e6k6.apps.googleusercontent.com',
+    androidClientId:
+        '286258998209-191atsp9auc0a1k96pg7kfvnk2bqma6p.apps.googleusercontent.com',
+    iosClientId:
+        '286258998209-pn15s9kp0d0pk9ombbjd8urpdbm5e6k6.apps.googleusercontent.com',
     iosBundleId: 'com.example.archisri1',
   );
 
@@ -74,8 +76,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '286258998209',
     projectId: 'archi-sri-sign-in',
     storageBucket: 'archi-sri-sign-in.firebasestorage.app',
-    androidClientId: '286258998209-191atsp9auc0a1k96pg7kfvnk2bqma6p.apps.googleusercontent.com',
-    iosClientId: '286258998209-pn15s9kp0d0pk9ombbjd8urpdbm5e6k6.apps.googleusercontent.com',
+    androidClientId:
+        '286258998209-191atsp9auc0a1k96pg7kfvnk2bqma6p.apps.googleusercontent.com',
+    iosClientId:
+        '286258998209-pn15s9kp0d0pk9ombbjd8urpdbm5e6k6.apps.googleusercontent.com',
     iosBundleId: 'com.example.archisri1',
   );
 

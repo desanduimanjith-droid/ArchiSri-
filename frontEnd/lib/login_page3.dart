@@ -218,8 +218,8 @@ class _CompanyLoginScreenState extends State<login_page3> {
                             ),
                           ),
                           onPressed: () async {
-                            final companyName = _companyNameController.text
-                                .trim();
+                            final companyName =
+                                _companyNameController.text.trim();
                             final email = _emailController.text.trim();
                             final password = _passwordController.text.trim();
 
@@ -238,9 +238,9 @@ class _CompanyLoginScreenState extends State<login_page3> {
                             try {
                               final userCredential = await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
-                                    email: email,
-                                    password: password,
-                                  );
+                                email: email,
+                                password: password,
+                              );
 
                               final uid = userCredential.user?.uid;
                               if (uid == null) {
@@ -302,7 +302,8 @@ class _CompanyLoginScreenState extends State<login_page3> {
                                     backgroundColor: const Color(0xFFF5F0E6),
                                     title: const Row(
                                       children: [
-                                        Icon(Icons.hourglass_top, color: Colors.orange, size: 28),
+                                        Icon(Icons.hourglass_top,
+                                            color: Colors.orange, size: 28),
                                         SizedBox(width: 10),
                                         Expanded(
                                           child: Text(
@@ -318,18 +319,25 @@ class _CompanyLoginScreenState extends State<login_page3> {
                                     ),
                                     content: const Text(
                                       'Your company account is currently under review by the ArchiSri admin team.\n\nYou will be able to sign in once your business registration and documents have been verified.\n\nPlease check back later.',
-                                      style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black87,
+                                          height: 1.5),
                                     ),
                                     actions: [
                                       ElevatedButton(
                                         onPressed: () => Navigator.pop(ctx),
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(0xFF2D2D2D),
+                                          backgroundColor:
+                                              const Color(0xFF2D2D2D),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                         ),
-                                        child: const Text('OK', style: TextStyle(color: Colors.white)),
+                                        child: const Text('OK',
+                                            style:
+                                                TextStyle(color: Colors.white)),
                                       ),
                                     ],
                                   ),
@@ -349,9 +357,9 @@ class _CompanyLoginScreenState extends State<login_page3> {
                               if (!context.mounted) return;
                               final String errorMessage =
                                   mapCompanyLoginErrorCode(
-                                    e.code,
-                                    fallbackMessage: e.message,
-                                  );
+                                e.code,
+                                fallbackMessage: e.message,
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(errorMessage)),
                               );

@@ -29,22 +29,19 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
       final registration = _engineerRegistration(data).toLowerCase();
       final location = _engineerLocation(data).toLowerCase();
 
-      final matchesSearch =
-          _searchQuery.isEmpty ||
+      final matchesSearch = _searchQuery.isEmpty ||
           name.contains(_searchQuery.toLowerCase()) ||
           specialty.contains(_searchQuery.toLowerCase()) ||
           company.contains(_searchQuery.toLowerCase()) ||
           email.contains(_searchQuery.toLowerCase()) ||
           registration.contains(_searchQuery.toLowerCase());
 
-      final matchesSpecialty =
-          _selectedSpecialties.isEmpty ||
+      final matchesSpecialty = _selectedSpecialties.isEmpty ||
           _selectedSpecialties.any(
             (selected) => specialty.contains(selected.toLowerCase()),
           );
 
-      final matchesLocation =
-          _selectedLocation.isEmpty ||
+      final matchesLocation = _selectedLocation.isEmpty ||
           location.contains(_selectedLocation.toLowerCase());
 
       // ALWAYS require the engineer to be verified to show up in the public feed
@@ -114,7 +111,6 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
                         border: Border.all(color: Colors.black, width: 3),
                       ),
                       padding: const EdgeInsets.all(10),
-
                       child: Icon(
                         Icons.engineering,
                         size: 60,
@@ -151,7 +147,6 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
               ),
               Positioned(
                 top: 70,
-                
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
@@ -277,10 +272,10 @@ class _EngineerHomeScreenState extends State<EngineerHomeScreen> {
 
                 return ListView.builder(
                   itemCount: filtered.length,
-                    itemBuilder: (context, index) {
-                      final doc = filtered[index];
-                      return EngineerCard(item: doc.data(), docId: doc.id);
-                    },
+                  itemBuilder: (context, index) {
+                    final doc = filtered[index];
+                    return EngineerCard(item: doc.data(), docId: doc.id);
+                  },
                 );
               },
             ),
@@ -354,7 +349,8 @@ class EngineerCard extends StatelessWidget {
           color: const Color(0xFFFFF3F3),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
           ],
         ),
         child: Row(
@@ -755,9 +751,8 @@ class _EngineerDetailSheetState extends State<EngineerDetailSheet> {
             ElevatedButton.icon(
               onPressed: phone.isNotEmpty ? _connectWhatsApp : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: phone.isNotEmpty
-                    ? const Color(0xFF25D366)
-                    : Colors.grey,
+                backgroundColor:
+                    phone.isNotEmpty ? const Color(0xFF25D366) : Colors.grey,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
@@ -1092,47 +1087,59 @@ String _firstNonEmpty(
 String _engineerName(Map<String, dynamic> data) =>
     _firstNonEmpty(data, ['fullName', 'name'], fallback: 'Unnamed Engineer');
 
-String _engineerSpecialty(Map<String, dynamic> data) => _firstNonEmpty(data, [
-  'specialization',
-  'specialty',
-], fallback: 'General Engineering');
+String _engineerSpecialty(Map<String, dynamic> data) => _firstNonEmpty(
+    data,
+    [
+      'specialization',
+      'specialty',
+    ],
+    fallback: 'General Engineering');
 
-String _engineerDescription(Map<String, dynamic> data) => _firstNonEmpty(data, [
-  'description',
-  'bio',
-  'about',
-], fallback: 'Registered engineer on ArchiSri.');
+String _engineerDescription(Map<String, dynamic> data) => _firstNonEmpty(
+    data,
+    [
+      'description',
+      'bio',
+      'about',
+    ],
+    fallback: 'Registered engineer on ArchiSri.');
 
 String _engineerCompany(Map<String, dynamic> data) =>
     _firstNonEmpty(data, ['company', 'organization'], fallback: 'Independent');
 
-String _engineerExperience(Map<String, dynamic> data) => _firstNonEmpty(data, [
-  'yearsOfExperience',
-  'experience',
-], fallback: 'Not specified');
+String _engineerExperience(Map<String, dynamic> data) => _firstNonEmpty(
+    data,
+    [
+      'yearsOfExperience',
+      'experience',
+    ],
+    fallback: 'Not specified');
 
 String _engineerEmail(Map<String, dynamic> data) =>
     _firstNonEmpty(data, ['email'], fallback: 'Not provided');
 
 String _engineerPhone(Map<String, dynamic> data) => _firstNonEmpty(data, [
-  'phoneNumber',
-  'phone',
-  'mobile',
-  'contactNumber',
-  'whatsapp',
-]);
+      'phoneNumber',
+      'phone',
+      'mobile',
+      'contactNumber',
+      'whatsapp',
+    ]);
 
 String _engineerRegistration(Map<String, dynamic> data) => _firstNonEmpty(
-  data,
-  ['registrationNumber', 'registrationNo'],
-  fallback: 'Not provided',
-);
+      data,
+      ['registrationNumber', 'registrationNo'],
+      fallback: 'Not provided',
+    );
 
-String _engineerLocation(Map<String, dynamic> data) => _firstNonEmpty(data, [
-  'location',
-  'district',
-  'address',
-], fallback: 'Not specified');
+String _engineerLocation(Map<String, dynamic> data) => _firstNonEmpty(
+    data,
+    [
+      'location',
+      'district',
+      'address',
+    ],
+    fallback: 'Not specified');
 
 String _engineerImageUrl(Map<String, dynamic> data) =>
     _firstNonEmpty(data, ['imageUrl', 'image_url', 'photoUrl', 'profileImage']);
@@ -1180,10 +1187,8 @@ List<String> _engineerTags(Map<String, dynamic> data) {
 
 Widget _buildAvatar(Map<String, dynamic> item, {double size = 80}) {
   final name = _engineerName(item);
-  final parts = name
-      .split(' ')
-      .where((part) => part.trim().isNotEmpty)
-      .toList();
+  final parts =
+      name.split(' ').where((part) => part.trim().isNotEmpty).toList();
   final initials = parts.isEmpty
       ? 'E'
       : parts.take(2).map((part) => part[0].toUpperCase()).join();

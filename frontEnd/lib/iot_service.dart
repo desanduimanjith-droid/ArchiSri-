@@ -5,11 +5,10 @@ import 'package:http/http.dart' as http;
 
 class IoTService {
   IoTService({http.Client? client, String? databaseUrl, Duration? pollInterval})
-    : _client = client ?? http.Client(),
-      _databaseUrl =
-          databaseUrl ??
-          'https://archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app/SensorData.json',
-      _pollInterval = pollInterval ?? const Duration(seconds: 2);
+      : _client = client ?? http.Client(),
+        _databaseUrl = databaseUrl ??
+            'https://archisri-system-default-rtdb.asia-southeast1.firebasedatabase.app/SensorData.json',
+        _pollInterval = pollInterval ?? const Duration(seconds: 2);
 
   final http.Client _client;
   final String _databaseUrl;

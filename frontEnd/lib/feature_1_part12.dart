@@ -75,7 +75,6 @@ class _Feature1Part12State extends State<Feature1Part12> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 Container(
                   height: 100,
@@ -86,7 +85,6 @@ class _Feature1Part12State extends State<Feature1Part12> {
                     border: Border.all(color: Colors.white, width: 3),
                   ),
                   padding: const EdgeInsets.all(10),
-
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
                   ),
@@ -128,7 +126,8 @@ class _Feature1Part12State extends State<Feature1Part12> {
                           borderRadius: BorderRadius.circular(3),
                           child: LinearProgressIndicator(
                             value: currentStep / totalSteps,
-                            backgroundColor: Colors.white.withValues(alpha: 0.3),
+                            backgroundColor:
+                                Colors.white.withValues(alpha: 0.3),
                             valueColor: const AlwaysStoppedAnimation<Color>(
                               Colors.white,
                             ),
@@ -176,7 +175,6 @@ class _Feature1Part12State extends State<Feature1Part12> {
 
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
-
                           child: GestureDetector(
                             onTap: () {
                               setState(() {
@@ -202,7 +200,6 @@ class _Feature1Part12State extends State<Feature1Part12> {
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
-
                                 border: Border.all(
                                   color: isSelected
                                       ? const Color(0xFFE68C46)

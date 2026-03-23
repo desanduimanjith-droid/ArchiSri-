@@ -90,28 +90,25 @@ class _connection_EngineerState extends State<connection_Engineer> {
 
             String capitalizeWords(String input) {
               if (input.isEmpty) return input;
-              return input
-                  .split(' ')
-                  .map((word) {
-                    if (word.isEmpty) return word;
-                    return word[0].toUpperCase() +
-                        word.substring(1).toLowerCase();
-                  })
-                  .join(' ');
+              return input.split(' ').map((word) {
+                if (word.isEmpty) return word;
+                return word[0].toUpperCase() + word.substring(1).toLowerCase();
+              }).join(' ');
             }
 
             final String fullName = capitalizeWords(data['fullName'] ?? 'N/A');
             final String specialization = data['specialization'] ?? 'N/A';
             final String company = data['company'] ?? 'N/A';
             final String experience = data['yearsOfExperience'] ?? '0';
-            final String phoneNumber =
-              data['phoneNumber'] ?? data['contactNumber'] ?? data['phone'] ?? 'N/A';
+            final String phoneNumber = data['phoneNumber'] ??
+                data['contactNumber'] ??
+                data['phone'] ??
+                'N/A';
             final String ratePerHour = data['ratePerHour'] ?? '0';
             final int rating = data['rating'] is num
                 ? (data['rating'] as num).round()
                 : int.tryParse('${data['rating'] ?? ''}') ??
-                      (double.tryParse('${data['rating'] ?? ''}')?.round() ??
-                          5);
+                    (double.tryParse('${data['rating'] ?? ''}')?.round() ?? 5);
 
             return SingleChildScrollView(
               child: Padding(
@@ -249,7 +246,8 @@ class _connection_EngineerState extends State<connection_Engineer> {
                           const SizedBox(width: 12),
                           Expanded(
                             flex: 2,
-                            child: _buildMetricColumn("Phone Number", phoneNumber),
+                            child:
+                                _buildMetricColumn("Phone Number", phoneNumber),
                           ),
                         ],
                       ),
@@ -300,8 +298,7 @@ class _connection_EngineerState extends State<connection_Engineer> {
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors
-                                    .orange
+                                backgroundColor: Colors.orange
                                     .shade400, // Matches orange button color
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 14,
@@ -485,14 +482,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .collection('engineers')
           .doc(widget.uid)
           .update({
-            'fullName': _nameController.text.trim(),
-            'specialization': _specializationController.text.trim(),
-            'registrationNumber': _registrationController.text.trim(),
-            'yearsOfExperience': _experienceController.text.trim(),
-            'company': _companyController.text.trim(),
-            'phoneNumber': _phoneController.text.trim(),
-            'ratePerHour': _rateController.text.trim(),
-          });
+        'fullName': _nameController.text.trim(),
+        'specialization': _specializationController.text.trim(),
+        'registrationNumber': _registrationController.text.trim(),
+        'yearsOfExperience': _experienceController.text.trim(),
+        'company': _companyController.text.trim(),
+        'phoneNumber': _phoneController.text.trim(),
+        'ratePerHour': _rateController.text.trim(),
+      });
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

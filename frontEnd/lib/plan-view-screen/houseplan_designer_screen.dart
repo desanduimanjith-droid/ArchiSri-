@@ -76,15 +76,15 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
               'style': widget.style,
               'selected_floors': BlueprintSelections.selectedFloors,
               'bathroom_type_selections':
-                BlueprintSelections.bathroomTypeSelections,
+                  BlueprintSelections.bathroomTypeSelections,
               'kitchen_floor_selections':
-                BlueprintSelections.kitchenFloorSelections,
+                  BlueprintSelections.kitchenFloorSelections,
               'bedroom_selections_by_floor':
-                BlueprintSelections.bedroomSelectionsByFloor,
+                  BlueprintSelections.bedroomSelectionsByFloor,
               'bathroom_selections_by_floor':
-                BlueprintSelections.bathroomSelectionsByFloor,
+                  BlueprintSelections.bathroomSelectionsByFloor,
               'living_room_selections_by_floor':
-                BlueprintSelections.livingRoomSelectionsByFloor,
+                  BlueprintSelections.livingRoomSelectionsByFloor,
             }),
           )
           .timeout(
@@ -250,7 +250,6 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-
                 children: [
                   Container(
                     height: 100,
@@ -261,7 +260,6 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                       border: Border.all(color: Colors.white, width: 3),
                     ),
                     padding: const EdgeInsets.all(10),
-
                     child: Image.asset(
                       'assets/images/artificial-intelligence.png',
                     ),
@@ -303,7 +301,8 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                             borderRadius: BorderRadius.circular(3),
                             child: LinearProgressIndicator(
                               value: currentStep / totalSteps,
-                              backgroundColor: Colors.white.withValues(alpha: 0.3),
+                              backgroundColor:
+                                  Colors.white.withValues(alpha: 0.3),
                               valueColor: const AlwaysStoppedAnimation<Color>(
                                 Colors.white,
                               ),
@@ -374,12 +373,12 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                         errorBuilder:
                                             (context, error, stackTrace) =>
                                                 const Center(
-                                                  child: Icon(
-                                                    Icons.architecture,
-                                                    size: 80,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
+                                          child: Icon(
+                                            Icons.architecture,
+                                            size: 80,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
                                       ),
                                     ),
                             ),
@@ -414,9 +413,8 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                             Row(
                               children: [
                                 ElevatedButton(
-                                  onPressed: _isLoading
-                                      ? null
-                                      : _generateBlueprint,
+                                  onPressed:
+                                      _isLoading ? null : _generateBlueprint,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFE2AE62),
                                     disabledBackgroundColor: Colors.grey,
@@ -438,8 +436,8 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                             strokeWidth: 2,
                                             valueColor:
                                                 AlwaysStoppedAnimation<Color>(
-                                                  Colors.white,
-                                                ),
+                                              Colors.white,
+                                            ),
                                           ),
                                         )
                                       : const Text(
@@ -453,8 +451,7 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                                 ),
                                 const SizedBox(width: 8),
                                 ElevatedButton(
-                                  onPressed:
-                                      _generatedBlueprintImage == null ||
+                                  onPressed: _generatedBlueprintImage == null ||
                                           _isLoading
                                       ? null
                                       : _downloadBlueprint,
@@ -720,7 +717,6 @@ class _HouseplanDesignerScreenState extends State<HouseplanDesignerScreen> {
                             ),
                           );
                         },
-
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFB5BD55),
                           foregroundColor: Colors.black87,

@@ -11,11 +11,12 @@ class ArchieSriApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF4EBD7), // Default cream color for bg
+        scaffoldBackgroundColor:
+            const Color(0xFFF4EBD7), // Default cream color for bg
         fontFamily: 'Roboto', // Default text font
       ),
       // Update this line to match the class name in engineer_screen.dart
-      home: const EngineerHomeScreen(), 
+      home: const EngineerHomeScreen(),
     );
   }
 }

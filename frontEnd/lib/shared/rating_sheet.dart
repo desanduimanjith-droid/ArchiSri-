@@ -77,9 +77,9 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 10),
-          
+
           // Avatar and Rating Badge
           Stack(
             clipBehavior: Clip.none,
@@ -98,7 +98,8 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
               Positioned(
                 bottom: -15,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -128,9 +129,9 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 30),
-          
+
           // Name
           Text(
             widget.name,
@@ -140,9 +141,9 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          
+
           const SizedBox(height: 25),
-          
+
           // Title
           const Text(
             'Rate your professional',
@@ -152,9 +153,9 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
               color: Colors.black87,
             ),
           ),
-          
+
           const SizedBox(height: 10),
-          
+
           // Subtitle
           Text(
             "What do you think about ${widget.name}'s service?",
@@ -164,9 +165,9 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
               color: Colors.black54,
             ),
           ),
-          
+
           const SizedBox(height: 30),
-          
+
           // Stars Row
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -176,27 +177,32 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
                   setState(() {
                     _selectedRating = index + 1;
                   });
-                  
+
                   // Save new rating to Firestore via transaction
                   try {
                     final docRef = FirebaseFirestore.instance
                         .collection(widget.collectionName)
                         .doc(widget.docId);
-                    
-                    await FirebaseFirestore.instance.runTransaction((transaction) async {
+
+                    await FirebaseFirestore.instance
+                        .runTransaction((transaction) async {
                       final snapshot = await transaction.get(docRef);
                       if (!snapshot.exists) return;
-                      
+
                       final data = snapshot.data()!;
                       int currentCount = data['ratingCount'] ?? 0;
                       double currentVal = 0.0;
                       if (data['rating'] != null) {
-                         currentVal = double.tryParse('${data['rating']}') ?? 0.0;
+                        currentVal =
+                            double.tryParse('${data['rating']}') ?? 0.0;
                       }
-                      
-                      double newRating = ((currentVal * currentCount) + _selectedRating) / (currentCount + 1);
-                      double roundedRating = double.parse(newRating.toStringAsFixed(1));
-                      
+
+                      double newRating =
+                          ((currentVal * currentCount) + _selectedRating) /
+                              (currentCount + 1);
+                      double roundedRating =
+                          double.parse(newRating.toStringAsFixed(1));
+
                       transaction.update(docRef, {
                         'rating': roundedRating,
                         'ratingCount': currentCount + 1,
@@ -211,7 +217,8 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
                     if (mounted) {
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Thank you for your rating!')),
+                        const SnackBar(
+                            content: Text('Thank you for your rating!')),
                       );
                     }
                   });
@@ -221,15 +228,17 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
                   child: Icon(
                     index < _selectedRating ? Icons.star : Icons.star_border,
                     size: 45,
-                    color: index < _selectedRating ? Colors.amber[400] : Colors.grey.shade300,
+                    color: index < _selectedRating
+                        ? Colors.amber[400]
+                        : Colors.grey.shade300,
                   ),
                 ),
               );
             }),
           ),
-          
+
           const SizedBox(height: 30),
-          
+
           // Compliment generic button text
           GestureDetector(
             onTap: () {
@@ -244,7 +253,7 @@ class _RatingSheetContentState extends State<RatingSheetContent> {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 20),
         ],
       ),

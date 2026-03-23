@@ -261,7 +261,6 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.orange.shade100),
                         borderRadius: BorderRadius.circular(15),
-
                         color: Colors.grey.shade100,
                       ),
                       child: Image.asset(
@@ -304,8 +303,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                           children: List.generate(5, (index) {
                             int starValue = index + 1;
                             // Fill star if it's less than user rating OR average rating
-                            bool isFilled =
-                                starValue <=
+                            bool isFilled = starValue <=
                                 (_userRating != 0
                                     ? _userRating
                                     : _averageRating.round());
@@ -388,7 +386,6 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                     const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: _processPayment,
-
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFBF711D),
                         minimumSize: const Size(double.infinity, 45),

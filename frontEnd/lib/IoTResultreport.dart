@@ -74,7 +74,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                 icon: const Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              title: const Text("Soil Testing", style: TextStyle(color: Colors.black)),
+              title: const Text("Soil Testing",
+                  style: TextStyle(color: Colors.black)),
               elevation: 0,
             ),
             body: const Center(child: CircularProgressIndicator()),
@@ -90,7 +91,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                 icon: const Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              title: const Text("Soil Testing", style: TextStyle(color: Colors.black)),
+              title: const Text("Soil Testing",
+                  style: TextStyle(color: Colors.black)),
               elevation: 0,
             ),
             body: const Center(
@@ -173,7 +175,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
               IconButton(
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                icon: const Icon(Icons.arrow_back, color: Colors.black, size: 28),
+                icon:
+                    const Icon(Icons.arrow_back, color: Colors.black, size: 28),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],
@@ -220,7 +223,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  //  CONNECTION BAR 
+  //  CONNECTION BAR
   Widget _buildConnectionBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -230,7 +233,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8),
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05), blurRadius: 8),
           ],
         ),
         child: Row(
@@ -249,21 +253,24 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                     ),
                     Text(
                       "Last updated: ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}:${DateTime.now().second.toString().padLeft(2, '0')}",
-                      style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
+                      style:
+                          TextStyle(fontSize: 10, color: Colors.grey.shade600),
                     ),
                   ],
                 ),
               ],
             ),
-            const Text("Device #4521", style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text("Device #4521",
+                style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
       ),
     );
   }
 
-  // MOISTURE CARD 
-  Widget _buildMoistureCard(double moisture, double rawMoisture, String moistureStatus) {
+  // MOISTURE CARD
+  Widget _buildMoistureCard(
+      double moisture, double rawMoisture, String moistureStatus) {
     final double percentValue = (moisture / 100).clamp(0.0, 1.0);
 
     return Padding(
@@ -274,7 +281,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
           ],
         ),
         child: Column(
@@ -302,11 +310,13 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                       children: [
                         Text(
                           "${moisture.toStringAsFixed(1)}%",
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                         Text(
                           "(${rawMoisture.toInt()})",
-                          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                          style: TextStyle(
+                              fontSize: 12, color: Colors.grey.shade600),
                         ),
                       ],
                     ),
@@ -332,7 +342,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  // SMALL CARDS 
+  // SMALL CARDS
   Widget _buildSmallCards(double temp, double ec) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -391,7 +401,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  //  MOISTURE CHART 
+  //  MOISTURE CHART
   Widget _buildMoistureChart() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -401,7 +411,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05), blurRadius: 10),
           ],
         ),
         child: Column(
@@ -423,8 +434,8 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                   double height = (index % 3 == 0)
                       ? 110
                       : (index % 3 == 1)
-                      ? 70
-                      : 40;
+                          ? 70
+                          : 40;
 
                   return Container(
                     width: 6,
@@ -466,7 +477,7 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
     );
   }
 
-  //  DETAILED ANALYSIS 
+  //  DETAILED ANALYSIS
   Widget _buildDetailedAnalysis(double ph, double ec) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -531,7 +542,9 @@ class _SoilTestingScreenState extends State<SoilTestingScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 5),
+                      BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 5),
                     ],
                   ),
                   child: ElevatedButton(

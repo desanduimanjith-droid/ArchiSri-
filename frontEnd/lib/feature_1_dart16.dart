@@ -17,10 +17,30 @@ class _Feature1Part16State extends State<Feature1Part16> {
   List<String> selectedRooms = [];
 
   final List<Map<String, dynamic>> houseStyles = [
-    {'name': '1', 'image': Image(image: AssetImage('assets/images/living-room.png'), fit: BoxFit.contain)},
-    {'name': '2', 'image': Image(image: AssetImage('assets/images/living-room.png'), fit: BoxFit.contain)},
-    {'name': '3', 'image': Image(image: AssetImage('assets/images/living-room.png'), fit: BoxFit.contain)},
-    {'name': '4', 'image': Image(image: AssetImage('assets/images/living-room.png'), fit: BoxFit.contain)},
+    {
+      'name': '1',
+      'image': Image(
+          image: AssetImage('assets/images/living-room.png'),
+          fit: BoxFit.contain)
+    },
+    {
+      'name': '2',
+      'image': Image(
+          image: AssetImage('assets/images/living-room.png'),
+          fit: BoxFit.contain)
+    },
+    {
+      'name': '3',
+      'image': Image(
+          image: AssetImage('assets/images/living-room.png'),
+          fit: BoxFit.contain)
+    },
+    {
+      'name': '4',
+      'image': Image(
+          image: AssetImage('assets/images/living-room.png'),
+          fit: BoxFit.contain)
+    },
   ];
 
   @override
@@ -32,7 +52,8 @@ class _Feature1Part16State extends State<Feature1Part16> {
           // Header Section
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(left: 40,top: 60, right: 40, bottom: 40),
+            padding:
+                const EdgeInsets.only(left: 40, top: 60, right: 40, bottom: 40),
             decoration: const BoxDecoration(
               color: Color(0xFFD4C55A),
               borderRadius: BorderRadius.only(
@@ -42,7 +63,6 @@ class _Feature1Part16State extends State<Feature1Part16> {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              
               children: [
                 Container(
                   height: 100,
@@ -53,15 +73,11 @@ class _Feature1Part16State extends State<Feature1Part16> {
                     border: Border.all(color: Colors.white, width: 3),
                   ),
                   padding: const EdgeInsets.all(10),
-                 
                   child: Image.asset(
                     'assets/images/artificial-intelligence.png',
-                    
                   ),
-                  
-                
                 ),
-                const SizedBox(width: 16), 
+                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,8 +114,10 @@ class _Feature1Part16State extends State<Feature1Part16> {
                           borderRadius: BorderRadius.circular(3),
                           child: LinearProgressIndicator(
                             value: currentStep / totalSteps,
-                            backgroundColor: Colors.white.withValues(alpha: 0.3),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                            backgroundColor:
+                                Colors.white.withValues(alpha: 0.3),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white),
                           ),
                         ),
                       ),
@@ -138,7 +156,8 @@ class _Feature1Part16State extends State<Feature1Part16> {
                   // Grid of style options
                   Flexible(
                     child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 16,
                         mainAxisSpacing: 16,
@@ -147,7 +166,8 @@ class _Feature1Part16State extends State<Feature1Part16> {
                       itemCount: houseStyles.length,
                       itemBuilder: (context, index) {
                         final style = houseStyles[index];
-                        final isSelected = selectedRooms.contains(style['name']);
+                        final isSelected =
+                            selectedRooms.contains(style['name']);
 
                         return GestureDetector(
                           onTap: () {
@@ -183,10 +203,7 @@ class _Feature1Part16State extends State<Feature1Part16> {
                                 Container(
                                   height: 70,
                                   width: 70,
-                                  decoration: BoxDecoration(
-                                    
-                                    
-                                  ),
+                                  decoration: BoxDecoration(),
                                   child: style['image'],
                                 ),
                                 const SizedBox(height: 12),
@@ -197,9 +214,7 @@ class _Feature1Part16State extends State<Feature1Part16> {
                                     fontWeight: FontWeight.w600,
                                     color: Colors.black87,
                                   ),
-                                  ),
-                                
-                                
+                                ),
                               ],
                             ),
                           ),
@@ -207,7 +222,7 @@ class _Feature1Part16State extends State<Feature1Part16> {
                       },
                     ),
                   ),
-                  
+
                   const SizedBox(height: 8),
 
                   // Next Button
@@ -217,10 +232,14 @@ class _Feature1Part16State extends State<Feature1Part16> {
                           ? () {
                               // Handle next action
                               debugPrint('Selected rooms: $selectedRooms');
-                              BlueprintSelections.livingRoomSelectionsByFloor['fourth'] = List<String>.from(selectedRooms);
+                              BlueprintSelections
+                                      .livingRoomSelectionsByFloor['fourth'] =
+                                  List<String>.from(selectedRooms);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const Feature1Part17()),
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const Feature1Part17()),
                               );
                             }
                           : null,
@@ -228,7 +247,8 @@ class _Feature1Part16State extends State<Feature1Part16> {
                         backgroundColor: const Color(0xFFE68C46),
                         disabledBackgroundColor: Colors.grey.shade300,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 48, vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),

@@ -37,11 +37,10 @@ class AIRecommendationScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   _buildSectionTitle("Soil Dynamics Dashboard"),
+                  _buildSectionTitle("Soil Dynamics Dashboard"),
                   const SizedBox(height: 15),
                   _buildMetricsDashboard(),
                   const SizedBox(height: 35),
-                  
                   _buildSectionTitle("AI Structural Roadmap"),
                   const SizedBox(height: 15),
                   _buildRecommendationCard(
@@ -64,7 +63,6 @@ class AIRecommendationScreen extends StatelessWidget {
                     description: _getCementReasoning(),
                   ),
                   const SizedBox(height: 35),
-                  
                   _buildSectionTitle("Expert Implementation Guide"),
                   const SizedBox(height: 15),
                   _buildAIGuidanceSection(),
@@ -132,7 +130,8 @@ class AIRecommendationScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 2),
+                      border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3), width: 2),
                     ),
                     child: const Icon(
                       Icons.insights_rounded,
@@ -186,16 +185,20 @@ class AIRecommendationScreen extends StatelessWidget {
   Widget _buildMetricsDashboard() {
     return Row(
       children: [
-        _buildMetricItem("Moisture", "${moisture.toStringAsFixed(1)}%", Icons.water_drop_rounded, const Color(0xFF3B82F6)),
+        _buildMetricItem("Moisture", "${moisture.toStringAsFixed(1)}%",
+            Icons.water_drop_rounded, const Color(0xFF3B82F6)),
         const SizedBox(width: 12),
-        _buildMetricItem("Salinity", "${ec.toInt()}", Icons.bolt_rounded, const Color(0xFF10B981)),
+        _buildMetricItem("Salinity", "${ec.toInt()}", Icons.bolt_rounded,
+            const Color(0xFF10B981)),
         const SizedBox(width: 12),
-        _buildMetricItem("Temp", "${temp.toStringAsFixed(1)}°C", Icons.thermostat_rounded, const Color(0xFFEF4444)),
+        _buildMetricItem("Temp", "${temp.toStringAsFixed(1)}°C",
+            Icons.thermostat_rounded, const Color(0xFFEF4444)),
       ],
     );
   }
 
-  Widget _buildMetricItem(String label, String value, IconData icon, Color color) {
+  Widget _buildMetricItem(
+      String label, String value, IconData icon, Color color) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -296,7 +299,8 @@ class AIRecommendationScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
                         decoration: BoxDecoration(
                           color: Colors.grey.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(10),
@@ -414,24 +418,32 @@ class AIRecommendationScreen extends StatelessWidget {
 
     // Foundation logic
     if (foundationType == "Piled Foundation") {
-      guide += "The soil shows critical indicators of instability due to ${ec > 1000 ? "extreme salinity level ($ec)" : "saturation ($moisture%)"}. A Piled Foundation is mandatory to transfer structural loads to deeper, more stable strata, bypassing the weak surface soil.\n\n";
+      guide +=
+          "The soil shows critical indicators of instability due to ${ec > 1000 ? "extreme salinity level ($ec)" : "saturation ($moisture%)"}. A Piled Foundation is mandatory to transfer structural loads to deeper, more stable strata, bypassing the weak surface soil.\n\n";
     } else if (foundationType == "Raft Foundation") {
-      guide += "With high moisture content ($moisture%), a Raft Foundation is recommended to spread the load over the entire footprint of the structure, minimizing differential settlement and ensuring structural integrity.\n\n";
+      guide +=
+          "With high moisture content ($moisture%), a Raft Foundation is recommended to spread the load over the entire footprint of the structure, minimizing differential settlement and ensuring structural integrity.\n\n";
     } else if (foundationType == "Pad Foundation") {
-      guide += "The current moisture level ($moisture%) is optimal for Pad Foundations. This cost-effective solution is ideal for the detected soil stability, provided columns are correctly spaced and reinforced.\n\n";
+      guide +=
+          "The current moisture level ($moisture%) is optimal for Pad Foundations. This cost-effective solution is ideal for the detected soil stability, provided columns are correctly spaced and reinforced.\n\n";
     } else {
-      guide += "Excellent soil stability detected ($moisture% moisture). A Shallow Foundation is more than sufficient, allowing for significant cost savings without compromising safety.\n\n";
+      guide +=
+          "Excellent soil stability detected ($moisture% moisture). A Shallow Foundation is more than sufficient, allowing for significant cost savings without compromising safety.\n\n";
     }
 
     // Cement logic
     if (cementType.contains("SRC")) {
-      guide += "Crucially, the high salinity (EC: $ec) poses a chemical threat to standard concrete. Sulfate Resisting Cement (SRC) is essential to prevent concrete degradation and internal corrosion of steel reinforcement.";
+      guide +=
+          "Crucially, the high salinity (EC: $ec) poses a chemical threat to standard concrete. Sulfate Resisting Cement (SRC) is essential to prevent concrete degradation and internal corrosion of steel reinforcement.";
     } else if (cementType.contains("PPC")) {
-      guide += "Given the elevated ground temperature ($temp°C), Portland Pozzolana Cement (PPC) is selected for its low heat of hydration, which drastically reduces the risk of thermal cracking during the curing process.";
+      guide +=
+          "Given the elevated ground temperature ($temp°C), Portland Pozzolana Cement (PPC) is selected for its low heat of hydration, which drastically reduces the risk of thermal cracking during the curing process.";
     } else if (cementType.contains("53")) {
-      guide += "OPC Grade 53 is recommended to provide high early strength, which is vital for maintaining construction speed in high-moisture conditions.";
+      guide +=
+          "OPC Grade 53 is recommended to provide high early strength, which is vital for maintaining construction speed in high-moisture conditions.";
     } else {
-      guide += "Standard OPC Grade 43 is recommended. It offers a perfect balance of workability and strength for these stable environmental conditions.";
+      guide +=
+          "Standard OPC Grade 43 is recommended. It offers a perfect balance of workability and strength for these stable environmental conditions.";
     }
 
     return guide;

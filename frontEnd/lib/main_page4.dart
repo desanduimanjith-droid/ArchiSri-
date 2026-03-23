@@ -47,7 +47,6 @@ class _MainPage4State extends State<MainPage4> {
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withValues(alpha: 0.5),
-
                       blurRadius: 10,
                       offset: const Offset(0, 5),
                     ),
@@ -61,7 +60,6 @@ class _MainPage4State extends State<MainPage4> {
               ),
             ),
           ),
-
           Expanded(
             flex: 3,
             child: Container(
@@ -74,7 +72,6 @@ class _MainPage4State extends State<MainPage4> {
                   topRight: Radius.circular(30),
                 ),
               ),
-
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -112,9 +109,7 @@ class _MainPage4State extends State<MainPage4> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
-
                       const SizedBox(width: 8),
-
                       Container(
                         width: 8,
                         height: 8,
@@ -124,7 +119,6 @@ class _MainPage4State extends State<MainPage4> {
                         ),
                       ),
                       const SizedBox(width: 8),
-
                       Container(
                         width: 30,
                         height: 8,
@@ -150,7 +144,6 @@ class _MainPage4State extends State<MainPage4> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 0, 229, 255),
-
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),

@@ -17,12 +17,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
   // Country code dropdown
-  Map<String, String> _selectedCountry = {'name': 'Sri Lanka', 'flag': '🇱🇰', 'code': '+94'};
+  Map<String, String> _selectedCountry = {
+    'name': 'Sri Lanka',
+    'flag': '🇱🇰',
+    'code': '+94'
+  };
   final List<Map<String, String>> _countries = [
     {'name': 'Sri Lanka', 'flag': '🇱🇰', 'code': '+94'},
     {'name': 'India', 'flag': '🇮🇳', 'code': '+91'},
@@ -89,7 +94,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     Color backgroundColor = const Color(0xFFEBE4D0);
 
     return Scaffold(
@@ -103,16 +107,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
           iconSize: 35,
           onPressed: () {
             // Go back to Login Screen
-             Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPage(), 
-                    ),
-                      );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ),
+            );
           },
         ),
       ),
-      
+
       extendBodyBehindAppBar: true,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -122,21 +126,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                      'assets/images/ARCHISHI.png',
-                      height: 125.0,
-                      width: 125.0,
-                    ), 
+                  'assets/images/ARCHISHI.png',
+                  height: 125.0,
+                  width: 125.0,
+                ),
                 const Text(
                   "Create Account",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'Serif', 
+                    fontFamily: 'Serif',
                     color: Colors.black,
                   ),
                 ),
-                 const SizedBox(height: 5),
-                 const Text(
+                const SizedBox(height: 5),
+                const Text(
                   "Fill in the details below to sign up",
                   style: TextStyle(
                     fontSize: 14,
@@ -167,17 +171,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       // Using a helper function to avoid repeating code for fields
                       _buildInputField(
-                        label: "Full Name", 
-                        controller: _nameController, 
-                        hint: "John Doe"
-                      ),
+                          label: "Full Name",
+                          controller: _nameController,
+                          hint: "John Doe"),
                       const SizedBox(height: 16),
-                      
+
                       _buildInputField(
-                        label: "Email", 
-                        controller: _emailController, 
-                        hint: "example@email.com"
-                      ),
+                          label: "Email",
+                          controller: _emailController,
+                          hint: "example@email.com"),
                       const SizedBox(height: 16),
 
                       // Phone Number with Country Code
@@ -199,7 +201,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               child: DropdownButton<String>(
                                 value: _selectedCountry['name'],
                                 isExpanded: true,
-                                icon: const Icon(Icons.arrow_drop_down, size: 18),
+                                icon:
+                                    const Icon(Icons.arrow_drop_down, size: 18),
                                 style: const TextStyle(
                                   fontSize: 13,
                                   color: Colors.black87,
@@ -249,15 +252,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: const BorderSide(color: Colors.black87),
+                                  borderSide:
+                                      const BorderSide(color: Colors.black87),
                                 ),
                               ),
                             ),
@@ -267,8 +273,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(height: 16),
 
                       _buildInputField(
-                        label: "Password", 
-                        controller: _passwordController, 
+                        label: "Password",
+                        controller: _passwordController,
                         hint: "********",
                         isPassword: true,
                         obscure: _obscurePassword,
@@ -277,15 +283,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      
+
                       _buildInputField(
-                        label: "Confirm Password", 
-                        controller: _confirmPasswordController, 
+                        label: "Confirm Password",
+                        controller: _confirmPasswordController,
                         hint: "********",
                         isPassword: true,
                         obscure: _obscureConfirmPassword,
                         onToggleObscure: () {
-                          setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
+                          setState(() => _obscureConfirmPassword =
+                              !_obscureConfirmPassword);
                         },
                       ),
 
@@ -297,7 +304,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2D2D2D), // Dark charcoal
+                            backgroundColor:
+                                const Color(0xFF2D2D2D), // Dark charcoal
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -326,18 +334,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     GestureDetector(
                       onTap: () {
                         // Go back to Login Screen
-                        
-                     Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LoginPage(), 
-                    ),
-                      );
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
                       },
                       child: const Text(
                         "Sign In",
                         style: TextStyle(
-                          color: Colors.pinkAccent, 
+                          color: Colors.pinkAccent,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -353,99 +361,109 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  
-
   // Handles the sign up action using Firebase Auth and Firestore
   Future<void> _handleSignUp() async {
-     String name = _nameController.text.trim();
-     String email = _emailController.text.trim();
-     String phoneDigits = _phoneController.text.trim();
-     String fullPhone = '${_selectedCountry['code']} $phoneDigits';
-     String pass = _passwordController.text;
-     String confirmPass = _confirmPasswordController.text;
+    String name = _nameController.text.trim();
+    String email = _emailController.text.trim();
+    String phoneDigits = _phoneController.text.trim();
+    String fullPhone = '${_selectedCountry['code']} $phoneDigits';
+    String pass = _passwordController.text;
+    String confirmPass = _confirmPasswordController.text;
 
-     // Client-side validations
-     if (name.isEmpty || email.isEmpty || phoneDigits.isEmpty || pass.isEmpty || confirmPass.isEmpty) {
-       _showError('Please fill in all fields.');
-       return;
-     }
+    // Client-side validations
+    if (name.isEmpty ||
+        email.isEmpty ||
+        phoneDigits.isEmpty ||
+        pass.isEmpty ||
+        confirmPass.isEmpty) {
+      _showError('Please fill in all fields.');
+      return;
+    }
 
-     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-       _showError('Please enter a valid email address.');
-       return;
-     }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      _showError('Please enter a valid email address.');
+      return;
+    }
 
-     if (!RegExp(r'^[0-9]{7,10}$').hasMatch(phoneDigits)) {
-       _showError('Please enter a valid phone number (7-10 digits).');
-       return;
-     }
+    if (!RegExp(r'^[0-9]{7,10}$').hasMatch(phoneDigits)) {
+      _showError('Please enter a valid phone number (7-10 digits).');
+      return;
+    }
 
-     if (pass.length < 6) {
-       _showError('Password must be at least 6 characters long.');
-       return;
-     }
+    if (pass.length < 6) {
+      _showError('Password must be at least 6 characters long.');
+      return;
+    }
 
-     if (pass != confirmPass) {
-       _showError('Passwords do not match.');
-       return;
-     }
+    if (pass != confirmPass) {
+      _showError('Passwords do not match.');
+      return;
+    }
 
-     try {
-       // Create user with Firebase Auth
-       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-         email: email,
-         password: pass,
-       );
+    try {
+      // Create user with Firebase Auth
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: pass,
+      );
 
-       // Set displayName on the Auth profile so it's available everywhere
-       await userCredential.user!.updateDisplayName(name);
+      // Set displayName on the Auth profile so it's available everywhere
+      await userCredential.user!.updateDisplayName(name);
 
-       // Insert details to Firestore
-       await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-         'fullName': name,
-         'email': email,
-         'phoneNumber': fullPhone,
-         'createdAt': FieldValue.serverTimestamp(),
-       });
+      // Insert details to Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'fullName': name,
+        'email': email,
+        'phoneNumber': fullPhone,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
 
-       if (!context.mounted) return;
-       ScaffoldMessenger.of(context).showSnackBar(
-         const SnackBar(
-           content: Text('Account created successfully!'),
-           backgroundColor: Colors.green,
-         ),
-       );
-       
-       // Navigate to MainContent instead of LoginPage
-       Navigator.pushReplacement(
-         context,
-         MaterialPageRoute(
-           builder: (context) => const MainContentPart(), 
-         ),
-       );
-     } on FirebaseAuthException catch (e) {
-       if (!context.mounted) return;
-       String errorMessage = 'Sign up failed. Please try again.';
-       if (e.code == 'email-already-in-use') {
-         errorMessage = 'An account already exists with this email. Try signing in instead.';
-       } else if (e.code == 'weak-password') {
-         errorMessage = 'Password is too weak. Use at least 6 characters.';
-       } else if (e.code == 'invalid-email') {
-         errorMessage = 'Please enter a valid email address.';
-       } else if (e.code == 'operation-not-allowed') {
-         errorMessage = 'Email/password sign up is not enabled. Please contact support.';
-       } else if (e.code == 'network-request-failed') {
-         errorMessage = 'Network error. Check your internet connection and try again.';
-       } else if (e.code == 'too-many-requests') {
-         errorMessage = 'Too many attempts. Please wait a few minutes and try again.';
-       } else if (e.code == 'configuration-not-found') {
-         errorMessage = 'Firebase is not fully configured for this app.';
-       }
-       _showError(errorMessage);
-     } catch (e) {
-       if (!context.mounted) return;
-       _showError('Something went wrong. Please try again.');
-     }
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account created successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Navigate to MainContent instead of LoginPage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MainContentPart(),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!context.mounted) return;
+      String errorMessage = 'Sign up failed. Please try again.';
+      if (e.code == 'email-already-in-use') {
+        errorMessage =
+            'An account already exists with this email. Try signing in instead.';
+      } else if (e.code == 'weak-password') {
+        errorMessage = 'Password is too weak. Use at least 6 characters.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (e.code == 'operation-not-allowed') {
+        errorMessage =
+            'Email/password sign up is not enabled. Please contact support.';
+      } else if (e.code == 'network-request-failed') {
+        errorMessage =
+            'Network error. Check your internet connection and try again.';
+      } else if (e.code == 'too-many-requests') {
+        errorMessage =
+            'Too many attempts. Please wait a few minutes and try again.';
+      } else if (e.code == 'configuration-not-found') {
+        errorMessage = 'Firebase is not fully configured for this app.';
+      }
+      _showError(errorMessage);
+    } catch (e) {
+      if (!context.mounted) return;
+      _showError('Something went wrong. Please try again.');
+    }
   }
 
   void _showError(String message) {
@@ -462,8 +480,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // Helper widget to build consistent text fields
   Widget _buildInputField({
-    required String label, 
-    required TextEditingController controller, 
+    required String label,
+    required TextEditingController controller,
     required String hint,
     bool isPassword = false,
     bool obscure = false,
@@ -480,7 +498,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: Colors.grey[400]),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             suffixIcon: isPassword
                 ? IconButton(
                     icon: Icon(
