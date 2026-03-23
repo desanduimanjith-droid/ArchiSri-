@@ -1,3 +1,5 @@
+![alt text](image.png)
+
 # ArchiSri CI/CD Pipeline - Your Project
 
 ## Project Structure
