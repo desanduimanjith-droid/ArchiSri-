@@ -27,8 +27,13 @@ jobs:
       - name: Build Web for Production
         working-directory: ./frontEnd
         run: flutter build web --release
+
+      - name: Skip deploy (missing Firebase secret)
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT == '' }}
+        run: echo "FIREBASE_SERVICE_ACCOUNT is not configured. Skipping Firebase deploy."
       
       - name: Deploy to Firebase Hosting
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
