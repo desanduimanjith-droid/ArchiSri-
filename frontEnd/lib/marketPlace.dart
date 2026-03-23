@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:archisri_1/utils/marketplace_rating_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class IoTMarketplace extends StatefulWidget {
@@ -100,8 +101,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
       return;
     }
 
-    final String serverUrl =
-        "https://archisri-marketplace.onrender.com/create-checkout";
+    final String serverUrl = "http://192.168.1.21:5001/create-checkout";
     try {
       final response = await http.post(Uri.parse(serverUrl));
 
@@ -131,21 +131,19 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
   int _userRating = 0;
 
   void _handleRating(int rating) {
+    final updated = applyMarketplaceRating(
+      current: MarketplaceRatingState(
+        totalRatingsCount: _totalRatingsCount,
+        averageRating: _averageRating,
+        userRating: _userRating,
+      ),
+      newRating: rating,
+    );
+
     setState(() {
-      if (_userRating == 0) {
-        // First time rating
-        _averageRating =
-            ((_averageRating * _totalRatingsCount) + rating) /
-            (_totalRatingsCount + 1);
-        _totalRatingsCount++;
-      } else {
-        // Updating existing rating
-        _averageRating =
-            ((_averageRating * _totalRatingsCount) - _userRating + rating) /
-            _totalRatingsCount;
-      }
-      _userRating = rating;
-      _averageRating = _averageRating.clamp(1.0, 5.0);
+      _totalRatingsCount = updated.totalRatingsCount;
+      _averageRating = updated.averageRating;
+      _userRating = updated.userRating;
     });
   }
 
@@ -267,7 +265,7 @@ class _IoTMarketplaceState extends State<IoTMarketplace> {
                         color: Colors.grey.shade100,
                       ),
                       child: Image.asset(
-                        'assets/images/IOTDevice.png',
+                        'assets/images/iot.png',
                         fit: BoxFit.fill,
                       ),
                     ),

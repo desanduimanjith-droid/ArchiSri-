@@ -1167,11 +1167,13 @@ List<String> _engineerTags(Map<String, dynamic> data) {
   final company = _engineerCompany(data);
   final registration = _engineerRegistration(data);
 
-  if (specialty.isNotEmpty && specialty != 'General Engineering')
+  if (specialty.isNotEmpty && specialty != 'General Engineering') {
     tags.add(specialty);
+  }
   if (company.isNotEmpty && company != 'Independent') tags.add(company);
-  if (registration.isNotEmpty && registration != 'Not provided')
+  if (registration.isNotEmpty && registration != 'Not provided') {
     tags.add('Reg: $registration');
+  }
 
   return tags;
 }

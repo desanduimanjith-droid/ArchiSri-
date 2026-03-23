@@ -252,7 +252,7 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                             borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                         ),
-                        initialValue: _selectedLocation,
+                        value: _selectedLocation,
                         hint: const Text('Select District'),
                         items: _districts.map((String value) {
                           return DropdownMenuItem<String>(
@@ -289,7 +289,7 @@ class _CompanySignUpScreenState extends State<signin_page3> {
                             borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                         ),
-                        initialValue: _selectedConstructionType,
+                        value: _selectedConstructionType,
                         hint: const Text('Select Construction Type'),
                         items: _constructionTypes.map((String value) {
                           return DropdownMenuItem<String>(
