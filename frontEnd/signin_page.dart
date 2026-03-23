@@ -94,7 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // Same shadow style as login screen
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 5),
                       ),
@@ -199,6 +199,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   
 
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
   // Simulates the sign up action
   void _handleSignUp() {
      String name = _nameController.text;
@@ -207,21 +213,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
      String confirmPass = _confirmPasswordController.text;
 
      if(name.isEmpty || email.isEmpty || pass.isEmpty) {
-       print("Error: Please fill all fields");
-       // Show snackbar in real app
+       _showMessage('Please fill all fields');
        return;
      }
 
      if(pass != confirmPass) {
-       print("Error: Passwords do not match");
-       // Show snackbar in real app
+       _showMessage('Passwords do not match');
        return;
      }
 
-     print("Sign Up Successful Details:");
-     print("Name: $name");
-     print("Email: $email");
-     print("Password: $pass");
+     _showMessage('Sign Up Successful');
      // Proceed to next screen...
   }
 
