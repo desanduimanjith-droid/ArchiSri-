@@ -106,7 +106,7 @@ jobs:
         run: flutter build apk --release
       
       - name: Upload APK (30 days)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: archisri-app.apk
           path: frontEnd/build/app/outputs/flutter-apk/app-release.apk
@@ -137,7 +137,7 @@ jobs:
         run: flutter build web --release
       
       - name: Upload Web (30 days)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: archisri-web-build
           path: frontEnd/build/web/
