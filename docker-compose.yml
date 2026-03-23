@@ -1,23 +1,21 @@
-version: '3.8'
-
 services:
   # Backend Service 1: Constructor Connect
   constructor-backend:
-    build:
-      context: ./backend/engineer&constructor_connect_backend
+    image: python:3.10-slim
+    working_dir: /app
     ports:
       - "5000:5000"
     environment:
       - FLASK_ENV=development
       - FLASK_APP=app.py
     volumes:
-      - ./backend/engineer&constructor_connect_backend:/app
-    command: flask run --host=0.0.0.0
+      - "./backend/engineer&constructor_connect_backend:/app"
+    command: sh -c "pip install --no-cache-dir -r requirements.txt && flask run --host=0.0.0.0 --port=5000"
 
   # Backend Service 2: Blueprint Generator
   blueprint-backend:
-    build:
-      context: ./backend/blueprint-generator
+    image: python:3.10-slim
+    working_dir: /app
     ports:
       - "5002:5002"
     environment:
@@ -25,12 +23,12 @@ services:
       - FLASK_APP=app.py
     volumes:
       - ./backend/blueprint-generator:/app
-    command: flask run --host=0.0.0.0 --port=5002
+    command: sh -c "pip install --no-cache-dir -r requirements.txt && flask run --host=0.0.0.0 --port=5002"
 
   # Backend Service 3: Marketplace
   marketplace-backend:
-    build:
-      context: ./backend/marketPlace
+    image: python:3.10-slim
+    working_dir: /app
     ports:
       - "5001:5001"
     environment:
@@ -38,4 +36,4 @@ services:
       - FLASK_APP=marketPlace.py
     volumes:
       - ./backend/marketPlace:/app
-    command: flask run --host=0.0.0.0 --port=5001
+    command: sh -c "pip install --no-cache-dir -r requirements.txt && flask run --host=0.0.0.0 --port=5001"
