@@ -56,17 +56,21 @@ class IoTService {
         double.tryParse(sensorMap["moisture"].toString()) ?? 0.0;
 
     final double ecValue = double.tryParse(sensorMap["ec"].toString()) ?? 0.0;
+    final double temperatureValue =
+        double.tryParse(sensorMap["temperature"].toString()) ?? 0.0;
 
     final double moisturePercent = ((4095 - rawMoisture) / 4095) * 100;
 
+    final double phValue = 6.2 + (moisturePercent / 100);
+    
     return {
       "moisture": moisturePercent.clamp(0.0, 100.0),
       "rawMoisture": rawMoisture,
-      "temperature": 25.0,
+      "temperature": temperatureValue,
       "ec": ecValue,
       "soilDensity": 1.43,
-      "ph": 6.8,
-      "conductivity": ecValue,
+      "ph": phValue,
+      "conductivity": ecValue > 0 ? ecValue : (moisturePercent * 1.5),
     };
   }
 
