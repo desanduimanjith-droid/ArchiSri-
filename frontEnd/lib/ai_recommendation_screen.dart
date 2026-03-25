@@ -41,31 +41,35 @@ class AIRecommendationScreen extends StatelessWidget {
                   const SizedBox(height: 15),
                   _buildMetricsDashboard(),
                   const SizedBox(height: 35),
-                  _buildSectionTitle("AI Structural Roadmap"),
-                  const SizedBox(height: 15),
-                  _buildRecommendationCard(
-                    title: "Foundation Strategy",
-                    value: foundationType,
-                    icon: Icons.foundation_rounded,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF60A5FA), Color(0xFF2563EB)],
+                  if (moisture == 0 && ec == 0 && temp == 0)
+                    _buildZeroStatePlaceholder()
+                  else ...[
+                    _buildSectionTitle("AI Structural Roadmap"),
+                    const SizedBox(height: 15),
+                    _buildRecommendationCard(
+                      title: "Foundation Strategy",
+                      value: foundationType,
+                      icon: Icons.foundation_rounded,
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF60A5FA), Color(0xFF2563EB)],
+                      ),
+                      description: _getFoundationReasoning(),
                     ),
-                    description: _getFoundationReasoning(),
-                  ),
-                  const SizedBox(height: 20),
-                  _buildRecommendationCard(
-                    title: "Material Specification",
-                    value: cementType,
-                    icon: Icons.architecture_rounded,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFDBA74), Color(0xFFEA580C)],
+                    const SizedBox(height: 20),
+                    _buildRecommendationCard(
+                      title: "Material Specification",
+                      value: cementType,
+                      icon: Icons.architecture_rounded,
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFFDBA74), Color(0xFFEA580C)],
+                      ),
+                      description: _getCementReasoning(),
                     ),
-                    description: _getCementReasoning(),
-                  ),
-                  const SizedBox(height: 35),
-                  _buildSectionTitle("Expert Implementation Guide"),
-                  const SizedBox(height: 15),
-                  _buildAIGuidanceSection(),
+                    const SizedBox(height: 35),
+                    _buildSectionTitle("Expert Implementation Guide"),
+                    const SizedBox(height: 15),
+                    _buildAIGuidanceSection(),
+                  ],
                 ],
               ),
             ),
@@ -447,5 +451,59 @@ class AIRecommendationScreen extends StatelessWidget {
     }
 
     return guide;
+  }
+
+  Widget _buildZeroStatePlaceholder() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(30),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: kAccentColor.withValues(alpha: 0.1), width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: kSecondaryColor.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: kAccentColor.withValues(alpha: 0.05),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.sensors_off_rounded,
+              color: kAccentColor,
+              size: 40,
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            "Waiting for Data",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: kSecondaryColor,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "AI recommendations will appear here automatically once active sensor data (Moisture, Salinity, or Temp) is detected from the IoT device.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey.shade600,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
