@@ -59,7 +59,7 @@ void main() {
 
       expect(result['rawMoisture'], 0.0);
       expect(result['ec'], 3.2);
-      expect(result['moisture'], 100.0);
+      expect(result['moisture'], 0.0);
     });
 
     test('returns default data when http client throws', () async {

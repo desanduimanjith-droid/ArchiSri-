@@ -38,36 +38,42 @@ class IoTService {
   }
 
   Map<String, dynamic> parseResponse(http.Response response) {
-    if (response.statusCode != 200) {
-      debugPrint("IoTService: HTTP error ${response.statusCode}");
+    try {
+      if (response.statusCode != 200) {
+        debugPrint("IoTService: HTTP error ${response.statusCode}");
+        return _getDefaultData();
+      }
+
+      final raw = jsonDecode(response.body);
+      debugPrint("IoTService: Raw data = $raw");
+
+      if (raw == null || raw is! Map) {
+        return _getDefaultData();
+      }
+
+      final sensorMap = Map<String, dynamic>.from(raw);
+
+      final double rawMoisture =
+          double.tryParse(sensorMap["moisture"].toString()) ?? 0.0;
+      final double ecValue = double.tryParse(sensorMap["ec"].toString()) ?? 0.0;
+      final double temperature =
+          double.tryParse(sensorMap["temperature"].toString()) ?? 25.0;
+
+      final double moisturePercent = (rawMoisture / 4095) * 100;
+
+      return {
+        "moisture": moisturePercent.clamp(0.0, 100.0),
+        "rawMoisture": rawMoisture,
+        "temperature": temperature,
+        "ec": ecValue,
+        "soilDensity": 1.43,
+        "ph": 6.8,
+        "conductivity": ecValue,
+      };
+    } catch (e) {
+      debugPrint("IoTService: Error parsing response: $e");
       return _getDefaultData();
     }
-
-    final raw = jsonDecode(response.body);
-    debugPrint("IoTService: Raw data = $raw");
-
-    if (raw == null) {
-      return _getDefaultData();
-    }
-
-    final sensorMap = Map<String, dynamic>.from(raw as Map);
-
-    final double rawMoisture =
-        double.tryParse(sensorMap["moisture"].toString()) ?? 0.0;
-
-    final double ecValue = double.tryParse(sensorMap["ec"].toString()) ?? 0.0;
-
-    final double moisturePercent = ((4095 - rawMoisture) / 4095) * 100;
-
-    return {
-      "moisture": moisturePercent.clamp(0.0, 100.0),
-      "rawMoisture": rawMoisture,
-      "temperature": 25.0,
-      "ec": ecValue,
-      "soilDensity": 1.43,
-      "ph": 6.8,
-      "conductivity": ecValue,
-    };
   }
 
   Map<String, dynamic> _getDefaultData() {
